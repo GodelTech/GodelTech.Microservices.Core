@@ -1,29 +1,28 @@
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - '*'
 
-pool:
-  vmImage: 'windows-latest'
+pr:
+  branches:
+    include:
+    - '*'
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+resources:
+  repositories:
+    - repository: GodelTech
+      type: github
+      endpoint: 'godeltech'
+      name: 'GodelTech/AzureDevOps.Pipeline.Templates'
+      ref: 'refs/heads/master'
 
-steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+extends:
+  template: '.NET Core/nuget.yml@GodelTech'
+  parameters:
+    artifactPackDirectory: 'packages'
+    buildConfiguration: 'Release'
+    internalFeed: '19324bbd-9baf-4407-b86d-3e7f0d145399/1574777e-9941-4b90-baa9-d9938266ac24'
+    sonarCloudOrganizationName: 'godeltech'
+    sourceBranch: 'master'
+    vmImage: 'ubuntu-latest'
