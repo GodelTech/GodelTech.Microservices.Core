@@ -15,10 +15,10 @@ resources:
       type: github
       endpoint: 'godeltech'
       name: 'GodelTech/AzureDevOps.Pipeline.Templates'
-      ref: 'refs/heads/master'
+      ref: 'refs/heads/test'
 
 extends:
-  template: '.NET Core/nuget.yml@GodelTech'
+  template: 'test/nuget.yml@GodelTech'
   parameters:
     artifactPackDirectory: 'packages'
     buildConfiguration: 'Release'
