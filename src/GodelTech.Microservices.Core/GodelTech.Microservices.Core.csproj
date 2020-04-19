@@ -2,13 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>GodelTech.Microservices.Core</PackageId>
     <PackageTags>.netcore netcore microservice</PackageTags>
     <Copyright>Godel Technologies Europe</Copyright>
     <Product>Microservice Platform</Product>
     <Company>Godel Technologies Europe</Company>
     <Authors>Andrei Salanoi</Authors>
-    <Version>0.0.1</Version>
+    <RepositoryUrl>https://github.com/GodelTech/GodelTech.Microservices.Core</RepositoryUrl>
+    <VersionPrefix>1.0.0-rc.2</VersionPrefix>
+
+    <!-- SonarQube needs this -->
+    <ProjectGuid>{00000000-0000-0000-0000-000000000001}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
