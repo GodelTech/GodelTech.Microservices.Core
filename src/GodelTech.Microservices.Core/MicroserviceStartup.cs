@@ -34,8 +34,6 @@ namespace GodelTech.Microservices.Core
             yield return new CommonServicesInitializer(Configuration);
             yield return new CollaboratorsInitializer(Configuration);
 
-            yield return new SwaggerInitializer(Configuration, securityInfoProvider);
-
             yield return new CommonMiddlewareInitializer(Configuration);
 
             yield return new RoutingInitializer(Configuration);
