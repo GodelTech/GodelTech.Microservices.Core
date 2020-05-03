@@ -9,7 +9,7 @@
     <Company>Godel Technologies Europe</Company>
     <Authors>Andrei Salanoi</Authors>
     <RepositoryUrl>https://github.com/GodelTech/GodelTech.Microservices.Core</RepositoryUrl>
-    <VersionPrefix>1.0.1</VersionPrefix>
+    <VersionPrefix>1.0.2</VersionPrefix>
 
     <!-- SonarQube needs this -->
     <ProjectGuid>{00000000-0000-0000-0000-000000000001}</ProjectGuid>
@@ -35,8 +35,6 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.3.1" />
 
   </ItemGroup>
 
