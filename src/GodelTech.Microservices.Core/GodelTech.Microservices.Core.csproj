@@ -9,7 +9,7 @@
     <Company>Godel Technologies Europe</Company>
     <Authors>Andrei Salanoi</Authors>
     <RepositoryUrl>https://github.com/GodelTech/GodelTech.Microservices.Core</RepositoryUrl>
-    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionPrefix>1.0.1</VersionPrefix>
 
     <!-- SonarQube needs this -->
     <ProjectGuid>{00000000-0000-0000-0000-000000000001}</ProjectGuid>
@@ -25,8 +25,6 @@
     <PackageReference Include="IdentityModel" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="3.1.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Serilog.Enrichers.AssemblyName" Version="1.0.9" />
