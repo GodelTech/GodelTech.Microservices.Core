@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GodelTech.Microservices.Core.Collaborators;
-using GodelTech.Microservices.Core.HealthChecks;
-using GodelTech.Microservices.Core.Mvc;
-using GodelTech.Microservices.Core.Mvc.Security;
 using GodelTech.Microservices.Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,26 +23,8 @@ namespace GodelTech.Microservices.Core
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        protected virtual IEnumerable<IMicroserviceInitializer> CreateInitializers()
-        {
-            var securityInfoProvider = CreateSecurityInfoProvider();
-
-            yield return new CommonServicesInitializer(Configuration);
-            yield return new CollaboratorsInitializer(Configuration);
-
-            yield return new CommonMiddlewareInitializer(Configuration);
-
-            yield return new RoutingInitializer(Configuration);
-            yield return new ApiSecurityInitializer(Configuration, securityInfoProvider);
-            yield return new HealthCheckInitializer(Configuration);
-            yield return new MvcInitializer(Configuration);
-        }
-
-        protected virtual ISecurityInfoProvider CreateSecurityInfoProvider()
-        {
-            return new NullSecurityInfoProvider();
-        }
-
+        protected abstract IEnumerable<IMicroserviceInitializer> CreateInitializers();
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
