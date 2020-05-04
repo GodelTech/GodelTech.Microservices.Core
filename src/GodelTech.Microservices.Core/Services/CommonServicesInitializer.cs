@@ -1,6 +1,4 @@
-﻿using GodelTech.Microservices.Core.Mvc.Security;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GodelTech.Microservices.Core.Services
@@ -29,11 +27,7 @@ namespace GodelTech.Microservices.Core.Services
             services.AddSingleton<IStreamDataReader, StreamDataReader>();
             services.AddSingleton<ISha512HashCalculator, Sha512HashCalculator>();
             services.AddSingleton<IContentTypeResolver, ContentTypeResolver>();
-            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
-
-            services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ITempFileFactory, TempFileFactory>();
-            services.AddTransient<ISecurityContext, SecurityContext>();
         }
     }
 }

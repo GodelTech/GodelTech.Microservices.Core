@@ -32,7 +32,6 @@ namespace GodelTech.Microservices.Core.Collaborators
 
             services.AddTransient<RequestResponseLoggingHandler>();
             services.AddTransient<CorrelationIdHandler>();
-            services.AddTransient<ClientCredentialsAuthTokenHandler>();
 
             foreach (var (serviceName, serviceEndpoint) in serviceConfigs)
             {
