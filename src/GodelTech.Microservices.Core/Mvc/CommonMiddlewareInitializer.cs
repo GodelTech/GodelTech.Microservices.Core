@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Serilog;
 
 namespace GodelTech.Microservices.Core.Mvc
 {
@@ -15,7 +14,6 @@ namespace GodelTech.Microservices.Core.Mvc
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSerilogRequestLogging();
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<LogUncaughtErrorsMiddleware>();
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
