@@ -46,6 +46,7 @@ namespace GodelTech.Microservices.Core.Mvc
 
         protected virtual void ConfigureMvcOptions(MvcOptions x)
         {
+            x.SuppressAsyncSuffixInActionNames = false;
             x.Filters.Add(new BadRequestOnExceptionAttribute(typeof(RequestValidationException)));
             x.Filters.Add(new NotFoundOnExceptionAttribute(typeof(ResourceNotFoundException)));
             x.Filters.Add(new HttpStatusCodeOnExceptionAttribute(413, typeof(FileTooLargeExceptionException)));
