@@ -11,11 +11,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace GodelTech.Microservices.Core.Mvc
 {
-    public class MvcInitializer : MicroserviceInitializerBase
+    public class ApiInitializer : MicroserviceInitializerBase
     {
         protected virtual CompatibilityVersion CompatibilityVersion => CompatibilityVersion.Version_3_0;
 
-        public MvcInitializer(IConfiguration configuration)
+        public ApiInitializer(IConfiguration configuration)
             : base(configuration)
         {
         }
@@ -33,7 +33,7 @@ namespace GodelTech.Microservices.Core.Mvc
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(ConfigureMvcOptions)
+            services.AddControllers(ConfigureMvcOptions)
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
