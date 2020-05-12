@@ -26,7 +26,8 @@ namespace GodelTech.Microservices.Core.Services
         {
             return CurrentCorrelationId;
         }
-    }
+
+     }
 
     public interface ICorrelationIdAccessor
     {

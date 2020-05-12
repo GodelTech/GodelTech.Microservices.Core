@@ -2,14 +2,7 @@
 
 namespace GodelTech.Microservices.Core.Services
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Better sytnax for context operation.
-    /// Wraps a delegate that is executed when the Dispose method is called.
-    /// This allows to do context sensitive things easily.
-    /// Basically, it mimics Java's anonymous classes.
-    /// </summary>
-    public class DisposableAction : IDisposable
+    internal sealed class DisposableAction : IDisposable
     {
         private readonly Action _action;
 
@@ -28,16 +21,7 @@ namespace GodelTech.Microservices.Core.Services
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _action();
-            }
+            _action();
         }
     }
 }
