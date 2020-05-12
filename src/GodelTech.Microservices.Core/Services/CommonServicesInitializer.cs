@@ -17,17 +17,10 @@ namespace GodelTech.Microservices.Core.Services
             services.AddSingleton<ICorrelationIdAccessor>(correlationIdAccessor);
             services.AddSingleton<ICorrelationIdSetter>(correlationIdAccessor);
 
-            services.AddSingleton<IDirectoryService, DirectoryService>();
-            services.AddSingleton<IFileService, FileService>();
-            services.AddSingleton<IGuidFactory, GuidFactory>();
             services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            services.AddSingleton<IPathService, PathService>();
             services.AddSingleton<IZipService, ZipService>();
-            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             services.AddSingleton<IStreamDataReader, StreamDataReader>();
             services.AddSingleton<ISha512HashCalculator, Sha512HashCalculator>();
-            services.AddSingleton<IContentTypeResolver, ContentTypeResolver>();
-            services.AddTransient<ITempFileFactory, TempFileFactory>();
         }
     }
 }
