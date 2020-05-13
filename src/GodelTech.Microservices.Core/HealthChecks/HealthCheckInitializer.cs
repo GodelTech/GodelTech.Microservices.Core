@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -7,8 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace GodelTech.Microservices.Core.HealthChecks
 {
@@ -41,16 +40,25 @@ namespace GodelTech.Microservices.Core.HealthChecks
         {
             httpContext.Response.ContentType = "application/json";
 
-            var json = new JObject(
-                new JProperty("status", result.Status.ToString()),
-                new JProperty("results", new JObject(result.Entries.Select(pair =>
-                    new JProperty(pair.Key, new JObject(
-                        new JProperty("status", pair.Value.Status.ToString()),
-                        new JProperty("description", pair.Value.Description),
-                        new JProperty("data", new JObject(pair.Value.Data.Select(
-                            p => new JProperty(p.Key, p.Value))))))))));
+            var healthResult = new
+            {
+                status = result.Status.ToString(),
+                results = result.Entries.ToDictionary(
+                    x => x.Key,
+                    x => new
+                    {
+                        status = x.Value.Status.ToString(),
+                        description = x.Value.Description,
+                    }
+                ).ToArray()
+            };
 
-            return httpContext.Response.WriteAsync(json.ToString(Formatting.Indented));
+            var json = JsonSerializer.Serialize(healthResult, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            return httpContext.Response.WriteAsync(json);
         }
     }
 }

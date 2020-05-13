@@ -17,10 +17,6 @@ namespace GodelTech.Microservices.Core.Services
             services.AddSingleton<ICorrelationIdAccessor>(correlationIdAccessor);
             services.AddSingleton<ICorrelationIdSetter>(correlationIdAccessor);
 
-            services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            services.AddSingleton<IZipService, ZipService>();
-            services.AddSingleton<IStreamDataReader, StreamDataReader>();
-            services.AddSingleton<ISha512HashCalculator, Sha512HashCalculator>();
         }
     }
 }
