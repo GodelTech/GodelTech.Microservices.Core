@@ -17,7 +17,6 @@ namespace GodelTech.Microservices.Core.Mvc
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<LogUncaughtErrorsMiddleware>();
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
-            app.UseMiddleware<AccessTokenMiddleware>();
         }
     }
 }

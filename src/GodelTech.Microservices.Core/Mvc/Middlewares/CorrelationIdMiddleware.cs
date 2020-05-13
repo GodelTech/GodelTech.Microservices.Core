@@ -26,7 +26,8 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
 
             using (_correlationIdSetter.SetCorrelationId(correlationId))
             {
-                context.Response.Headers.Add(CorrelationIdHeaderName, new[] { correlationId });
+                if (!context.Response.Headers.ContainsKey(CorrelationIdHeaderName))
+                    context.Response.Headers.Add(CorrelationIdHeaderName, new[] { correlationId });
 
                 await _next.Invoke(context);
             }
