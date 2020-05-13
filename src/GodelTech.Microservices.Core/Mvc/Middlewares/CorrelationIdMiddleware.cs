@@ -7,7 +7,7 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
 {
     public class CorrelationIdMiddleware
     {
-        internal const string CorrelationIdHeaderName = "X-Rie-Correlation-Id";
+        public static readonly string CorrelationIdHeaderName = "X-Rie-Correlation-Id";
 
         private readonly RequestDelegate _next;
         private readonly ICorrelationIdSetter _correlationIdSetter;

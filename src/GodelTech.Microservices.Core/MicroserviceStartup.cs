@@ -37,10 +37,6 @@ namespace GodelTech.Microservices.Core
         // This method gets called by the runtime. Use this method to add services to the container.
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var hostConfig = Configuration.GetSection("Host").Get<HostConfig>();
-            if (hostConfig != null)
-                services.AddSingleton<IHostConfig>(hostConfig);
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IBearerTokenStorage, BearerTokenStorage>();
 
