@@ -25,11 +25,12 @@ namespace GodelTech.Microservices.Website
             yield return new GenericInitializer((app, env) => app.UseAuthentication());
 
             yield return new ApiInitializer(Configuration);
-            //yield return new RazorPagesInitializer(Configuration);
-            yield return new MvcInitializer(Configuration)
-            {
-                EnableAddRazorRuntimeCompilation = true
-            };
+
+            // IMPORTANT: You can use Razor and MVC initializers together but you need to make sure
+            // that their routes do not conflict with each other. If the same url is mapped to MVC Controller
+            // and Page first initializer wins
+            yield return new RazorPagesInitializer(Configuration);
+            yield return new MvcInitializer(Configuration);
         }
     }
 }
