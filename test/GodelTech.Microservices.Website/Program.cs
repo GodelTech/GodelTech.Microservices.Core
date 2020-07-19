@@ -5,8 +5,6 @@ namespace GodelTech.Microservices.Website
 {
     public class Program
     {
-        public static bool UseIntegrationTestsStartup = false;
-
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -16,10 +14,7 @@ namespace GodelTech.Microservices.Website
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    if (UseIntegrationTestsStartup)
-                        webBuilder.UseStartup<IntegrationTestsStartup>();
-                    else
-                        webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }
