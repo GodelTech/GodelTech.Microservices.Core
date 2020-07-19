@@ -11,28 +11,28 @@ using Xunit;
 
 namespace GodelTech.Microservices.IntegrationTests.Mvc
 {
-    public class ApiInitializerTests : IntegrationTestBase
+    public class RazorPagesInitializerTests : IntegrationTestBase
     {
         [Fact]
-        public async Task InvokeRestApi_WhenInitializerProviderConfigured_ShouldReturnExpectedString()
+        public async Task InvokeHomePage_WhenProviderConfigured_ShouldReturnExpectedString()
         {
             static IEnumerable<IMicroserviceInitializer> CreateInitializers(IConfiguration configuration)
             {
                 yield return new GenericInitializer((app, env) => app.UseRouting());
 
-                yield return new ApiInitializer(configuration);
+                yield return new RazorPagesInitializer(configuration);
             }
 
             var client = CreateClient(CreateInitializers);
 
-            var response = await client.GetAsync("/v1/users");
+            var response = await client.GetAsync("/");
 
-            response.StatusCode.Should().Be(HttpStatusCode.OK); 
-            response.GetText().Should().Be("Welcome to REST API");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.GetText().Should().Contain("Welcome to Razor Pages");
         }
 
         [Fact]
-        public async Task InvokeRestApi_WhenInitializerProviderNotProvided_ShouldReturn404()
+        public async Task InvokeHomePage_WhenInitializerProviderNotProvided_ShouldReturn404()
         {
             static IEnumerable<IMicroserviceInitializer> CreateInitializers(IConfiguration configuration)
             {
@@ -41,7 +41,7 @@ namespace GodelTech.Microservices.IntegrationTests.Mvc
 
             var client = CreateClient(CreateInitializers);
 
-            var response = await client.GetAsync("/v1/users");
+            var response = await client.GetAsync("/");
 
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
