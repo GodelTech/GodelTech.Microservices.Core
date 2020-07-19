@@ -17,12 +17,19 @@ namespace GodelTech.Microservices.Website
         {
             yield return new DeveloperExceptionPageInitializer(Configuration);
 
+            // Uncomment this line if HTTPs usage is required
+            // yield return new HttpsInitializer(Configuration);
+
             yield return new GenericInitializer((app, env) => app.UseStaticFiles());
             yield return new GenericInitializer((app, env) => app.UseRouting());
             yield return new GenericInitializer((app, env) => app.UseAuthentication());
 
             yield return new ApiInitializer(Configuration);
-            yield return new RazorPagesInitializer(Configuration);
+            //yield return new RazorPagesInitializer(Configuration);
+            yield return new MvcInitializer(Configuration)
+            {
+                EnableAddRazorRuntimeCompilation = true
+            };
         }
     }
 }
