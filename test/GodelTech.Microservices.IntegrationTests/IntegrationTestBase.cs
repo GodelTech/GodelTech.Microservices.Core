@@ -1,25 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using GodelTech.Microservices.Core;
+using GodelTech.Microservices.IntegrationTests.Utils;
 using GodelTech.Microservices.Website;
 using Microsoft.Extensions.Configuration;
-using Xunit;
 
 namespace GodelTech.Microservices.IntegrationTests
 {
-    public abstract class IntegrationTestBase: IClassFixture<IntegrationTestWebApplicationFactory<IntegrationTestsStartup>>
+    public abstract class IntegrationTestBase
     {
-        protected IntegrationTestWebApplicationFactory<IntegrationTestsStartup> Factory { get; }
-
-        protected IntegrationTestBase(IntegrationTestWebApplicationFactory<IntegrationTestsStartup> factory)
+        protected HttpClient CreateClient(Func<IConfiguration, IEnumerable<IMicroserviceInitializer>> intializerFactory)
         {
-            Factory = factory;
+            IntegrationTestsStartup.InitializerFactory = intializerFactory;
 
-            IntegrationTestsStartup.InitializerFactory = CreateInitializers;
-        }
+            var factory = new IntegrationTestWebApplicationFactory<IntegrationTestsStartup>();
 
-        protected virtual IEnumerable<IMicroserviceInitializer> CreateInitializers(IConfiguration configuration)
-        {
-            yield break;
+            return factory.CreateClient();
         }
     }
 }

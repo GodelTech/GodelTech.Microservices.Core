@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GodelTech.Microservices.Core;
 using GodelTech.Microservices.Core.Mvc;
-using GodelTech.Microservices.Website;
+using GodelTech.Microservices.IntegrationTests.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Xunit;
@@ -12,27 +13,37 @@ namespace GodelTech.Microservices.IntegrationTests.Mvc
 {
     public class ApiInitializerTests : IntegrationTestBase
     {
-        public ApiInitializerTests(IntegrationTestWebApplicationFactory<IntegrationTestsStartup> factory) 
-            : base(factory)
-        {
-        }
-
         [Fact]
-        public async Task Get_EndpointsReturnSuccessAndCorrectContentType()
+        public async Task InvokeRestApi_WhenApiInitializerProviderConfigured_ShouldReturnExpectedString()
         {
-            var client = Factory.CreateClient();
+            static IEnumerable<IMicroserviceInitializer> CreateInitializers(IConfiguration configuration)
+            {
+                yield return new GenericInitializer((app, env) => app.UseRouting());
+
+                yield return new ApiInitializer(configuration);
+            }
+
+            var client = CreateClient(CreateInitializers);
 
             var response = await client.GetAsync("/v1/users");
 
-            response.EnsureSuccessStatusCode(); 
-            response.Content.ReadAsStringAsync().GetAwaiter().GetResult().Should().Be("Hello World!");
+            response.StatusCode.Should().Be(HttpStatusCode.OK); 
+            response.GetText().Should().Be("Welcome to REST API");
         }
 
-        protected override IEnumerable<IMicroserviceInitializer> CreateInitializers(IConfiguration configuration)
+        [Fact]
+        public async Task InvokeRestApi_WhenApiInitializerProviderNotProvided_ShouldReturn404()
         {
-            yield return new GenericInitializer((app, env) => app.UseRouting());
+            static IEnumerable<IMicroserviceInitializer> CreateInitializers(IConfiguration configuration)
+            {
+                yield return new GenericInitializer((app, env) => app.UseRouting());
+            }
 
-            yield return new ApiInitializer(configuration);
+            var client = CreateClient(CreateInitializers);
+
+            var response = await client.GetAsync("/v1/users");
+
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 }

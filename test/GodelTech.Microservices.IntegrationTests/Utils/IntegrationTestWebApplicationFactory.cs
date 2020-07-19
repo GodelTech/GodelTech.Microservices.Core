@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Hosting;
 
-namespace GodelTech.Microservices.IntegrationTests
+namespace GodelTech.Microservices.IntegrationTests.Utils
 {
     #region snippet1
     public class IntegrationTestWebApplicationFactory<TStartup>

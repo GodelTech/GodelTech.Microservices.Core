@@ -9,7 +9,7 @@ namespace GodelTech.Microservices.Website.v1.Controllers
         [HttpGet]
         public ActionResult ListAllAsync()
         {
-            return Ok("Hello World!");
+            return Ok("Welcome to REST API");
         }
     }
 }
