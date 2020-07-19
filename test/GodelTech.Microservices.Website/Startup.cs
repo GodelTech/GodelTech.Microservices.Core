@@ -21,6 +21,7 @@ namespace GodelTech.Microservices.Website
             yield return new GenericInitializer((app, env) => app.UseRouting());
             yield return new GenericInitializer((app, env) => app.UseAuthentication());
 
+            yield return new ApiInitializer(Configuration);
             yield return new RazorPagesInitializer(Configuration);
         }
     }
