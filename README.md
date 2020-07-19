@@ -13,11 +13,11 @@ Initializer contract is defined as follows:
     }
 ```
 
-It's easy to see that contracts mimics signature of `Startup.cs` class. Main purpose of initializer is encapsulation of ASP.NET Core application pipeline configuration. E.g. aspect of pipeline (REST API, HTTPS, Static Files and etc) is configured by dedicated initializer. As result complex unmaintainable `Startup.cs` file is splitted into number of initializers which are sequentially executed by subclass of `MicroserviceStartup`. In order to save few lines of code during initializer development `MicroserviceInitializerBase` class can be used.
+It's easy to see that contracts mimics signature of typical `Startup` class. Main purpose of initializer is encapsulation of ASP.NET Core application pipeline configuration. E.g. each aspect of pipeline (REST API, HTTPS, Static Files and etc) is configured by dedicated initializer. As result complex unmaintainable `Startup` class is splitted into number of initializers which are sequentially executed by subclass of `MicroserviceStartup`. In order to save few lines of code during initializer development `MicroserviceInitializerBase` class can be used.
 
-`MicroserviceStartup` is recommended base class for `Startup` class. In comparison to ordinary `Startup.cs` file just few differences:
+`MicroserviceStartup` is recommended base class for `Startup` class. In comparison to ordinary `Startup` this class just few differences:
 
-1. It accepts `IConfiguration` as constructor parameter and stored in property named `Configuration`.
+1. It accepts `IConfiguration` as constructor parameter and stores it in property named `Configuration`.
 2. Abstract method `CreateInitializers` must be created by child classes. This method is responsible for initializer chain creation.
 3. Virtual methods `Configure()` and `ConfigureServices()` are defined.
 4. `Configure()` and `ConfigureServices()` invoke corresponding methods of initializers to configure ASP.NET Core application.
@@ -29,13 +29,13 @@ Other than this no other logic is included into `MicroserviceStartup` class.
 
 In order to use microservice framework few simple steps are required:
 
-1. Create ASP.NET Website application using Visual Studio or **dotnet cli**.
+1. Create ASP.NET Website application using **Visual Studio** or **dotnet cli**.
 2. Reference latest version of `Godel.Microservice.Core` nuget package and optionally satellite packages you would like to use.
 3. Update your `Startup.cs` file to create initializers used to configure pipeline.
 
 ### REST API configuration
 
-Please use the following snippet to configure services which uses REST API only:
+Please use the following snippet to configure service which uses REST API only:
 
 ```c#
     public class Startup : MicroserviceStartup
@@ -61,7 +61,7 @@ Please use the following snippet to configure services which uses REST API only:
 
 ### Razor Pages Configuration
 
-Please use the following snippet to configure services which uses Razon Pages only:
+Please use the following snippet to configure service which use Razon Pages only:
 
 ```c#
     public class Startup : MicroserviceStartup
@@ -87,7 +87,7 @@ Please use the following snippet to configure services which uses Razon Pages on
 
 ### ASP.NET MVC Configuration
 
-Please use the following snippet to configure services which uses ASP.NET MVC only (and REST API too):
+Please use the following snippet to configure service which use ASP.NET MVC only (REST API will be impicitly registered too):
 
 ```c#
     public class Startup : MicroserviceStartup
@@ -113,7 +113,7 @@ Please use the following snippet to configure services which uses ASP.NET MVC on
 
 ### Mixed usage
 
-REST API, Razor Pages and ASP.NET MVC initializers can be used inside one application. Please avoid situations when the same Url can be handled by different components. If this happens first component specified in initializer list wins.
+REST API, Razor Pages and ASP.NET MVC initializers can be used inside one application. Please avoid situations when the same url can be handled by different components. If this happens first component specified in initializer list wins.
 
 The following snippet is example of microservice using Razor Pages and REST APIs:
 
