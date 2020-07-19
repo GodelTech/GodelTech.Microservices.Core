@@ -1,14 +1,16 @@
 ﻿using System;
-using GodelTech.Microservices.Core.Mvc.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace GodelTech.Microservices.Core.Mvc
 {
-    public class CommonMiddlewareInitializer : MicroserviceInitializerBase
+    public class DeveloperExceptionPageInitializer : MicroserviceInitializerBase
     {
-        public CommonMiddlewareInitializer(IConfiguration configuration) 
+        public string ErrorHandlingPath { get; set; } = "/Error";
+
+        public DeveloperExceptionPageInitializer(IConfiguration configuration) 
             : base(configuration)
         {
         }
@@ -20,9 +22,14 @@ namespace GodelTech.Microservices.Core.Mvc
             if (env == null) 
                 throw new ArgumentNullException(nameof(env));
 
-            app.UseMiddleware<CorrelationIdMiddleware>();
-            app.UseMiddleware<LogUncaughtErrorsMiddleware>();
-            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler(ErrorHandlingPath);
+            }
         }
     }
 }

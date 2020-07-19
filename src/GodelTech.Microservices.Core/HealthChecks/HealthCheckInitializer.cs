@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,8 @@ namespace GodelTech.Microservices.Core.HealthChecks
 {
     public class HealthCheckInitializer : MicroserviceInitializerBase
     {
+        public string HealthCheckPath { get; set; } = "/health";
+
         public HealthCheckInitializer(IConfiguration configuration)
             : base(configuration)
         {
@@ -20,9 +23,14 @@ namespace GodelTech.Microservices.Core.HealthChecks
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (app == null) 
+                throw new ArgumentNullException(nameof(app));
+            if (env == null) 
+                throw new ArgumentNullException(nameof(env));
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                endpoints.MapHealthChecks(HealthCheckPath, new HealthCheckOptions
                 {
                     AllowCachingResponses = false,
                     Predicate = _ => true,
@@ -33,11 +41,19 @@ namespace GodelTech.Microservices.Core.HealthChecks
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            if (services == null) 
+                throw new ArgumentNullException(nameof(services));
+
             services.AddHealthChecks();
         }
 
-        private static Task WriteResponse(HttpContext httpContext, HealthReport result)
+        protected virtual Task WriteResponse(HttpContext httpContext, HealthReport result)
         {
+            if (httpContext == null) 
+                throw new ArgumentNullException(nameof(httpContext));
+            if (result == null) 
+                throw new ArgumentNullException(nameof(result));
+
             httpContext.Response.ContentType = "application/json";
 
             var healthResult = new
