@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace GodelTech.Microservices.Website
 {
     public class Program
     {
+        public static bool UseIntegrationTestsStartup = false;
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -20,7 +16,10 @@ namespace GodelTech.Microservices.Website
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    if (UseIntegrationTestsStartup)
+                        webBuilder.UseStartup<IntegrationTestsStartup>();
+                    else
+                        webBuilder.UseStartup<Startup>();
                 });
     }
 }
