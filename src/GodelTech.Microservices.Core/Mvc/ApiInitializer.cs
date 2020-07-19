@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using GodelTech.Microservices.Core.Exceptions;
 using GodelTech.Microservices.Core.Mvc.Filters;
@@ -22,6 +23,11 @@ namespace GodelTech.Microservices.Core.Mvc
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (app == null) 
+                throw new ArgumentNullException(nameof(app));
+            if (env == null) 
+                throw new ArgumentNullException(nameof(env));
+
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
@@ -33,23 +39,29 @@ namespace GodelTech.Microservices.Core.Mvc
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
             services.AddControllers(ConfigureMvcOptions)
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-                    options.JsonSerializerOptions.IgnoreNullValues = true;
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                })
+                .AddJsonOptions(ConfigureJsonOptions)
                 .SetCompatibilityVersion(CompatibilityVersion);
         }
 
-        protected virtual void ConfigureMvcOptions(MvcOptions x)
+        protected virtual void ConfigureJsonOptions(JsonOptions options)
         {
-            x.SuppressAsyncSuffixInActionNames = false;
-            x.Filters.Add(new BadRequestOnExceptionAttribute(typeof(RequestValidationException)));
-            x.Filters.Add(new NotFoundOnExceptionAttribute(typeof(ResourceNotFoundException)));
-            x.Filters.Add(new HttpStatusCodeOnExceptionAttribute(413, typeof(FileTooLargeExceptionException)));
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.IgnoreNullValues = true;
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        }
+
+        protected virtual void ConfigureMvcOptions(MvcOptions options)
+        {
+            options.SuppressAsyncSuffixInActionNames = false;
+
+            options.Filters.Add(new BadRequestOnExceptionAttribute(typeof(RequestValidationException)));
+            options.Filters.Add(new NotFoundOnExceptionAttribute(typeof(ResourceNotFoundException)));
+            options.Filters.Add(new HttpStatusCodeOnExceptionAttribute(413, typeof(FileTooLargeExceptionException)));
         }
     }
 }

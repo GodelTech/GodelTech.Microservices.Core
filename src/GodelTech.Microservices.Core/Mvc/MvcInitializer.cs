@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -18,11 +19,19 @@ namespace GodelTech.Microservices.Core.Mvc
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (app == null) 
+                throw new ArgumentNullException(nameof(app));
+            if (env == null) 
+                throw new ArgumentNullException(nameof(env));
+
             app.UseEndpoints(ConfigureEndpoints);
         }
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            if (services == null) 
+                throw new ArgumentNullException(nameof(services));
+
             var builder = services.AddControllersWithViews(ConfigureMvcOptions);
 
             if (EnableAddRazorRuntimeCompilation)
