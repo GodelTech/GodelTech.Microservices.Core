@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace GodelTech.Microservices.IntegrationTests.Utils
 {
-    #region snippet1
     public class IntegrationTestWebApplicationFactory<TStartup>
         : WebApplicationFactory<TStartup> where TStartup : class
     {
@@ -19,5 +18,4 @@ namespace GodelTech.Microservices.IntegrationTests.Utils
             return builder;
         }
     }
-    #endregion
 }
