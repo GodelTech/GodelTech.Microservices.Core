@@ -73,7 +73,11 @@ Please use the following snippet to configure service which use Razon Pages only
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
         {
-            yield return new DeveloperExceptionPageInitializer(Configuration);
+            yield return new DeveloperExceptionPageInitializer(Configuration)
+            {
+                ErrorHandlingPath = "/Error"
+            };
+
             yield return new HttpsInitializer(Configuration);
 
             yield return new GenericInitializer((app, env) => app.UseStaticFiles());
@@ -99,7 +103,11 @@ Please use the following snippet to configure service which use ASP.NET MVC only
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
         {
-            yield return new DeveloperExceptionPageInitializer(Configuration);
+            yield return new DeveloperExceptionPageInitializer(Configuration)
+            {
+                ErrorHandlingPath = "/Error"
+            };
+
             yield return new HttpsInitializer(Configuration);
 
             yield return new GenericInitializer((app, env) => app.UseStaticFiles());
@@ -127,7 +135,11 @@ The following snippet is example of microservice using Razor Pages and REST APIs
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
         {
-            yield return new DeveloperExceptionPageInitializer(Configuration);
+            yield return new DeveloperExceptionPageInitializer(Configuration)
+            {
+                ErrorHandlingPath = "/Error"
+            };
+                        
             yield return new HttpsInitializer(Configuration);
 
             yield return new GenericInitializer((app, env) => app.UseStaticFiles());

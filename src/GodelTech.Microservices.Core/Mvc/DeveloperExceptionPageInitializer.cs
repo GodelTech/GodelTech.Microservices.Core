@@ -8,7 +8,11 @@ namespace GodelTech.Microservices.Core.Mvc
 {
     public class DeveloperExceptionPageInitializer : MicroserviceInitializerBase
     {
-        public string ErrorHandlingPath { get; set; } = "/Error";
+        /// <summary>
+        /// This option makes sense for UI application. REST API application should return
+        /// HTTP status error code rather than render HTML page containing error information.
+        /// </summary>
+        public string ErrorHandlingPath { get; set; }
 
         public DeveloperExceptionPageInitializer(IConfiguration configuration) 
             : base(configuration)
@@ -28,7 +32,8 @@ namespace GodelTech.Microservices.Core.Mvc
             }
             else
             {
-                app.UseExceptionHandler(ErrorHandlingPath);
+                if (!string.IsNullOrWhiteSpace(ErrorHandlingPath))
+                    app.UseExceptionHandler(ErrorHandlingPath);
             }
         }
     }
