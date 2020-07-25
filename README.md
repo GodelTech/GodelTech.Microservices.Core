@@ -50,7 +50,6 @@ Please use the following snippet to configure service which uses REST API only:
             yield return new DeveloperExceptionPageInitializer(Configuration);
             yield return new HttpsInitializer(Configuration);
 
-            yield return new GenericInitializer((app, env) => app.UseStaticFiles());
             yield return new GenericInitializer((app, env) => app.UseRouting());
             yield return new GenericInitializer((app, env) => app.UseAuthentication());
 
