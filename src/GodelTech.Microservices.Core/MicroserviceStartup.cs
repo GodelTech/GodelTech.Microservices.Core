@@ -38,7 +38,6 @@ namespace GodelTech.Microservices.Core
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IBearerTokenStorage, BearerTokenStorage>();
 
             foreach (var initializer in Initializers)
             {
