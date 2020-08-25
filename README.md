@@ -166,6 +166,13 @@ Framework comes with a number of initializers. Full list of initializers and the
 |`HealthCheckInitializer`| Health check infrastructure is configured by this initializer.|
 |`CommonMiddlewareInitializer`| This class configures number of frequently used middlewares such as `CorrelationIdMiddleware`, `LogUncaughtErrorsMiddleware` and `RequestResponseLoggingMiddleware`. |
 
+**IMPORTANT**: In order to benefit from [GodelTech.Microservices.Http](https://github.com/GodelTech/GodelTech.Microservices.Http) project. `AccessTokenMiddleware` middleware needs to be configured as follows:
+
+```c#
+    yield return new GenericInitializer((app, env) => app.UseMiddleware<AccessTokenMiddleware>());
+```
+The purpose of this middle ware is to take access token from HttpContext and put it into `BearerTokenStorage`. This store is used by service clients to configure value of `Authorization` header.
+
 ## Advanced usage
 
 ### Third-party DI container and logging mechanism
