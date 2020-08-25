@@ -2,7 +2,7 @@
 
 namespace GodelTech.Microservices.Core.Services
 {
-    internal sealed class DisposableAction : IDisposable
+    public sealed class DisposableAction : IDisposable
     {
         private readonly Action _action;
 
