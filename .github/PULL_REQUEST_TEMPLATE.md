@@ -1,8 +1,8 @@
 #### CHANGE TYPE
 <!--- MANDATORY: Delete the items that don't apply -->
- - [ ] Patch
- - [x] Minor
  - [ ] Major
+ - [x] Minor
+ - [ ] Patch
 
 #### GITHUB ISSUE LINK
 <!--- MANDATORY: Add the GitHub issue url here -->
