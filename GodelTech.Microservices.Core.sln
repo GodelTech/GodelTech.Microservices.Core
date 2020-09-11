@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.Core.Tests", "test\GodelTech.Microservices.Core.Tests\GodelTech.Microservices.Core.Tests.csproj", "{00000000-0000-0000-0000-000000000002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodelTech.Microservices.IntegrationTests", "test\GodelTech.Microservices.IntegrationTests\GodelTech.Microservices.IntegrationTests.csproj", "{5BA960FD-8A69-4303-B29C-7AABDCC14A00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.IntegrationTests", "test\GodelTech.Microservices.IntegrationTests\GodelTech.Microservices.IntegrationTests.csproj", "{5BA960FD-8A69-4303-B29C-7AABDCC14A00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodelTech.Microservices.Website", "test\GodelTech.Microservices.Website\GodelTech.Microservices.Website.csproj", "{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.Website", "test\GodelTech.Microservices.Website\GodelTech.Microservices.Website.csproj", "{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.AwsLambda", "test\GodelTech.Microservices.AwsLambda\GodelTech.Microservices.AwsLambda.csproj", "{7A726EAB-601A-4712-B0C1-87EF2924957D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.AwsLambda.Tests", "test\GodelTech.Microservices.AwsLambda.Tests\GodelTech.Microservices.AwsLambda.Tests.csproj", "{C3E60BCF-B350-4ED3-A404-C915F9461C76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A726EAB-601A-4712-B0C1-87EF2924957D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A726EAB-601A-4712-B0C1-87EF2924957D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A726EAB-601A-4712-B0C1-87EF2924957D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A726EAB-601A-4712-B0C1-87EF2924957D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3E60BCF-B350-4ED3-A404-C915F9461C76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3E60BCF-B350-4ED3-A404-C915F9461C76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3E60BCF-B350-4ED3-A404-C915F9461C76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3E60BCF-B350-4ED3-A404-C915F9461C76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
