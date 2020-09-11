@@ -1,5 +1,5 @@
 ---
-name:  Bug report
+name:  🐞 Bug report
 about: Create a report about something that is not working
 ---
 
@@ -17,11 +17,6 @@ about: Create a report about something that is not working
   - [ ] Minor
   - [ ] Major
   - [ ] Critical
-
-#### PRIORITY
-  - [x] Low
-  - [ ] Medium
-  - [ ] High
 
 #### ENVIRONMENT
 <!--- OPTIONAL -->
