@@ -1,25 +1,15 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-
 using Xunit;
-using Amazon.Lambda.Core;
 using Amazon.Lambda.TestUtilities;
 using Amazon.Lambda.APIGatewayEvents;
-
 using Newtonsoft.Json;
 
-using GodelTech.Microservices.AwsLambda;
 
-
-namespace GodelTech.Microservices.AwsLambda.Tests
+namespace GodelTech.Microservices.AwsLambda.Integration.Tests
 {
     public class ValuesControllerTests
     {
-
-
         [Fact]
         public async Task TestGet()
         {
@@ -35,7 +25,5 @@ namespace GodelTech.Microservices.AwsLambda.Tests
             Assert.True(response.MultiValueHeaders.ContainsKey("Content-Type"));
             Assert.Equal("application/json; charset=utf-8", response.MultiValueHeaders["Content-Type"][0]);
         }
-
-
     }
 }
