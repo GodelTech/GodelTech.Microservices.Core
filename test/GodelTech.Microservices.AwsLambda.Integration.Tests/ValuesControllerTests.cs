@@ -5,7 +5,6 @@ using Amazon.Lambda.TestUtilities;
 using Amazon.Lambda.APIGatewayEvents;
 using Newtonsoft.Json;
 
-
 namespace GodelTech.Microservices.AwsLambda.Integration.Tests
 {
     public class ValuesControllerTests
