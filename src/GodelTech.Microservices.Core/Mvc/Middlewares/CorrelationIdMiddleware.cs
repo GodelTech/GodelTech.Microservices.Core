@@ -37,6 +37,7 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
         {
             if (context.Request.Headers.ContainsKey(CorrelationIdHeaderName))
                 return context.Request.Headers[CorrelationIdHeaderName];
+
             return Guid.NewGuid().ToString();
         }
     }

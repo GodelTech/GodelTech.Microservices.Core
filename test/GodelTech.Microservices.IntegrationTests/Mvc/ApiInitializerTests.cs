@@ -18,7 +18,7 @@ namespace GodelTech.Microservices.IntegrationTests.Mvc
         {
             static IEnumerable<IMicroserviceInitializer> CreateInitializers(IConfiguration configuration)
             {
-                yield return new GenericInitializer((app, env) => app.UseRouting());
+                yield return new GenericInitializer(null, (app, env) => app.UseRouting());
 
                 yield return new ApiInitializer(configuration);
             }
@@ -36,7 +36,7 @@ namespace GodelTech.Microservices.IntegrationTests.Mvc
         {
             static IEnumerable<IMicroserviceInitializer> CreateInitializers(IConfiguration configuration)
             {
-                yield return new GenericInitializer((app, env) => app.UseRouting());
+                yield return new GenericInitializer(null, (app, env) => app.UseRouting());
             }
 
             var client = CreateClient(CreateInitializers);

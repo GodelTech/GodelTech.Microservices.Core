@@ -8,19 +8,21 @@ namespace GodelTech.Microservices.Core
 {
     public class MicroserviceInitializerBase : IMicroserviceInitializer
     {
-        protected IConfiguration Configuration { get; }
-
         public MicroserviceInitializerBase(IConfiguration configuration)
         {
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-        }
+        protected IConfiguration Configuration { get; }
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+
+        }
+
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+
         }
     }
 }

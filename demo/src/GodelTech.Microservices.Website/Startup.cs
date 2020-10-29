@@ -20,9 +20,9 @@ namespace GodelTech.Microservices.Website
             // Uncomment this line if HTTPs usage is required
             // yield return new HttpsInitializer(Configuration);
 
-            yield return new GenericInitializer((app, env) => app.UseStaticFiles());
-            yield return new GenericInitializer((app, env) => app.UseRouting());
-            yield return new GenericInitializer((app, env) => app.UseAuthentication());
+            yield return new GenericInitializer(null, (app, env) => app.UseStaticFiles());
+            yield return new GenericInitializer(null, (app, env) => app.UseRouting());
+            yield return new GenericInitializer(null, (app, env) => app.UseAuthentication());
 
             yield return new ApiInitializer(Configuration);
 

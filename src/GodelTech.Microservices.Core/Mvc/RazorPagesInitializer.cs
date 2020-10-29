@@ -14,6 +14,18 @@ namespace GodelTech.Microservices.Core.Mvc
         public RazorPagesInitializer(IConfiguration configuration) 
             : base(configuration)
         {
+
+        }
+
+        public override void ConfigureServices(IServiceCollection services)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            var builder = services.AddRazorPages(ConfigureRazorPagesOptions);
+
+            if (EnableAddRazorRuntimeCompilation)
+                builder.AddRazorRuntimeCompilation();
         }
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -23,28 +35,24 @@ namespace GodelTech.Microservices.Core.Mvc
             if (env == null) 
                 throw new ArgumentNullException(nameof(env));
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-            });
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapRazorPages();
+                }
+            );
         }
 
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            if (services == null) 
-                throw new ArgumentNullException(nameof(services));
-
-            var builder = services.AddRazorPages(ConfigureRazorPagesOptions);
-
-            if (EnableAddRazorRuntimeCompilation)
-                builder.AddRazorRuntimeCompilation();
-        }
-
+        /// <summary>
+        /// Configure Razor pages options.
+        /// You can put security configuration logic here in your subclass
+        /// options.Conventions.AuthorizePage("/Index");
+        /// options.Conventions.AuthorizeFolder("/Admin");
+        /// </summary>
+        /// <param name="options">Razor pages options</param>
         protected virtual void ConfigureRazorPagesOptions(RazorPagesOptions options)
         {
-            // You can put security configuration logic here in your subclass
-            // options.Conventions.AuthorizePage("/Index");
-            // options.Conventions.AuthorizeFolder("/Admin");
+
         }
     }
 }

@@ -14,11 +14,20 @@ namespace GodelTech.Microservices.Core.HealthChecks
 {
     public class HealthCheckInitializer : MicroserviceInitializerBase
     {
-        public string HealthCheckPath { get; set; } = "/health";
-
         public HealthCheckInitializer(IConfiguration configuration)
             : base(configuration)
         {
+
+        }
+
+        public string HealthCheckPath { get; set; } = "/health";
+
+        public override void ConfigureServices(IServiceCollection services)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            services.AddHealthChecks();
         }
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -28,23 +37,20 @@ namespace GodelTech.Microservices.Core.HealthChecks
             if (env == null) 
                 throw new ArgumentNullException(nameof(env));
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHealthChecks(HealthCheckPath, new HealthCheckOptions
+            app.UseEndpoints(
+                endpoints =>
                 {
-                    AllowCachingResponses = false,
-                    Predicate = _ => true,
-                    ResponseWriter = WriteResponse
-                });
-            });
-        }
-
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            if (services == null) 
-                throw new ArgumentNullException(nameof(services));
-
-            services.AddHealthChecks();
+                    endpoints.MapHealthChecks(
+                        HealthCheckPath,
+                        new HealthCheckOptions
+                        {
+                            AllowCachingResponses = false,
+                            Predicate = _ => true,
+                            ResponseWriter = WriteResponse
+                        }
+                    );
+                }
+            );
         }
 
         protected virtual Task WriteResponse(HttpContext httpContext, HealthReport result)
@@ -69,10 +75,13 @@ namespace GodelTech.Microservices.Core.HealthChecks
                 ).ToArray()
             };
 
-            var json = JsonSerializer.Serialize(healthResult, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(
+                healthResult,
+                new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                }
+            );
 
             return httpContext.Response.WriteAsync(json);
         }

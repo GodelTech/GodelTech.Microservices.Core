@@ -7,6 +7,7 @@ namespace GodelTech.Microservices.Core.Exceptions
         public ResourceNotFoundException(string message)
             : base(message)
         {
+
         }
     }
 }

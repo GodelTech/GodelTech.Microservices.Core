@@ -17,6 +17,7 @@ namespace GodelTech.Microservices.Core.Mvc
         public DeveloperExceptionPageInitializer(IConfiguration configuration) 
             : base(configuration)
         {
+
         }
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -11,6 +11,7 @@ namespace GodelTech.Microservices.Core.Mvc
         public CommonMiddlewareInitializer(IConfiguration configuration) 
             : base(configuration)
         {
+
         }
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)

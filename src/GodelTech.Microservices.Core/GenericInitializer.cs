@@ -7,22 +7,20 @@ namespace GodelTech.Microservices.Core
 {
     public class GenericInitializer : IMicroserviceInitializer
     {
-        private readonly Action<IApplicationBuilder, IWebHostEnvironment> _configureAction;
         private readonly Action<IServiceCollection> _configureServices;
+        private readonly Action<IApplicationBuilder, IWebHostEnvironment> _configureAction;
 
         public GenericInitializer(
-            Action<IApplicationBuilder, IWebHostEnvironment> configureAction = null,
-            Action<IServiceCollection> configureServices = null)
+            Action<IServiceCollection> configureServices = null,
+            Action<IApplicationBuilder, IWebHostEnvironment> configureAction = null)
         {
-            _configureAction = configureAction;
             _configureServices = configureServices;
+            _configureAction = configureAction;
         }
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             _configureAction?.Invoke(app, env);
-
         }
 
         public void ConfigureServices(IServiceCollection services)

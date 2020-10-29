@@ -41,11 +41,11 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
             if (!_logger.IsEnabled(LogLevel.Information))
             {
                 await _next.Invoke(context);
+
                 return;
             }
 
             // Process request and log response
-
             var requestUriOriginalString = string.Empty;
             var requestRemoteIpAddress = string.Empty;
             var requestHttpMethod = string.Empty;
@@ -57,7 +57,6 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
 
             try
             {
-
                 // Read the request properties before processing. 
                 // This will prevent getting
                 // {"Cannot access a disposed object.\r\nObject name: 'System.Net.HttpListenerRequest'."}
@@ -98,7 +97,7 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
                         requestAuthHeaderStr, 
                         ToDictionary(context.Response.Headers), 
                         GetAuthClaims(requestAuthHeader)
-                        );
+                    );
                 }
                 catch (Exception e)
                 {

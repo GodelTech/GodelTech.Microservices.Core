@@ -8,8 +8,8 @@ Initializer contract is defined as follows:
 ```c#
     public interface IMicroserviceInitializer
     {
-        void Configure(IApplicationBuilder app, IWebHostEnvironment env);
         void ConfigureServices(IServiceCollection services);
+        void Configure(IApplicationBuilder app, IWebHostEnvironment env);
     }
 ```
 
@@ -43,6 +43,7 @@ Please use the following snippet to configure service which uses REST API only:
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
+			
         }
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
@@ -50,8 +51,8 @@ Please use the following snippet to configure service which uses REST API only:
             yield return new DeveloperExceptionPageInitializer(Configuration);
             yield return new HttpsInitializer(Configuration);
 
-            yield return new GenericInitializer((app, env) => app.UseRouting());
-            yield return new GenericInitializer((app, env) => app.UseAuthentication());
+            yield return new GenericInitializer(null, (app, env) => app.UseRouting());
+            yield return new GenericInitializer(null, (app, env) => app.UseAuthentication());
 
             yield return new ApiInitializer(Configuration);
         }
@@ -68,6 +69,7 @@ Please use the following snippet to configure service which use Razon Pages only
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
+			
         }
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
@@ -79,9 +81,9 @@ Please use the following snippet to configure service which use Razon Pages only
 
             yield return new HttpsInitializer(Configuration);
 
-            yield return new GenericInitializer((app, env) => app.UseStaticFiles());
-            yield return new GenericInitializer((app, env) => app.UseRouting());
-            yield return new GenericInitializer((app, env) => app.UseAuthentication());
+            yield return new GenericInitializer(null, (app, env) => app.UseStaticFiles());
+            yield return new GenericInitializer(null, (app, env) => app.UseRouting());
+            yield return new GenericInitializer(null, (app, env) => app.UseAuthentication());
 
             yield return new RazorPagesInitializer(Configuration);
         }
@@ -98,6 +100,7 @@ Please use the following snippet to configure service which use ASP.NET MVC only
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
+			
         }
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
@@ -109,9 +112,9 @@ Please use the following snippet to configure service which use ASP.NET MVC only
 
             yield return new HttpsInitializer(Configuration);
 
-            yield return new GenericInitializer((app, env) => app.UseStaticFiles());
-            yield return new GenericInitializer((app, env) => app.UseRouting());
-            yield return new GenericInitializer((app, env) => app.UseAuthentication());
+            yield return new GenericInitializer(null, (app, env) => app.UseStaticFiles());
+            yield return new GenericInitializer(null, (app, env) => app.UseRouting());
+            yield return new GenericInitializer(null, (app, env) => app.UseAuthentication());
 
             yield return new MvcInitializer(Configuration);
         }
@@ -130,6 +133,7 @@ The following snippet is example of microservice using Razor Pages and REST APIs
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
+			
         }
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
@@ -141,9 +145,9 @@ The following snippet is example of microservice using Razor Pages and REST APIs
                         
             yield return new HttpsInitializer(Configuration);
 
-            yield return new GenericInitializer((app, env) => app.UseStaticFiles());
-            yield return new GenericInitializer((app, env) => app.UseRouting());
-            yield return new GenericInitializer((app, env) => app.UseAuthentication());
+            yield return new GenericInitializer(null, (app, env) => app.UseStaticFiles());
+            yield return new GenericInitializer(null, (app, env) => app.UseRouting());
+            yield return new GenericInitializer(null, (app, env) => app.UseAuthentication());
 
             yield return new ApiInitializer(Configuration);
             yield return new RazorPagesInitializer(Configuration);

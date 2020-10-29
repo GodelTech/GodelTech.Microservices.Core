@@ -47,7 +47,9 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
                         LogUncaughtErrors,
                         tex.Message,
                         context.Request.Method,
-                        context.Request.GetDisplayUrl());
+                        context.Request.GetDisplayUrl()
+                    );
+
                     throw;
                 }
             }
@@ -59,7 +61,9 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
                     LogUncaughtErrors,
                     e.Message,
                     context.Request.Method,
-                    context.Request.GetDisplayUrl());
+                    context.Request.GetDisplayUrl()
+                );
+
                 throw;
             }
         }

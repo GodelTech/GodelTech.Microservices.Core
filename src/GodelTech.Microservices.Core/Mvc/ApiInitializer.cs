@@ -19,22 +19,7 @@ namespace GodelTech.Microservices.Core.Mvc
         public ApiInitializer(IConfiguration configuration)
             : base(configuration)
         {
-        }
 
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (app == null) 
-                throw new ArgumentNullException(nameof(app));
-            if (env == null) 
-                throw new ArgumentNullException(nameof(env));
-
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
         }
 
         public override void ConfigureServices(IServiceCollection services)
@@ -47,12 +32,19 @@ namespace GodelTech.Microservices.Core.Mvc
                 .SetCompatibilityVersion(CompatibilityVersion);
         }
 
-        protected virtual void ConfigureJsonOptions(JsonOptions options)
+        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.IgnoreNullValues = true;
-            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            if (app == null) 
+                throw new ArgumentNullException(nameof(app));
+            if (env == null) 
+                throw new ArgumentNullException(nameof(env));
+
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapControllers();
+                }
+            );
         }
 
         protected virtual void ConfigureMvcOptions(MvcOptions options)
@@ -62,6 +54,14 @@ namespace GodelTech.Microservices.Core.Mvc
             options.Filters.Add(new BadRequestOnExceptionAttribute(typeof(RequestValidationException)));
             options.Filters.Add(new NotFoundOnExceptionAttribute(typeof(ResourceNotFoundException)));
             options.Filters.Add(new HttpStatusCodeOnExceptionAttribute(413, typeof(FileTooLargeExceptionException)));
+        }
+
+        protected virtual void ConfigureJsonOptions(JsonOptions options)
+        {
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.IgnoreNullValues = true;
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         }
     }
 }
