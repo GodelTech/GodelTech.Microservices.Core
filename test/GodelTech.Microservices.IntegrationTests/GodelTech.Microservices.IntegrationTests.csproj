@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GodelTech.Microservices.Website\GodelTech.Microservices.Website.csproj" />
+    <ProjectReference Include="..\..\demo\src\GodelTech.Microservices.Website\GodelTech.Microservices.Website.csproj" />
   </ItemGroup>
 
   <ItemGroup>

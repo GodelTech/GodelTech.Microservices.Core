@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\GodelTech.Microservices.Core\GodelTech.Microservices.Core.csproj" />
+    <Folder Include="Models\" />
+    <Folder Include="Views\Home\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Views\Home\" />
+    <ProjectReference Include="..\..\..\src\GodelTech.Microservices.Core\GodelTech.Microservices.Core.csproj" />
   </ItemGroup>
 
 </Project>

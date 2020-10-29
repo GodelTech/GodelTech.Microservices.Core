@@ -7,9 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.Core.Tests", "test\GodelTech.Microservices.Core.Tests\GodelTech.Microservices.Core.Tests.csproj", "{00000000-0000-0000-0000-000000000002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodelTech.Microservices.IntegrationTests", "test\GodelTech.Microservices.IntegrationTests\GodelTech.Microservices.IntegrationTests.csproj", "{5BA960FD-8A69-4303-B29C-7AABDCC14A00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.IntegrationTests", "test\GodelTech.Microservices.IntegrationTests\GodelTech.Microservices.IntegrationTests.csproj", "{5BA960FD-8A69-4303-B29C-7AABDCC14A00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodelTech.Microservices.Website", "test\GodelTech.Microservices.Website\GodelTech.Microservices.Website.csproj", "{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E14CD660-7253-4E9C-AD04-F16538271B99}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F3CB0CEF-DFFC-44B5-9950-A2F34DB3EC39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{4DEB84D7-5BB6-454A-896C-B406C9FF873E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2E37BAE8-0C65-4A74-B6B0-BE1831A4D862}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.Website", "demo\src\GodelTech.Microservices.Website\GodelTech.Microservices.Website.csproj", "{6DE95F0E-6246-4D1A-9776-8229543518D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,13 +37,20 @@ Global
 		{5BA960FD-8A69-4303-B29C-7AABDCC14A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BA960FD-8A69-4303-B29C-7AABDCC14A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BA960FD-8A69-4303-B29C-7AABDCC14A00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DE95F0E-6246-4D1A-9776-8229543518D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DE95F0E-6246-4D1A-9776-8229543518D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DE95F0E-6246-4D1A-9776-8229543518D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DE95F0E-6246-4D1A-9776-8229543518D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00000000-0000-0000-0000-000000000001} = {E14CD660-7253-4E9C-AD04-F16538271B99}
+		{00000000-0000-0000-0000-000000000002} = {F3CB0CEF-DFFC-44B5-9950-A2F34DB3EC39}
+		{5BA960FD-8A69-4303-B29C-7AABDCC14A00} = {F3CB0CEF-DFFC-44B5-9950-A2F34DB3EC39}
+		{2E37BAE8-0C65-4A74-B6B0-BE1831A4D862} = {4DEB84D7-5BB6-454A-896C-B406C9FF873E}
+		{6DE95F0E-6246-4D1A-9776-8229543518D4} = {2E37BAE8-0C65-4A74-B6B0-BE1831A4D862}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D695AB56-54D7-4D9F-80D7-3951FE69FE54}
