@@ -19,8 +19,8 @@ It's easy to see that contracts mimics signature of typical `Startup` class. Mai
 
 1. It accepts `IConfiguration` as constructor parameter and stores it in property named `Configuration`.
 2. Abstract method `CreateInitializers` must be created by child classes. This method is responsible for initializer chain creation.
-3. Virtual methods `Configure()` and `ConfigureServices()` are defined.
-4. `Configure()` and `ConfigureServices()` invoke corresponding methods of initializers to configure ASP.NET Core application.
+3. Virtual methods `ConfigureServices()` and `Configure()` are defined.
+4. `ConfigureServices()` and `Configure()` invoke corresponding methods of initializers to configure ASP.NET Core application.
 5. Few common services are registered by `ConfigureServices()`
 
 Other than this no other logic is included into `MicroserviceStartup` class.
