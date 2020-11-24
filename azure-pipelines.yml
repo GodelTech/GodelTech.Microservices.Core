@@ -1,26 +1,170 @@
+resources:
+  repositories:
+  - repository: GodelTech
+    type: github
+    endpoint: godeltech
+    name: GodelTech/AzureDevOps.Pipeline.Templates
+    ref: refs/heads/master
 trigger:
   batch: true
   branches:
     include:
     - '*'
-
 pr:
   branches:
     include:
     - '*'
+stages:
+- stage: Build
+  displayName: Build
+  variables:
+  - name: versionSuffix
+    value: ''
+  pool:
+    vmImage: ubuntu-latest
+  jobs:
+  - job: Build
+    displayName: Build
+    steps:
+    - task: Bash@3
+      displayName: Set Version Suffix
+      condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+      inputs:
+        targetType: inline
+        script: >
+          echo "##vso[task.setvariable variable=versionSuffix]ci-$BUILD_BUILDNUMBER"
+    - task: SonarCloudPrepare@1
+      displayName: Prepare analysis on SonarCloud
+      inputs:
+        SonarCloud: SonarCloud
+        organization: godeltech
+        scannerMode: MSBuild
+        projectKey: $(Build.DefinitionName)
+        projectName: $(Build.DefinitionName)
+        extraProperties: >
+          sonar.cs.opencover.reportsPaths="$(Agent.TempDirectory)/**/coverage.opencover.xml"
 
-resources:
-  repositories:
-    - repository: GodelTech
-      type: github
-      endpoint: 'godeltech'
-      name: 'GodelTech/AzureDevOps.Pipeline.Templates'
-      ref: 'refs/heads/master'
+          sonar.coverage.exclusions="tools/build/*"
+    - task: UseDotNet@2
+      displayName: Use .NET Core SDK
+      inputs:
+        packageType: sdk
+        version: 3.x
+    - task: DotNetCoreCLI@2
+      displayName: dotnet restore from both NuGet and Azure Artifacts feeds
+      condition: and(ne(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+        feedsToUse: select
+        vstsFeed: 19324bbd-9baf-4407-b86d-3e7f0d145399/1574777e-9941-4b90-baa9-d9938266ac24
+    - task: DotNetCoreCLI@2
+      displayName: dotnet restore only from NuGet feed
+      condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+        feedsToUse: select
+    - task: DotNetCoreCLI@2
+      displayName: dotnet build
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+        arguments: --configuration Release /p:VersionSuffix=$(versionSuffix)
+    - task: DotNetCoreCLI@2
+      displayName: dotnet test
+      inputs:
+        command: test
+        projects: '**/*[Tt]ests/*.csproj'
+        arguments: --configuration Release --settings $(System.DefaultWorkingDirectory)/CodeCoverage.runsettings --collect:"XPlat Code Coverage" -- RunConfiguration.DisableAppDomain=true
+    - task: DotNetCoreCLI@2
+      displayName: Install ReportGenerator tool
+      inputs:
+        command: custom
+        custom: tool
+        arguments: install --tool-path . dotnet-reportgenerator-globaltool
+    - task: CmdLine@2
+      displayName: Create reports
+      inputs:
+        script: ./reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
+    - task: PublishCodeCoverageResults@1
+      displayName: Publish code coverage
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
+    - task: UseDotNet@2
+      displayName: Use .NET Core SDK 2.2.x for SonarCloud
+      inputs:
+        packageType: sdk
+        version: 2.2.x
+    - task: SonarCloudAnalyze@1
+      displayName: Run Code Analysis
+    - task: SonarCloudPublish@1
+      displayName: Publish Quality Gate Result
+      inputs:
+        pollingTimeoutSec: 300
+    - task: sonarcloud-buildbreaker@2
+      displayName: Break build on quality gate failure
+      condition: eq(True, true)
+      inputs:
+        SonarCloud: SonarCloud
+        organization: godeltech
+    - task: DotNetCoreCLI@2
+      displayName: Pack .NET Core NuGet packages
+      inputs:
+        command: pack
+        packagesToPack: '**/*.csproj'
+        buildProperties: VersionSuffix=$(versionSuffix)
+        packDirectory: $(Build.ArtifactStagingDirectory)/packages
+        versioningScheme: off
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Pipeline Artifact: NuGet Packages'
+      inputs:
+        path: $(Build.ArtifactStagingDirectory)/packages
+        artifact: NuGet Packages
+- stage: Artifacts
+  displayName: Artifacts
+  dependsOn:
+  - Build
+  pool:
+    vmImage: ubuntu-latest
+  jobs:
+  - deployment: Publish
+    displayName: Publish packages in Artifacts
+    environment:
+      name: Artifacts
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: NuGetCommand@2
+            displayName: Push package in Artifacts
+            inputs:
+              command: push
+              packagesToPush: $(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg
+              nuGetFeedType: internal
+              publishVstsFeed: 19324bbd-9baf-4407-b86d-3e7f0d145399/1574777e-9941-4b90-baa9-d9938266ac24
+- stage: NuGet
+  displayName: NuGet
+  dependsOn:
+  - Artifacts
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  pool:
+    vmImage: ubuntu-latest
+  jobs:
+  - deployment: Publish
+    displayName: Publish packages
+    environment:
+      name: NuGet
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: NuGetCommand@2
+            displayName: NuGet push
+            inputs:
+              command: push
+              packagesToPush: $(Pipeline.Workspace)/**/*.nupkg;!$(Pipeline.Workspace)/**/*.symbols.nupkg
+              nuGetFeedType: external
+              publishFeedCredentials: NuGet
 
-extends:
-  template: '.NET Core/NuGet.yml@GodelTech'
-  parameters:
-    artifactPackDirectory: 'packages'
-    buildConfiguration: 'Release'
-    internalFeed: '19324bbd-9baf-4407-b86d-3e7f0d145399/1574777e-9941-4b90-baa9-d9938266ac24'
-    sonarCloudOrganizationName: 'godeltech'
