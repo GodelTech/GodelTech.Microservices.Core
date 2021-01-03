@@ -63,7 +63,7 @@ namespace GodelTech.Microservices.Core.Mvc.Middlewares
                 // {"Cannot access a disposed object.\r\nObject name: 'System.Net.HttpListenerRequest'."}
                 // See https://tickets.intelliflo.com/browse/IP-29122
                 requestUriOriginalString = GetUri(context.Request)?.OriginalString;
-                requestRemoteIpAddress = context.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                requestRemoteIpAddress = context.Request.HttpContext.Connection.RemoteIpAddress?.ToString();
                 requestHttpMethod = context.Request.Method;
                 requestAuthHeader = GetAndParseRequestAuthHeader(context);
                 requestAuthHeaderStr = AuthHeaderToString(requestAuthHeader);
