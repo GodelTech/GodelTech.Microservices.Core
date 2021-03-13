@@ -39,10 +39,15 @@ stages:
 
           sonar.coverage.exclusions="tools/build/*"
     - task: UseDotNet@2
-      displayName: Use .NET Core SDK
+      displayName: Use .NET Core SDK 3.x
       inputs:
         packageType: sdk
         version: 3.x
+    - task: UseDotNet@2
+      displayName: Use .NET Core SDK 5.x
+      inputs:
+        packageType: sdk
+        version: 5.0.x
     - task: DotNetCoreCLI@2
       displayName: dotnet restore from both NuGet and Azure Artifacts feeds
       condition: and(ne(variables['Build.SourceBranch'], 'refs/heads/master'), ne(variables['Build.Reason'], 'PullRequest'))
