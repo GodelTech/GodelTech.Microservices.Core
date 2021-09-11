@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace GodelTech.Microservices.Core.Tests.Fakes.HealthChecks
 {
-    public class FakeHealthChecksInitializer : HealthChecksInitializer
+    public class FakeHealthCheckInitializer : HealthCheckInitializer
     {
         public void ExposedConfigureHealthCheckOptions(HealthCheckOptions options, IApplicationBuilder app)
         {

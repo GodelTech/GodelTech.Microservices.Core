@@ -11,17 +11,17 @@ using Xunit;
 
 namespace GodelTech.Microservices.Core.Tests.HealthChecks
 {
-    public class HealthChecksInitializerTests
+    public class HealthCheckInitializerTests
     {
         private readonly Mock<IApplicationBuilder> _mockApplicationBuilder;
 
-        private readonly FakeHealthChecksInitializer _initializer;
+        private readonly FakeHealthCheckInitializer _initializer;
 
-        public HealthChecksInitializerTests()
+        public HealthCheckInitializerTests()
         {
             _mockApplicationBuilder = new Mock<IApplicationBuilder>(MockBehavior.Strict);
 
-            _initializer = new FakeHealthChecksInitializer();
+            _initializer = new FakeHealthCheckInitializer();
         }
 
         [Fact]

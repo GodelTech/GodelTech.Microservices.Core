@@ -7,19 +7,19 @@ using Microsoft.Extensions.DependencyInjection;
 namespace GodelTech.Microservices.Core.HealthChecks
 {
     /// <summary>
-    /// HealthChecks initializer.
+    /// HealthCheck initializer.
     /// </summary>
-    public class HealthChecksInitializer : IMicroserviceInitializer
+    public class HealthCheckInitializer : IMicroserviceInitializer
     {
         private readonly string _path;
         private readonly Action<HealthCheckOptions, IApplicationBuilder> _configure;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HealthChecksInitializer"/> class.
+        /// Initializes a new instance of the <see cref="HealthCheckInitializer"/> class.
         /// </summary>
         /// <param name="path">Path.</param>
         /// <param name="configure">An <see cref="Action{HealthCheckOptions}"/> to configure the provided <see cref="HealthCheckOptions"/>.</param>
-        public HealthChecksInitializer(
+        public HealthCheckInitializer(
             string path = "/health",
             Action<HealthCheckOptions, IApplicationBuilder> configure = null)
         {

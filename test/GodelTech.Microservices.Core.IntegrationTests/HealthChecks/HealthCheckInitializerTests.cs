@@ -19,11 +19,11 @@ using Xunit;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
 {
-    public sealed class HealthChecksInitializerTests : IDisposable
+    public sealed class HealthCheckInitializerTests : IDisposable
     {
         private readonly AppTestFixture _fixture;
 
-        public HealthChecksInitializerTests()
+        public HealthCheckInitializerTests()
         {
             _fixture = new AppTestFixture();
         }
@@ -33,7 +33,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(HealthChecksInitializer initializer)
+        private HttpClient CreateClient(HealthCheckInitializer initializer)
         {
             return _fixture
                 .WithWebHostBuilder(
@@ -64,12 +64,12 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
             {
                 new object[]
                 {
-                    new HealthChecksInitializer(),
+                    new HealthCheckInitializer(),
                     new Uri("/health", UriKind.Relative)
                 },
                 new object[]
                 {
-                    new HealthChecksInitializer("/testPath"),
+                    new HealthCheckInitializer("/testPath"),
                     new Uri("/testPath", UriKind.Relative)
                 }
             };
@@ -77,7 +77,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
         [Theory]
         [MemberData(nameof(SuccessMemberData))]
         public async Task Configure_Success(
-            HealthChecksInitializer initializer,
+            HealthCheckInitializer initializer,
             Uri uri)
         {
             // Arrange
@@ -128,7 +128,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
                     mvcOptionsActionInvoked = true;
                 };
 
-            var initializer = new HealthChecksInitializer(configure: configureHealthCheck);
+            var initializer = new HealthCheckInitializer(configure: configureHealthCheck);
 
             // Act
             CreateClient(initializer);
