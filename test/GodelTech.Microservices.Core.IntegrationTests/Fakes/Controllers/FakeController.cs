@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
+using GodelTech.Microservices.Core.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,8 +28,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         }
 
         [HttpGet("fileTooLargeException")]
-        // todo: suggest to mention ErrorModel if we agree to return it via Filter
-        [ProducesResponseType(StatusCodes.Status413RequestEntityTooLarge)]
+        [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status413RequestEntityTooLarge)]
         public IActionResult GetFileTooLargeException()
         {
             _service.ThrowFileTooLargeException();
@@ -37,8 +37,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         }
 
         [HttpGet("requestValidationException")]
-        // todo: suggest to mention ErrorModel if we agree to return it via Filter
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status400BadRequest)]
         public IActionResult GetRequestValidationException()
         {
             _service.ThrowRequestValidationException();
@@ -47,8 +46,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         }
 
         [HttpGet("resourceNotFoundException")]
-        // todo: suggest to mention ErrorModel if we agree to return it via Filter
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status404NotFound)]
         public IActionResult GetResourceNotFoundException()
         {
             _service.ThrowResourceNotFoundException();

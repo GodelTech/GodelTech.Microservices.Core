@@ -1,10 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts;
 using GodelTech.Microservices.Core.Mvc;
+using GodelTech.Microservices.Core.Mvc.Filters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,7 +99,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 "\"id\":2," +
                 "\"intValue\":97," +
                 "\"nullableIntValue\":3," +
-                "\"status\":\"First\"" +
+                "\"status\":\"Other\"" +
                 "}" +
                 "]",
                 await result.Content.ReadAsStringAsync()
@@ -163,9 +166,21 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             // Assert
             Assert.Equal(HttpStatusCode.RequestEntityTooLarge, result.StatusCode);
+
             Assert.Equal(
                 "{\"errorMessage\":\"Exception of type 'GodelTech.Microservices.Core.FileTooLargeException' was thrown.\"}",
                 await result.Content.ReadAsStringAsync()
+            );
+
+            var stream = await result.Content.ReadAsStreamAsync();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var model = await result.Content.ReadFromJsonAsync<ExceptionFilterResultModel>();
+
+            Assert.NotNull(model);
+            Assert.Equal(
+                "Exception of type 'GodelTech.Microservices.Core.FileTooLargeException' was thrown.",
+                model.ErrorMessage
             );
         }
 
@@ -187,9 +202,21 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+
             Assert.Equal(
                 "{\"errorMessage\":\"Exception of type 'GodelTech.Microservices.Core.RequestValidationException' was thrown.\"}",
                 await result.Content.ReadAsStringAsync()
+            );
+
+            var stream = await result.Content.ReadAsStreamAsync();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var model = await result.Content.ReadFromJsonAsync<ExceptionFilterResultModel>();
+
+            Assert.NotNull(model);
+            Assert.Equal(
+                "Exception of type 'GodelTech.Microservices.Core.RequestValidationException' was thrown.",
+                model.ErrorMessage
             );
         }
 
@@ -211,9 +238,21 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+
             Assert.Equal(
                 "{\"errorMessage\":\"Exception of type 'GodelTech.Microservices.Core.ResourceNotFoundException' was thrown.\"}",
                 await result.Content.ReadAsStringAsync()
+            );
+
+            var stream = await result.Content.ReadAsStreamAsync();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var model = await result.Content.ReadFromJsonAsync<ExceptionFilterResultModel>();
+
+            Assert.NotNull(model);
+            Assert.Equal(
+                "Exception of type 'GodelTech.Microservices.Core.ResourceNotFoundException' was thrown.",
+                model.ErrorMessage
             );
         }
     }

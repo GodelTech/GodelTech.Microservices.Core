@@ -30,7 +30,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes
                 Id = 2,
                 IntValue = 97,
                 NullableIntValue = 3,
-                Status = FakeStatus.First
+                Status = FakeStatus.Other
             }
         };
         

@@ -3,8 +3,6 @@
     public enum FakeStatus
     {
         Default,
-        First,
-        Second,
-        Third
+        Other
     }
 }

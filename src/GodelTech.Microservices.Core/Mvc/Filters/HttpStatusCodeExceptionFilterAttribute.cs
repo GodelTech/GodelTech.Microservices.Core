@@ -74,7 +74,7 @@ namespace GodelTech.Microservices.Core.Mvc.Filters
 
             context.HttpContext.Response.StatusCode = StatusCode;
             context.Result = new ObjectResult(
-                new
+                new ExceptionFilterResultModel
                 {
                     ErrorMessage = context.Exception.Message
                 }

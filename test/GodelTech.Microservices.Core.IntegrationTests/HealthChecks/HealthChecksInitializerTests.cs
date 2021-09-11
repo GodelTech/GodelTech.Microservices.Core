@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.HealthChecks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Xunit;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
@@ -84,10 +89,31 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(new MediaTypeHeaderValue("application/json"), result.Content.Headers.ContentType);
+
             Assert.Matches(
                 new Regex(@"{""status"":""Healthy"",""results"":\[\],""totalDuration"":[\d]{1,4}[.,][\d]{1,4}}"),
                 await result.Content.ReadAsStringAsync()
             );
+
+            var stream = await result.Content.ReadAsStreamAsync();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var model = await result.Content
+                .ReadFromJsonAsync<HealthCheckResponseModel>(
+                    new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        Converters =
+                        {
+                            new JsonStringEnumConverter()
+                        }
+                    }
+                );
+
+            Assert.NotNull(model);
+            Assert.Equal(HealthStatus.Healthy, model.Status);
+            Assert.Empty(model.Results);
+            Assert.True(model.TotalDuration > 0);
         }
 
         [Fact]
