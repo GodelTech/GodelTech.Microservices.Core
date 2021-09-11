@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -20,18 +22,20 @@ namespace GodelTech.Microservices.Core.HealthChecks
 
             context.Response.ContentType = "application/json";
 
-            // todo: a.solonoy: why not just return HealthReport model?
-            var healthResult = new
+            var healthResult = new HealthCheckResponseModel
             {
-                Status = healthReport.Status.ToString(),
-                Results = healthReport.Entries.ToDictionary(
-                    x => x.Key,
-                    x => new
-                    {
-                        Status = x.Value.Status.ToString(),
-                        x.Value.Description
-                    }
-                ).ToArray(),
+                Status = healthReport.Status,
+                Results = healthReport.Entries
+                    .Select(
+                        x => new KeyValuePair<string, HealthCheckResponseResultModel>(
+                            x.Key,
+                            new HealthCheckResponseResultModel
+                            {
+                                Status = x.Value.Status,
+                                Description = x.Value.Description
+                            }
+                        )
+                    ).ToList(),
                 TotalDuration = healthReport.TotalDuration.TotalMilliseconds
             };
 
@@ -39,8 +43,11 @@ namespace GodelTech.Microservices.Core.HealthChecks
                 healthResult,
                 new JsonSerializerOptions
                 {
-                    // todo: a.solonoy: do we need this?
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    Converters =
+                    {
+                        new JsonStringEnumConverter()
+                    }
                 }
             );
 
