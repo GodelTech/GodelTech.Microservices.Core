@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!-- Configurations for data collectors -->
+  <DataCollectionRunSettings>
+    <DataCollectors>
+	  <DataCollector friendlyName="XPlat code coverage">
+	    <Configuration>
+	      <Format>cobertura,opencover</Format>
+		</Configuration>
+	  </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
