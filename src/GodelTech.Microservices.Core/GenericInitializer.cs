@@ -29,7 +29,7 @@ namespace GodelTech.Microservices.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericInitializer"/> class.
         /// </summary>
-        /// <param name="configureServices"></param>
+        /// <param name="configureServices">Action for configure services.</param>
         public GenericInitializer(
             Action<IServiceCollection> configureServices)
             : this(configureServices, null)
@@ -48,20 +48,14 @@ namespace GodelTech.Microservices.Core
 
         }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
-        /// <param name="services">Service collection.</param>
+
+        /// <inheritdoc />
         public void ConfigureServices(IServiceCollection services)
         {
             _configureServices?.Invoke(services);
         }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// </summary>
-        /// <param name="app">Application builder.</param>
-        /// <param name="env">WebHost environment.</param>
+        /// <inheritdoc />
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             _configure?.Invoke(app, env);
