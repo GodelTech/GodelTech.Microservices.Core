@@ -1,4 +1,5 @@
-﻿using GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts;
+﻿using System;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,11 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes
         public void ThrowResourceNotFoundException()
         {
             throw new ResourceNotFoundException();
+        }
+
+        public void ThrowArgumentException(string name)
+        {
+            throw new ArgumentException("Fake ArgumentException", nameof(name));
         }
     }
 }

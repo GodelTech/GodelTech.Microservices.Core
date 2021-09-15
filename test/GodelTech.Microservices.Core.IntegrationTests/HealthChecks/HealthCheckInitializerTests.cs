@@ -91,7 +91,13 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
             Assert.Equal(new MediaTypeHeaderValue("application/json"), result.Content.Headers.ContentType);
 
             Assert.Matches(
-                new Regex(@"{""status"":""Healthy"",""results"":\[\],""totalDuration"":[\d]{1,4}[.,][\d]{1,4}}"),
+                new Regex(
+                    "{" +
+                    "\"status\":\"Healthy\"," +
+                    "\"results\":[[]]," +
+                    "\"totalDuration\":[\\d]{1,4}[.,][\\d]{1,4}" +
+                    "}"
+                ),
                 await result.Content.ReadAsStringAsync()
             );
 

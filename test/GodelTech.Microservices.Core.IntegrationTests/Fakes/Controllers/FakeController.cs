@@ -53,5 +53,14 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
 
             return Ok();
         }
+
+        [HttpGet("argumentException")]
+        [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status413RequestEntityTooLarge)]
+        public IActionResult GetArgumentException()
+        {
+            _service.ThrowArgumentException(null);
+
+            return Ok();
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts
         void ThrowRequestValidationException();
 
         void ThrowResourceNotFoundException();
+
+        void ThrowArgumentException(string name);
     }
 }

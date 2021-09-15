@@ -8,6 +8,13 @@ namespace GodelTech.Microservices.Core.IntegrationTests
 {
     public class AppTestFixture : WebApplicationFactory<TestStartup>
     {
+        private string _environment;
+
+        public void SetEnvironment(string environment)
+        {
+            _environment = environment;
+        }
+
         protected override IHostBuilder CreateHostBuilder()
         {
             var builder = Host.CreateDefaultBuilder()
@@ -16,6 +23,11 @@ namespace GodelTech.Microservices.Core.IntegrationTests
                     {
                         x.UseStartup<TestStartup>()
                             .UseTestServer();
+
+                        if (!string.IsNullOrWhiteSpace(_environment))
+                        {
+                            x.UseEnvironment(_environment);
+                        }
                     }
                 );
 
