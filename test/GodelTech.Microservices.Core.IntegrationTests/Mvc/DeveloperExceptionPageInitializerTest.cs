@@ -93,8 +93,10 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 result.Content.Headers.ContentType
             );
 
-            Assert.Equal(
-                await File.ReadAllTextAsync($"Documents/DeveloperExceptionPage.txt"),
+            Assert.Matches(
+                new Regex(
+                    await File.ReadAllTextAsync("Documents/DeveloperExceptionPage.txt")
+                ),
                 await result.Content.ReadAsStringAsync()
             );
         }
