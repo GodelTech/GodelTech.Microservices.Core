@@ -1,15 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers;
 using GodelTech.Microservices.Core.Mvc;
-using GodelTech.Microservices.Core.Mvc.Filters;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -77,9 +73,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                             .Configure(
                                 (context, app) =>
                                 {
-                                    app.UseDefaultFiles();
-                                    app.UseStaticFiles();
-
                                     initializer.Configure(app, context.HostingEnvironment);
                                 }
                             );
