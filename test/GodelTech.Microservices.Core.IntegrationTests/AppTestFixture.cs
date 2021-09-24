@@ -17,7 +17,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests
 
         protected override IHostBuilder CreateHostBuilder()
         {
-            var builder = Host.CreateDefaultBuilder()
+            var builder = Host
+                .CreateDefaultBuilder()
                 .ConfigureWebHostDefaults(
                     x =>
                     {

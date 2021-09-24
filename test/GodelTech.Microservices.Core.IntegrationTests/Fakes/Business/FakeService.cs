@@ -1,10 +1,10 @@
 ﻿using System;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
 using System.Collections.Generic;
 using System.Linq;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
 
-namespace GodelTech.Microservices.Core.IntegrationTests.Fakes
+namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
 {
     public class FakeService : IFakeService
     {

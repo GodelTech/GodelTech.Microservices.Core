@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
 using GodelTech.Microservices.Core.Mvc.Filters;
 using Microsoft.AspNetCore.Http;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
 
-namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts
+namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts
 {
     public interface IFakeService
     {

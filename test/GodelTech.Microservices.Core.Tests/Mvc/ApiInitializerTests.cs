@@ -59,7 +59,6 @@ namespace GodelTech.Microservices.Core.Tests.Mvc
             // Assert
             Assert.NotNull(options);
 
-            Assert.False(options.SuppressAsyncSuffixInActionNames);
             Assert.Equal(expectedFilters, options.Filters);
         }
 

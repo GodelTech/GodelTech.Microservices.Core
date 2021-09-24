@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes.Contracts;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

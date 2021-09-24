@@ -74,9 +74,6 @@ namespace GodelTech.Microservices.Core.Mvc
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
-            // todo: is it applicable for API?
-            options.SuppressAsyncSuffixInActionNames = false;
-
             options.Filters.Add(
                 new HttpStatusCodeExceptionFilterAttribute(
                     HttpStatusCode.RequestEntityTooLarge,
