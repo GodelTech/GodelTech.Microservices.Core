@@ -11,13 +11,13 @@ namespace GodelTech.Microservices.Core.Mvc
     public class DeveloperExceptionPageInitializer : IMicroserviceInitializer
     {
         /// <inheritdoc />
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
 
         }
 
         /// <inheritdoc />
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

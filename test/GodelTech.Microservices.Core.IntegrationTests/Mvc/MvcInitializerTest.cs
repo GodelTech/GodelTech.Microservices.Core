@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ using GodelTech.Microservices.Core.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Xunit;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
@@ -65,6 +68,18 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                                         }
                                     );
 
+                                    services.Configure<MvcRazorRuntimeCompilationOptions>(
+                                        options =>
+                                        {
+                                            options.FileProviders
+                                                .Add(
+                                                    new EmbeddedFileProvider(
+                                                        typeof(HomeController).Assembly
+                                                    )
+                                                );
+                                        }
+                                    );
+
                                     initializer.ConfigureServices(services);
                                 }
                             );
@@ -85,7 +100,15 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_Success()
         {
             // Arrange
-            var initializer = new MvcInitializer();
+            Action<IMvcBuilder> configureBuilder =
+                builder =>
+                {
+                    builder
+                        .AddApplicationPart(typeof(HomeController).Assembly)
+                        .AddRazorRuntimeCompilation();
+                };
+
+            var initializer = new MvcInitializer(configureBuilder: configureBuilder);
 
             var client = CreateClient(initializer);
 
@@ -100,32 +123,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(
-                "[" +
-                "{" +
-                "\"id\":0," +
-                "\"intValue\":0," +
-                "\"status\":\"Default\"" +
-                "}," +
-                "{" +
-                "\"id\":1," +
-                "\"serviceName\":\"FakeService\"," +
-                "\"message\":\"Test Message\"," +
-                "\"dictionary\":" +
-                "{" +
-                "\"firstKey\":\"FirstValue\"," +
-                "\"second Key\":\"Second Value\"," +
-                "\"third key\":\"third value\"" +
-                "}," +
-                "\"intValue\":97," +
-                "\"status\":\"Default\"" +
-                "}," +
-                "{" +
-                "\"id\":2," +
-                "\"intValue\":97," +
-                "\"nullableIntValue\":3," +
-                "\"status\":\"Other\"" +
-                "}" +
-                "]",
+                await File.ReadAllTextAsync("Documents/HomeIndex.txt"),
                 await result.Content.ReadAsStringAsync()
             );
         }
@@ -149,6 +147,27 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             // Assert
             Assert.True(mvcOptionsActionInvoked);
+        }
+
+        [Fact]
+        public void Configure_WithMvcBuilder_Success()
+        {
+            // Arrange
+            var mvcBuilderActionInvoked = false;
+
+            Action<IMvcBuilder> configureBuilder =
+                _ =>
+                {
+                    mvcBuilderActionInvoked = true;
+                };
+
+            var initializer = new MvcInitializer(configureBuilder: configureBuilder);
+
+            // Act
+            CreateClient(initializer);
+
+            // Assert
+            Assert.True(mvcBuilderActionInvoked);
         }
     }
 }

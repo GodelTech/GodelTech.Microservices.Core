@@ -13,20 +13,25 @@ namespace GodelTech.Microservices.Core.Mvc
     public class MvcInitializer : IMicroserviceInitializer
     {
         private readonly Action<MvcOptions> _configureMvc;
+        private readonly Action<IMvcBuilder> _configureBuilder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiInitializer"/> class.
         /// </summary>
         /// <param name="configureMvc">An <see cref="Action{MvcOptions}"/> to configure the provided <see cref="MvcOptions"/>.</param>
-        public MvcInitializer(Action<MvcOptions> configureMvc = null)
+        /// <param name="configureBuilder">An <see cref="Action{IMvcBuilder}"/> to configure the provided <see cref="IMvcBuilder"/>.</param>
+        public MvcInitializer(
+            Action<MvcOptions> configureMvc = null,
+            Action<IMvcBuilder> configureBuilder = null)
         {
             _configureMvc = configureMvc;
+            _configureBuilder = configureBuilder;
         }
 
         /// <inheritdoc />
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
-            services
+            var builder = services
                 .AddControllersWithViews(
                     options =>
                     {
@@ -35,10 +40,12 @@ namespace GodelTech.Microservices.Core.Mvc
                         _configureMvc?.Invoke(options);
                     }
                 );
+
+            _configureBuilder?.Invoke(builder);
         }
 
         /// <inheritdoc />
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRouting();
 
