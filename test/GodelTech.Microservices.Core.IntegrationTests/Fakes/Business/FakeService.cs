@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
 
@@ -45,6 +46,11 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
         {
             return Items
                 .FirstOrDefault(x => x.Id == id);
+        }
+
+        public Task CompleteAsync()
+        {
+            return Task.CompletedTask;
         }
 
         public void ThrowFileTooLargeException()

@@ -3,17 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home Page - Test</title>
+    <title>@ViewData["Title"] - Test</title>
 </head>
 <body>
     <div class="container">
         <main role="main" class="pb-3">
-            
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
+            @RenderBody()
         </main>
     </div>
 </body>

@@ -128,6 +128,78 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
         }
 
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task Configure_WhenItem_Success(int id)
+        {
+            // Arrange
+            Action<IMvcBuilder> configureBuilder =
+                builder =>
+                {
+                    builder
+                        .AddApplicationPart(typeof(HomeController).Assembly)
+                        .AddRazorRuntimeCompilation();
+                };
+
+            var initializer = new MvcInitializer(configureBuilder: configureBuilder);
+
+            var client = CreateClient(initializer);
+
+            // Act
+            var result = await client.GetAsync(
+                new Uri(
+                    $"/Home/Details/{id}",
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(
+                await File.ReadAllTextAsync($"Documents/HomeDetails.{id}.txt"),
+                await result.Content.ReadAsStringAsync()
+            );
+        }
+
+        [Theory]
+        [InlineData("/Home/Test", HttpStatusCode.NotFound, "")]
+        [InlineData("/Home/TestAsync", HttpStatusCode.OK, "TestAsync Content")]
+        public async Task Configure_WhenSuppressAsyncSuffixInActionNamesFalse_Success(
+            string path,
+            HttpStatusCode expectedStatusCode,
+            string expectedContent)
+        {
+            // Arrange
+            Action<IMvcBuilder> configureBuilder =
+                builder =>
+                {
+                    builder
+                        .AddApplicationPart(typeof(HomeController).Assembly)
+                        .AddRazorRuntimeCompilation();
+                };
+
+            var initializer = new MvcInitializer(configureBuilder: configureBuilder);
+
+            var client = CreateClient(initializer);
+
+            // Act
+            var result = await client.GetAsync(
+                new Uri(
+                    path,
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            Assert.Equal(expectedStatusCode, result.StatusCode);
+            Assert.Equal(
+                expectedContent,
+                await result.Content.ReadAsStringAsync()
+            );
+        }
+
         [Fact]
         public void Configure_WithMvcOptions_Success()
         {
