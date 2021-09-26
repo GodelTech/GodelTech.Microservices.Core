@@ -8,7 +8,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
 {
     public class FakeService : IFakeService
     {
-        private readonly IReadOnlyList<FakeModel> _items = new List<FakeModel>
+        private static readonly IReadOnlyList<FakeModel> Items = new List<FakeModel>
         {
             new FakeModel(),
             new FakeModel
@@ -37,8 +37,14 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
         
         public IList<FakeModel> GetList()
         {
-            return _items
+            return Items
                 .ToList();
+        }
+
+        public FakeModel Get(int id)
+        {
+            return Items
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public void ThrowFileTooLargeException()

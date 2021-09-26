@@ -7,6 +7,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts
     {
         IList<FakeModel> GetList();
 
+        FakeModel Get(int id);
+
         void ThrowFileTooLargeException();
 
         void ThrowRequestValidationException();

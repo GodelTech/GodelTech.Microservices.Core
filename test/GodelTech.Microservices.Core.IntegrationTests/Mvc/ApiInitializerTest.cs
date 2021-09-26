@@ -17,6 +17,36 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 {
     public sealed class ApiInitializerTest : IDisposable
     {
+        private static readonly string[] FakeJsonStrings = new string[]
+        {
+            "{" +
+            "\"id\":0," +
+            "\"intValue\":0," +
+            "\"status\":\"Default\"" +
+            "}",
+
+            "{" +
+            "\"id\":1," +
+            "\"serviceName\":\"FakeService\"," +
+            "\"message\":\"Test Message\"," +
+            "\"dictionary\":" +
+            "{" +
+            "\"firstKey\":\"FirstValue\"," +
+            "\"second Key\":\"Second Value\"," +
+            "\"third key\":\"third value\"" +
+            "}," +
+            "\"intValue\":97," +
+            "\"status\":\"Default\"" +
+            "}",
+
+            "{" +
+            "\"id\":2," +
+            "\"intValue\":97," +
+            "\"nullableIntValue\":3," +
+            "\"status\":\"Other\"" +
+            "}"
+        };
+        
         private readonly AppTestFixture _fixture;
 
         public ApiInitializerTest()
@@ -58,7 +88,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         }
 
         [Fact]
-        public async Task Configure_Success()
+        public async Task Configure_WhenList_Success()
         {
             // Arrange
             var initializer = new ApiInitializer();
@@ -76,32 +106,36 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(
-                "[" +
-                "{" +
-                "\"id\":0," +
-                "\"intValue\":0," +
-                "\"status\":\"Default\"" +
-                "}," +
-                "{" +
-                "\"id\":1," +
-                "\"serviceName\":\"FakeService\"," +
-                "\"message\":\"Test Message\"," +
-                "\"dictionary\":" +
-                "{" +
-                "\"firstKey\":\"FirstValue\"," +
-                "\"second Key\":\"Second Value\"," +
-                "\"third key\":\"third value\"" +
-                "}," +
-                "\"intValue\":97," +
-                "\"status\":\"Default\"" +
-                "}," +
-                "{" +
-                "\"id\":2," +
-                "\"intValue\":97," +
-                "\"nullableIntValue\":3," +
-                "\"status\":\"Other\"" +
-                "}" +
-                "]",
+                "[" + string.Join(',', FakeJsonStrings) + "]",
+                await result.Content.ReadAsStringAsync()
+            );
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(1, 1)]
+        [InlineData(2, 2)]
+        public async Task Configure_WhenItem_Success(
+            int id,
+            int expectedFakeJsonStringsIndex)
+        {
+            // Arrange
+            var initializer = new ApiInitializer();
+
+            var client = CreateClient(initializer);
+
+            // Act
+            var result = await client.GetAsync(
+                new Uri(
+                    $"/fakes/{id}",
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(
+                FakeJsonStrings[expectedFakeJsonStringsIndex],
                 await result.Content.ReadAsStringAsync()
             );
         }

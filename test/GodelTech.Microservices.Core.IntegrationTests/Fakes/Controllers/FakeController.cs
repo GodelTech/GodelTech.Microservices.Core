@@ -27,6 +27,15 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
             return Ok(list);
         }
 
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(FakeModel), StatusCodes.Status200OK)]
+        public IActionResult Get(int id)
+        {
+            var item = _service.Get(id);
+
+            return Ok(item);
+        }
+
         [HttpGet("fileTooLargeException")]
         [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status413RequestEntityTooLarge)]
         public IActionResult GetFileTooLargeException()
