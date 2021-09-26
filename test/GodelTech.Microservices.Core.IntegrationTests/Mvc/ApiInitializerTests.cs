@@ -15,7 +15,7 @@ using Xunit;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 {
-    public sealed class ApiInitializerTest : IDisposable
+    public sealed class ApiInitializerTests : IDisposable
     {
         private static readonly string[] FakeJsonStrings = new string[]
         {
@@ -49,7 +49,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         
         private readonly AppTestFixture _fixture;
 
-        public ApiInitializerTest()
+        public ApiInitializerTests()
         {
             _fixture = new AppTestFixture();
         }

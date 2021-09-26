@@ -16,7 +16,7 @@ namespace GodelTech.Microservices.Core.Mvc
         private readonly Action<IMvcBuilder> _configureBuilder;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiInitializer"/> class.
+        /// Initializes a new instance of the <see cref="MvcInitializer"/> class.
         /// </summary>
         /// <param name="configureMvc">An <see cref="Action{MvcOptions}"/> to configure the provided <see cref="MvcOptions"/>.</param>
         /// <param name="configureBuilder">An <see cref="Action{IMvcBuilder}"/> to configure the provided <see cref="IMvcBuilder"/>.</param>

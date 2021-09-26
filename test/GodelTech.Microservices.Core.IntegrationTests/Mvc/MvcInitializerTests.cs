@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers;
 using GodelTech.Microservices.Core.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +16,11 @@ using Xunit;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 {
-    public sealed class MvcInitializerTest : IDisposable
+    public sealed class MvcInitializerTests : IDisposable
     {
         private readonly AppTestFixture _fixture;
 
-        public MvcInitializerTest()
+        public MvcInitializerTests()
         {
             _fixture = new AppTestFixture();
         }
@@ -37,14 +36,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 .WithWebHostBuilder(
                     builder =>
                     {
-                        builder.ConfigureAppConfiguration(
-                            (context, _) =>
-                            {
-                                context.HostingEnvironment.ApplicationName =
-                                    typeof(HomeController).Assembly.GetName().Name;
-                            }
-                        );
-
                         builder
                             .ConfigureServices(
                                 services =>
@@ -74,7 +65,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                                             options.FileProviders
                                                 .Add(
                                                     new EmbeddedFileProvider(
-                                                        typeof(HomeController).Assembly
+                                                        typeof(TestStartup).Assembly
                                                     )
                                                 );
                                         }
@@ -104,7 +95,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 builder =>
                 {
                     builder
-                        .AddApplicationPart(typeof(HomeController).Assembly)
+                        .AddApplicationPart(typeof(TestStartup).Assembly)
                         .AddRazorRuntimeCompilation();
                 };
 
@@ -139,7 +130,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 builder =>
                 {
                     builder
-                        .AddApplicationPart(typeof(HomeController).Assembly)
+                        .AddApplicationPart(typeof(TestStartup).Assembly)
                         .AddRazorRuntimeCompilation();
                 };
 
@@ -176,7 +167,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 builder =>
                 {
                     builder
-                        .AddApplicationPart(typeof(HomeController).Assembly)
+                        .AddApplicationPart(typeof(TestStartup).Assembly)
                         .AddRazorRuntimeCompilation();
                 };
 

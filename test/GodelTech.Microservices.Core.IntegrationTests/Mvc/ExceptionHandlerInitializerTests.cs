@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
@@ -12,11 +14,11 @@ using Xunit;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 {
-    public sealed class HstsInitializerTest : IDisposable
+    public sealed class ExceptionHandlerInitializerTests : IDisposable
     {
         private readonly AppTestFixture _fixture;
 
-        public HstsInitializerTest()
+        public ExceptionHandlerInitializerTests()
         {
             _fixture = new AppTestFixture();
         }
@@ -26,7 +28,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(HstsInitializer initializer)
+        private HttpClient CreateClient(ExceptionHandlerInitializer initializer)
         {
             return _fixture
                 .WithWebHostBuilder(
@@ -37,20 +39,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                                 services =>
                                 {
                                     services.AddTransient<IFakeService, FakeService>();
-
-                                    services.AddHsts(
-                                        options =>
-                                        {
-                                            options.ExcludedHosts.Clear();
-                                        }
-                                    );
-
-                                    services.AddHttpsRedirection(
-                                        options =>
-                                        {
-                                            options.HttpsPort = 5001;
-                                        }
-                                    );
 
                                     initializer.ConfigureServices(services);
 
@@ -83,31 +71,38 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_WhenIsNotDevelopmentEnvironment_Success()
         {
             // Arrange
-            var initializer = new HstsInitializer();
+            var initializer = new ExceptionHandlerInitializer();
 
             var client = CreateClient(initializer);
 
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes",
+                    "/fakes/argumentException",
                     UriKind.Relative
                 )
             );
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            Assert.Single(result.Headers);
+            Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
             Assert.Equal(
-                new string[]
+                new MediaTypeHeaderValue("application/problem+json")
                 {
-                    "max-age=2592000"
+                    CharSet = "utf-8"
                 },
-                result.Headers.GetValues("Strict-Transport-Security")
+                result.Content.Headers.ContentType
             );
-            Assert.Equal(
-                new Uri("https://localhost:5001/fakes"),
-                result.RequestMessage?.RequestUri
+            
+            Assert.Matches(
+                new Regex(
+                    "{" +
+                    "\"type\":\"https://tools.ietf.org/html/rfc7231#section-6.6.1\"," +
+                    "\"title\":\"An error occurred while processing your request.\"," +
+                    "\"status\":500," +
+                    "\"traceId\":\"[0-9]{2}-[a-f0-9]{32}-[a-f0-9]{16}-[0-9]{2}\"" +
+                    "}"
+                ),
+                await result.Content.ReadAsStringAsync()
             );
         }
 
@@ -115,27 +110,24 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_WhenIsDevelopmentEnvironment_Success()
         {
             // Arrange
-            var initializer = new HstsInitializer();
+            var initializer = new ExceptionHandlerInitializer();
 
             _fixture.SetEnvironment("Development");
 
             var client = CreateClient(initializer);
 
-            // Act
-            var result = await client.GetAsync(
-                new Uri(
-                    "/fakes",
-                    UriKind.Relative
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ArgumentException>(
+                () => client.GetAsync(
+                    new Uri(
+                        "/fakes/argumentException",
+                        UriKind.Relative
+                    )
                 )
             );
 
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-            Assert.Empty(result.Headers);
-            Assert.Equal(
-                new Uri("https://localhost:5001/fakes"),
-                result.RequestMessage?.RequestUri
-            );
+            Assert.Equal("Fake ArgumentException (Parameter 'name')", exception.Message);
+            Assert.Equal("name", exception.ParamName);
         }
     }
 }

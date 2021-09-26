@@ -13,7 +13,7 @@ namespace GodelTech.Microservices.Core.Mvc
         private readonly string _path;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeveloperExceptionPageInitializer"/> class.
+        /// Initializes a new instance of the <see cref="ExceptionHandlerInitializer"/> class.
         /// </summary>
         /// <param name="path">Path.</param>
         public ExceptionHandlerInitializer(string path = "/Error")

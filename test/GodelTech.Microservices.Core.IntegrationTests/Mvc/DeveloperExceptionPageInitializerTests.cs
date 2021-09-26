@@ -15,11 +15,11 @@ using Xunit;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 {
-    public sealed class DeveloperExceptionPageInitializerTest : IDisposable
+    public sealed class DeveloperExceptionPageInitializerTests : IDisposable
     {
         private readonly AppTestFixture _fixture;
 
-        public DeveloperExceptionPageInitializerTest()
+        public DeveloperExceptionPageInitializerTests()
         {
             _fixture = new AppTestFixture();
         }
