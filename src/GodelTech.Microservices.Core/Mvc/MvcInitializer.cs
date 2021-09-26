@@ -65,6 +65,7 @@ namespace GodelTech.Microservices.Core.Mvc
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
+            // todo: a.solonoy: do we need this? By default it is true.
             options.SuppressAsyncSuffixInActionNames = false;
         }
 
