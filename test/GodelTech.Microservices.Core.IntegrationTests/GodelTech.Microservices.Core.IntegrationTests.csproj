@@ -45,13 +45,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Fakes\Views\*\*">
+		<Content Include="Fakes\Views\**\*.cshtml">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Fakes\Views\Home\TestAsync.cshtml" />
+		<Content Include="Fakes\Pages\**\*.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 </Project>

@@ -10,7 +10,6 @@
         <main role="main" class="pb-3">
             
 
-
 <h1>Details</h1>
 
 <div>
