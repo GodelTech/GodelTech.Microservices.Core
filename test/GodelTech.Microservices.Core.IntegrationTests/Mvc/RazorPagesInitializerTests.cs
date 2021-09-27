@@ -104,6 +104,27 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         }
 
         [Fact]
+        public void Configure_WithRazorPagesOptions_Success()
+        {
+            // Arrange
+            var razorPagesOptionsActionInvoked = false;
+
+            Action<RazorPagesOptions> configureRazorPages =
+                _ =>
+                {
+                    razorPagesOptionsActionInvoked = true;
+                };
+
+            var initializer = new RazorPagesInitializer(configureRazorPages);
+
+            // Act
+            CreateClient(initializer);
+
+            // Assert
+            Assert.True(razorPagesOptionsActionInvoked);
+        }
+
+        [Fact]
         public void Configure_WithMvcBuilder_Success()
         {
             // Arrange
