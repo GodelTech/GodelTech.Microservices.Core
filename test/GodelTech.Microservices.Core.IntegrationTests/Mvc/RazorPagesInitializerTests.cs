@@ -102,5 +102,26 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 await result.Content.ReadAsStringAsync()
             );
         }
+
+        [Fact]
+        public void Configure_WithMvcBuilder_Success()
+        {
+            // Arrange
+            var mvcBuilderActionInvoked = false;
+
+            Action<IMvcBuilder> configureBuilder =
+                _ =>
+                {
+                    mvcBuilderActionInvoked = true;
+                };
+
+            var initializer = new RazorPagesInitializer(configureBuilder: configureBuilder);
+
+            // Act
+            CreateClient(initializer);
+
+            // Assert
+            Assert.True(mvcBuilderActionInvoked);
+        }
     }
 }
