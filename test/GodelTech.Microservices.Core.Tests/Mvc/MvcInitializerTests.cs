@@ -1,6 +1,8 @@
 ﻿using System;
 using GodelTech.Microservices.Core.Tests.Fakes.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Xunit;
 
 namespace GodelTech.Microservices.Core.Tests.Mvc
@@ -38,6 +40,21 @@ namespace GodelTech.Microservices.Core.Tests.Mvc
             Assert.NotNull(options);
 
             Assert.False(options.SuppressAsyncSuffixInActionNames);
+        }
+
+        [Fact]
+        public void ConfigureMvcBuilder_Success()
+        {
+            // Arrange
+            var mockMvcBuilder = new Mock<IMvcBuilder>(MockBehavior.Strict);
+
+            // Act
+            _initializer.ExposedConfigureMvcBuilder(mockMvcBuilder.Object);
+
+            // Assert
+            Assert.NotNull(mockMvcBuilder.Object);
+
+            mockMvcBuilder.VerifyAll();
         }
 
         [Fact]

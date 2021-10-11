@@ -12,22 +12,6 @@ namespace GodelTech.Microservices.Core.Mvc
     /// </summary>
     public class MvcInitializer : IMicroserviceInitializer
     {
-        private readonly Action<MvcOptions> _configureMvc;
-        private readonly Action<IMvcBuilder> _configureBuilder;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MvcInitializer"/> class.
-        /// </summary>
-        /// <param name="configureMvc">An <see cref="Action{MvcOptions}"/> to configure the provided <see cref="MvcOptions"/>.</param>
-        /// <param name="configureBuilder">An <see cref="Action{IMvcBuilder}"/> to configure the provided <see cref="IMvcBuilder"/>.</param>
-        public MvcInitializer(
-            Action<MvcOptions> configureMvc = null,
-            Action<IMvcBuilder> configureBuilder = null)
-        {
-            _configureMvc = configureMvc;
-            _configureBuilder = configureBuilder;
-        }
-
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
@@ -36,12 +20,10 @@ namespace GodelTech.Microservices.Core.Mvc
                     options =>
                     {
                         ConfigureMvcOptions(options);
-
-                        _configureMvc?.Invoke(options);
                     }
                 );
 
-            _configureBuilder?.Invoke(builder);
+            ConfigureMvcBuilder(builder);
         }
 
         /// <inheritdoc />
@@ -67,6 +49,15 @@ namespace GodelTech.Microservices.Core.Mvc
 
             // todo: a.solonoy: do we need this? By default it is true.
             options.SuppressAsyncSuffixInActionNames = false;
+        }
+
+        /// <summary>
+        /// Configure MvcBuilder.
+        /// </summary>
+        /// <param name="builder">IMvcBuilder.</param>
+        protected virtual void ConfigureMvcBuilder(IMvcBuilder builder)
+        {
+
         }
 
         /// <summary>

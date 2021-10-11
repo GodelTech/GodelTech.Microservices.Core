@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Mvc;
 using GodelTech.Microservices.Core.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
@@ -75,15 +76,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_Success()
         {
             // Arrange
-            Action<IMvcBuilder> configureBuilder =
-                builder =>
-                {
-                    builder
-                        .AddApplicationPart(typeof(TestStartup).Assembly)
-                        .AddRazorRuntimeCompilation();
-                };
-
-            var initializer = new RazorPagesInitializer(configureBuilder: configureBuilder);
+            var initializer = new FakeRazorPagesInitializer();
 
             var client = CreateClient(initializer);
 
@@ -101,48 +94,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 await File.ReadAllTextAsync("Documents/PagesIndex.txt"),
                 await result.Content.ReadAsStringAsync()
             );
-        }
-
-        [Fact]
-        public void Configure_WithRazorPagesOptions_Success()
-        {
-            // Arrange
-            var razorPagesOptionsActionInvoked = false;
-
-            Action<RazorPagesOptions> configureRazorPages =
-                _ =>
-                {
-                    razorPagesOptionsActionInvoked = true;
-                };
-
-            var initializer = new RazorPagesInitializer(configureRazorPages);
-
-            // Act
-            CreateClient(initializer);
-
-            // Assert
-            Assert.True(razorPagesOptionsActionInvoked);
-        }
-
-        [Fact]
-        public void Configure_WithMvcBuilder_Success()
-        {
-            // Arrange
-            var mvcBuilderActionInvoked = false;
-
-            Action<IMvcBuilder> configureBuilder =
-                _ =>
-                {
-                    mvcBuilderActionInvoked = true;
-                };
-
-            var initializer = new RazorPagesInitializer(configureBuilder: configureBuilder);
-
-            // Act
-            CreateClient(initializer);
-
-            // Assert
-            Assert.True(mvcBuilderActionInvoked);
         }
     }
 }

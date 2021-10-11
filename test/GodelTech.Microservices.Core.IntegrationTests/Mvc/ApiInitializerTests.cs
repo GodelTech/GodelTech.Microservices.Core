@@ -9,7 +9,6 @@ using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.Mvc;
 using GodelTech.Microservices.Core.Mvc.Filters;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -138,48 +137,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 FakeJsonStrings[expectedFakeJsonStringsIndex],
                 await result.Content.ReadAsStringAsync()
             );
-        }
-
-        [Fact]
-        public void Configure_WithMvcOptions_Success()
-        {
-            // Arrange
-            var mvcOptionsActionInvoked = false;
-
-            Action<MvcOptions> configureMvc =
-                _ =>
-                {
-                    mvcOptionsActionInvoked = true;
-                };
-
-            var initializer = new ApiInitializer(configureMvc);
-
-            // Act
-            CreateClient(initializer);
-
-            // Assert
-            Assert.True(mvcOptionsActionInvoked);
-        }
-
-        [Fact]
-        public void Configure_WithJsonOptions_Success()
-        {
-            // Arrange
-            var jsonOptionsActionInvoked = false;
-
-            Action<JsonOptions> configureJson =
-                _ =>
-                {
-                    jsonOptionsActionInvoked = true;
-                };
-
-            var initializer = new ApiInitializer(configureJson: configureJson);
-
-            // Act
-            CreateClient(initializer);
-
-            // Assert
-            Assert.True(jsonOptionsActionInvoked);
         }
 
         [Fact]

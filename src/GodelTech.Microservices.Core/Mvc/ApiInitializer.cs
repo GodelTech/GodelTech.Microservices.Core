@@ -15,22 +15,6 @@ namespace GodelTech.Microservices.Core.Mvc
     /// </summary>
     public class ApiInitializer : IMicroserviceInitializer
     {
-        private readonly Action<MvcOptions> _configureMvc;
-        private readonly Action<JsonOptions> _configureJson;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiInitializer"/> class.
-        /// </summary>
-        /// <param name="configureMvc">An <see cref="Action{MvcOptions}"/> to configure the provided <see cref="MvcOptions"/>.</param>
-        /// <param name="configureJson">An <see cref="Action{JsonOptions}"/> to configure the provided <see cref="JsonOptions"/>.</param>
-        public ApiInitializer(
-            Action<MvcOptions> configureMvc = null,
-            Action<JsonOptions> configureJson = null)
-        {
-            _configureMvc = configureMvc;
-            _configureJson = configureJson;
-        }
-
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
@@ -39,16 +23,12 @@ namespace GodelTech.Microservices.Core.Mvc
                     options =>
                     {
                         ConfigureMvcOptions(options);
-
-                        _configureMvc?.Invoke(options);
                     }
                 )
                 .AddJsonOptions(
                     options =>
                     {
                         ConfigureJsonOptions(options);
-
-                        _configureJson?.Invoke(options);
                     }
                 );
         }

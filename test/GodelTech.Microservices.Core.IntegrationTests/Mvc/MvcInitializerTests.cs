@@ -5,9 +5,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Mvc;
 using GodelTech.Microservices.Core.Mvc;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.DependencyInjection;
@@ -91,15 +91,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_Success()
         {
             // Arrange
-            Action<IMvcBuilder> configureBuilder =
-                builder =>
-                {
-                    builder
-                        .AddApplicationPart(typeof(TestStartup).Assembly)
-                        .AddRazorRuntimeCompilation();
-                };
-
-            var initializer = new MvcInitializer(configureBuilder: configureBuilder);
+            var initializer = new FakeMvcInitializer();
 
             var client = CreateClient(initializer);
 
@@ -126,15 +118,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_WhenItem_Success(int id)
         {
             // Arrange
-            Action<IMvcBuilder> configureBuilder =
-                builder =>
-                {
-                    builder
-                        .AddApplicationPart(typeof(TestStartup).Assembly)
-                        .AddRazorRuntimeCompilation();
-                };
-
-            var initializer = new MvcInitializer(configureBuilder: configureBuilder);
+            var initializer = new FakeMvcInitializer();
 
             var client = CreateClient(initializer);
 
@@ -163,15 +147,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             string expectedContent)
         {
             // Arrange
-            Action<IMvcBuilder> configureBuilder =
-                builder =>
-                {
-                    builder
-                        .AddApplicationPart(typeof(TestStartup).Assembly)
-                        .AddRazorRuntimeCompilation();
-                };
-
-            var initializer = new MvcInitializer(configureBuilder: configureBuilder);
+            var initializer = new FakeMvcInitializer();
 
             var client = CreateClient(initializer);
 
@@ -189,48 +165,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 expectedContent,
                 await result.Content.ReadAsStringAsync()
             );
-        }
-
-        [Fact]
-        public void Configure_WithMvcOptions_Success()
-        {
-            // Arrange
-            var mvcOptionsActionInvoked = false;
-
-            Action<MvcOptions> configureMvc =
-                _ =>
-                {
-                    mvcOptionsActionInvoked = true;
-                };
-
-            var initializer = new MvcInitializer(configureMvc);
-
-            // Act
-            CreateClient(initializer);
-
-            // Assert
-            Assert.True(mvcOptionsActionInvoked);
-        }
-
-        [Fact]
-        public void Configure_WithMvcBuilder_Success()
-        {
-            // Arrange
-            var mvcBuilderActionInvoked = false;
-
-            Action<IMvcBuilder> configureBuilder =
-                _ =>
-                {
-                    mvcBuilderActionInvoked = true;
-                };
-
-            var initializer = new MvcInitializer(configureBuilder: configureBuilder);
-
-            // Act
-            CreateClient(initializer);
-
-            // Assert
-            Assert.True(mvcBuilderActionInvoked);
         }
     }
 }

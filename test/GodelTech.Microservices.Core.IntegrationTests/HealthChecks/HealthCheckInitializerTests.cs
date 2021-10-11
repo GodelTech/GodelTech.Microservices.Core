@@ -11,8 +11,6 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.HealthChecks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Xunit;
@@ -120,27 +118,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
             Assert.Equal(HealthStatus.Healthy, model.Status);
             Assert.Empty(model.Results);
             Assert.True(model.TotalDuration > 0);
-        }
-
-        [Fact]
-        public void Configure_WithHealthCheckOptions_Success()
-        {
-            // Arrange
-            var mvcOptionsActionInvoked = false;
-
-            Action<HealthCheckOptions, IApplicationBuilder> configureHealthCheck =
-                (_, _) =>
-                {
-                    mvcOptionsActionInvoked = true;
-                };
-
-            var initializer = new HealthCheckInitializer(configure: configureHealthCheck);
-
-            // Act
-            CreateClient(initializer);
-
-            // Assert
-            Assert.True(mvcOptionsActionInvoked);
         }
     }
 }
