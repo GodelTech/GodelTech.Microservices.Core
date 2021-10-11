@@ -98,6 +98,7 @@ namespace GodelTech.Microservices.Core.Tests
                 );
 
             var initializer = new GenericInitializer(
+                null,
                 _mockConfigure.Object
             );
 

@@ -25,30 +25,7 @@ namespace GodelTech.Microservices.Core
             _configureServices = configureServices;
             _configure = configure;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericInitializer"/> class.
-        /// </summary>
-        /// <param name="configureServices">Action for configure services.</param>
-        public GenericInitializer(
-            Action<IServiceCollection> configureServices)
-            : this(configureServices, null)
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GenericInitializer"/> class.
-        /// </summary>
-        /// <param name="configure">Action for configure.</param>
-        public GenericInitializer(
-            Action<IApplicationBuilder, IWebHostEnvironment> configure)
-            : this(null, configure)
-        {
-
-        }
-
-
+        
         /// <inheritdoc />
         public void ConfigureServices(IServiceCollection services)
         {
