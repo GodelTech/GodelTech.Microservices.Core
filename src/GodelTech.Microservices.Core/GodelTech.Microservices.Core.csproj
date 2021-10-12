@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<PackageId>GodelTech.Microservices.Core</PackageId>
-		<VersionPrefix>3.0.0</VersionPrefix>
+		<VersionPrefix>2.0.0</VersionPrefix>
 		<Authors>Andrei Salanoi</Authors>
 		<Company>Godel Technologies</Company>
 		<Description>Library contains base components and interfaces of Microservices Framework. Whole idea of framework is based on components called initializers.</Description>
