@@ -82,7 +82,6 @@ namespace GodelTech.Microservices.Core.Mvc
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
-            // todo: a.solonoy: why such values?
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.IgnoreNullValues = true;
