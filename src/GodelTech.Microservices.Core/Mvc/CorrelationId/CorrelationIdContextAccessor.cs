@@ -10,7 +10,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
         private static readonly AsyncLocal<CorrelationIdContextHolder> CorrelationIdContextCurrent = new AsyncLocal<CorrelationIdContextHolder>();
 
         /// <inheritdoc/>
-        public CorrelationIdContext? CorrelationIdContext
+        public CorrelationIdContext CorrelationIdContext
         {
             get
             {
@@ -36,7 +36,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
 
         private class CorrelationIdContextHolder
         {
-            public CorrelationIdContext? Context;
+            public CorrelationIdContext Context;
         }
     }
 }

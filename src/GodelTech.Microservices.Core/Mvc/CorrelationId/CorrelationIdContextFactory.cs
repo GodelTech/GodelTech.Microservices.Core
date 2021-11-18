@@ -5,7 +5,7 @@
     /// </summary>
     public class CorrelationIdContextFactory : ICorrelationIdContextFactory
     {
-        private readonly ICorrelationIdContextAccessor? _correlationIdContextAccessor;
+        private readonly ICorrelationIdContextAccessor _correlationIdContextAccessor;
 
         /// <summary>
         /// Creates a factory for creating <see cref="CorrelationIdContext" /> instances.

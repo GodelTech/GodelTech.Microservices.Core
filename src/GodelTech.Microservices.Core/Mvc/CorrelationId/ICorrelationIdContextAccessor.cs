@@ -12,6 +12,6 @@
         /// <summary>
         /// Gets or sets the current <see cref="CorrelationIdContext"/>. Returns <see langword="null" /> if there is no active <see cref="CorrelationIdContext" />.
         /// </summary>
-        CorrelationIdContext? CorrelationIdContext { get; set; }
+        CorrelationIdContext CorrelationIdContext { get; set; }
     }
 }
