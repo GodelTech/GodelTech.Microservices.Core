@@ -13,6 +13,8 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CorrelationIdOptions>(ConfigureCorrelationIdOptions);
+
             services.AddSingleton<ICorrelationIdContextAccessor, CorrelationIdContextAccessor>();
             services.AddSingleton<ICorrelationIdContextFactory, CorrelationIdContextFactory>();
         }
@@ -21,6 +23,15 @@ namespace GodelTech.Microservices.Core.Mvc
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<CorrelationIdMiddleware>();
+        }
+
+        /// <summary>
+        /// Configure CorrelationIdOptions.
+        /// </summary>
+        /// <param name="options">CorrelationIdOptions.</param>
+        protected virtual void ConfigureCorrelationIdOptions(CorrelationIdOptions options)
+        {
+
         }
     }
 }
