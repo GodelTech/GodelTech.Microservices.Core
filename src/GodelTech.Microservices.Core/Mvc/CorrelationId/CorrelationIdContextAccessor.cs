@@ -34,7 +34,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
             }
         }
 
-        private class CorrelationIdContextHolder
+        private sealed class CorrelationIdContextHolder
         {
             public CorrelationIdContext Context;
         }
