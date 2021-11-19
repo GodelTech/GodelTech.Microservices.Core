@@ -34,8 +34,4 @@
 		<ProjectReference Include="..\..\src\GodelTech.Microservices.Core\GodelTech.Microservices.Core.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Mvc\CorrelationId\" />
-	</ItemGroup>
-
 </Project>
