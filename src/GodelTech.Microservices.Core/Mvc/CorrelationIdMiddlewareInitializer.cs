@@ -11,7 +11,7 @@ namespace GodelTech.Microservices.Core.Mvc
     public class CorrelationIdMiddlewareInitializer : IMicroserviceInitializer
     {
         /// <inheritdoc />
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CorrelationIdOptions>(ConfigureCorrelationIdOptions);
 
@@ -20,7 +20,7 @@ namespace GodelTech.Microservices.Core.Mvc
         }
 
         /// <inheritdoc />
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<CorrelationIdMiddleware>();
         }
