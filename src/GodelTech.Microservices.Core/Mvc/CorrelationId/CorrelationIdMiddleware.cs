@@ -44,7 +44,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
 
             var correlationId = GetCorrelationId(context);
 
-            _correlationIdContextFactory.Create(correlationId);
+            var correlationIdContext = _correlationIdContextFactory.Create(correlationId);
 
             // apply the correlation ID to the response header for client side tracking
             context.Response.OnStarting(
@@ -64,7 +64,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
 
             await _next.Invoke(context);
 
-            _correlationIdContextFactory.Dispose();
+            _correlationIdContextFactory.Dispose(correlationIdContext);
         }
 
         private string GetCorrelationId(HttpContext context)

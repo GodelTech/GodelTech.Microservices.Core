@@ -15,6 +15,7 @@
         /// <summary>
         /// Releases resources held by the <see cref="CorrelationIdContext"/>.
         /// </summary>
-        void Dispose();
+        /// <param name="correlationIdContext">The <see cref="CorrelationIdContext"/> to dispose.</param>
+        void Dispose(CorrelationIdContext correlationIdContext);
     }
 }

@@ -30,7 +30,7 @@
         }
 
         /// <inheritdoc/>
-        public void Dispose()
+        public void Dispose(CorrelationIdContext correlationIdContext)
         {
             if (_correlationIdContextAccessor != null)
             {
