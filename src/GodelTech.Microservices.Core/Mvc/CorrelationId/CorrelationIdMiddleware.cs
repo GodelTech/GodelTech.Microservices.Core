@@ -69,7 +69,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
 
             await _next.Invoke(context);
 
-            _correlationIdContextFactory.Dispose(correlationIdContext);
+            _correlationIdContextFactory.Clear(correlationIdContext);
         }
 
         private string GetCorrelationId(HttpContext context)
