@@ -38,10 +38,15 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
         /// Processes a request.
         /// </summary>
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
-        public async Task InvokeAsync(HttpContext context)
+        public Task InvokeAsync(HttpContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
+            return InvokeInternalAsync(context);
+        }
+
+        private async Task InvokeInternalAsync(HttpContext context)
+        {
             var correlationId = GetCorrelationId(context);
 
             var correlationIdContext = _correlationIdContextFactory.Create(correlationId);
