@@ -15,6 +15,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
         private readonly RequestDelegate _next;
         private readonly CorrelationIdOptions _options;
         private readonly ICorrelationIdContextFactory _correlationIdContextFactory;
+        private readonly Func<Guid> _newId = () => Guid.NewGuid();
 
         /// <summary>
         /// Creates a new instance of the CorrelationIdMiddleware.
@@ -22,16 +23,19 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="options">The configuration options.</param>
         /// <param name="correlationIdContextFactory">The CorrelationIdContext factory.</param>
+        /// <param name="newId">The function which generates new id.</param>
         public CorrelationIdMiddleware(
             RequestDelegate next,
             IOptions<CorrelationIdOptions> options,
-            ICorrelationIdContextFactory correlationIdContextFactory)
+            ICorrelationIdContextFactory correlationIdContextFactory,
+            Func<Guid> newId = null)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
             _next = next;
             _options = options.Value;
             _correlationIdContextFactory = correlationIdContextFactory;
+            _newId = newId ?? _newId;
         }
 
         /// <summary>
@@ -81,7 +85,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
 
             if (StringValues.IsNullOrEmpty(correlationIdValue))
             {
-                return Guid.NewGuid().ToString();
+                return _newId().ToString();
             }
 
             return correlationIdValue.FirstOrDefault();
