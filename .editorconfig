@@ -34,4 +34,4 @@ dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1716.severity = none
 
 # CA1062: Validate arguments of public methods
-dotnet_code_quality.CA1062.excluded_symbol_names = HttpStatusCodeExceptionFilterAttributeTests|CorrelationIdMiddlewareTests
+dotnet_code_quality.CA1062.excluded_symbol_names = HttpStatusCodeExceptionFilterAttributeTests|CorrelationIdMiddlewareTests|CorrelationIdMiddlewareInitializerTests

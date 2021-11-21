@@ -23,7 +23,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="options">The configuration options.</param>
         /// <param name="correlationIdContextFactory">The CorrelationIdContext factory.</param>
-        /// <param name="newId">The function which generates new id.</param>
+        /// <param name="newId">The function which generates new id, if null than () => Guid.NewGuid().</param>
         public CorrelationIdMiddleware(
             RequestDelegate next,
             IOptions<CorrelationIdOptions> options,
