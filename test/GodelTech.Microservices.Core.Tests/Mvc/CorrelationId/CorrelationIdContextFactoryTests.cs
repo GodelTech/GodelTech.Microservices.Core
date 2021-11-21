@@ -77,8 +77,11 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
 
             var factory = new CorrelationIdContextFactory(null);
 
-            // Act & Assert
+            // Act
             factory.Clear(context);
+
+            // Assert
+            Assert.NotNull(context);
         }
 
         [Fact]
