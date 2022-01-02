@@ -20,6 +20,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="GodelTech.XUnit.Logging" Version="1.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.10" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.9" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />

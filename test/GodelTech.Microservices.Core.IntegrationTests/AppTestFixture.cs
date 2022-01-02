@@ -1,14 +1,20 @@
 ﻿using System.IO;
+using GodelTech.XUnit.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Hosting;
+using Xunit.Abstractions;
 
 namespace GodelTech.Microservices.Core.IntegrationTests
 {
     public class AppTestFixture : WebApplicationFactory<TestStartup>
     {
         private string _environment;
+
+        public ITestOutputHelper Output { get; set; }
+
+        public ITestLoggerContextAccessor TestLoggerContextAccessor { get; } = new TestLoggerContextAccessor();
 
         public void SetEnvironment(string environment)
         {

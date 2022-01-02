@@ -186,7 +186,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
 
         [Theory]
         [MemberData(nameof(InvokeAsyncMemberData))]
-        public async Task InvokeAsync(
+        public async Task InvokeAsync_Success(
             Dictionary<string, string> requestHeaders,
             Dictionary<string, string> responseHeaders,
             string expectedRequestCorrelationId,

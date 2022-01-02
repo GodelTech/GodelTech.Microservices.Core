@@ -5,20 +5,18 @@
     /// </summary>
     public class CorrelationIdContext
     {
-        private readonly string _correlationId;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CorrelationIdContext"/> class.
         /// </summary>
         /// <param name="correlationId">The correlation Id.</param>
         public CorrelationIdContext(string correlationId)
         {
-            _correlationId = correlationId;
+            CorrelationId = correlationId;
         }
 
         /// <summary>
         /// The CorrelationId.
         /// </summary>
-        public string CorrelationId => _correlationId;
+        public string CorrelationId { get; }
     }
 }
