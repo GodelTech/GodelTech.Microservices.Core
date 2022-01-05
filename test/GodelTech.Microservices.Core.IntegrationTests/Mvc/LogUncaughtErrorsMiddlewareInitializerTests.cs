@@ -40,6 +40,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                             .ConfigureServices(
                                 services =>
                                 {
+                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
+
                                     services.AddTransient<IFakeService, FakeService>();
 
                                     initializer.ConfigureServices(services);
@@ -95,7 +97,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 .TestLoggerContext
                 .Entries;
 
-            var controllerLog = Assert.Single(
+            var middlewareLog = Assert.Single(
                 logs.Where(
                     x =>
                         x.CategoryName ==
@@ -104,7 +106,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
             Assert.Equal(
                 "Action=LogUncaughtErrors, Message=Uncaught error:Fake ArgumentException (Parameter 'name'), Method=GET, RequestUri=http://localhost/fakes/argumentException",
-                controllerLog.Message
+                middlewareLog.Message
             );
         }
     }

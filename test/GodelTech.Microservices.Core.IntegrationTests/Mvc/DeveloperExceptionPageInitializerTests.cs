@@ -39,6 +39,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                             .ConfigureServices(
                                 services =>
                                 {
+                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
+
                                     services.AddTransient<IFakeService, FakeService>();
 
                                     initializer.ConfigureServices(services);

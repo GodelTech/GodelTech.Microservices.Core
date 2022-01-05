@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models.Fake;
 using GodelTech.Microservices.Core.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,36 +12,64 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
     [Route("fakes")]
     public class FakeController : ControllerBase
     {
-        private readonly IFakeService _service;
+        private readonly IFakeService _fakeService;
+        private readonly IMapper _mapper;
 
-        public FakeController(IFakeService service)
+        public FakeController(
+            IFakeService fakeService,
+            IMapper mapper)
         {
-            _service = service;
+            _fakeService = fakeService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(IList<FakeModel>), StatusCodes.Status200OK)]
         public IActionResult GetList()
         {
-            var list = _service.GetList();
-
-            return Ok(list);
+            return Ok(
+                _mapper.Map<IList<FakeModel>>(
+                    _fakeService.GetList()
+                )
+            );
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(FakeModel), StatusCodes.Status200OK)]
         public IActionResult Get(int id)
         {
-            var item = _service.Get(id);
+            var item = _fakeService.Get(id);
 
-            return Ok(item);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(
+                _mapper.Map<FakeModel>(item)
+            );
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(FakeModel), StatusCodes.Status201Created)]
+        public IActionResult Post([FromBody] FakePostModel model)
+        {
+            var item = _mapper.Map<FakeModel>(
+                _fakeService.Add(model)
+            );
+
+            return CreatedAtAction(
+                nameof(Get),
+                new { id = item.Id },
+                item
+            );
         }
 
         [HttpGet("fileTooLargeException")]
         [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status413RequestEntityTooLarge)]
         public IActionResult GetFileTooLargeException()
         {
-            _service.ThrowFileTooLargeException();
+            _fakeService.ThrowFileTooLargeException();
 
             return Ok();
         }
@@ -49,7 +78,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status400BadRequest)]
         public IActionResult GetRequestValidationException()
         {
-            _service.ThrowRequestValidationException();
+            _fakeService.ThrowRequestValidationException();
 
             return Ok();
         }
@@ -58,7 +87,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status404NotFound)]
         public IActionResult GetResourceNotFoundException()
         {
-            _service.ThrowResourceNotFoundException();
+            _fakeService.ThrowResourceNotFoundException();
 
             return Ok();
         }
@@ -67,7 +96,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status413RequestEntityTooLarge)]
         public IActionResult GetArgumentException()
         {
-            _service.ThrowArgumentException(null);
+            _fakeService.ThrowArgumentException(null);
 
             return Ok();
         }

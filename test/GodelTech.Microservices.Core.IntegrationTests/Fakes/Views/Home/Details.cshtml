@@ -1,4 +1,4 @@
-﻿@model GodelTech.Microservices.Core.IntegrationTests.Fakes.Models.FakeModel
+﻿@model GodelTech.Microservices.Core.IntegrationTests.Fakes.Models.Fake.FakeModel
 
 @{
     ViewData["Title"] = "Details";
@@ -33,6 +33,12 @@
         </dt>
         <dd class="col-sm-10">
             @Model.Dictionary?.Count
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EmptyDictionary)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.EmptyDictionary?.Count
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IntValue)

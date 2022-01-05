@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Models;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts
 {
     public interface IFakeService
     {
-        IList<FakeModel> GetList();
+        IList<FakeDto> GetList();
 
-        FakeModel Get(int id);
+        FakeDto Get(int id);
+
+        FakeDto Add(IFakeAddDto item);
 
         Task CompleteAsync();
 

@@ -20,6 +20,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         {
             "{" +
             "\"id\":0," +
+            "\"dictionary\":{}," +
             "\"intValue\":0," +
             "\"status\":\"Default\"" +
             "}",
@@ -32,7 +33,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             "{" +
             "\"firstKey\":\"FirstValue\"," +
             "\"second Key\":\"Second Value\"," +
-            "\"third key\":\"third value\"" +
+            "\"third key lowercase\":\"third value lowercase\"" +
             "}," +
             "\"intValue\":97," +
             "\"status\":\"Default\"" +
@@ -40,6 +41,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             "{" +
             "\"id\":2," +
+            "\"dictionary\":{}," +
             "\"intValue\":97," +
             "\"nullableIntValue\":3," +
             "\"status\":\"Other\"" +
@@ -68,6 +70,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                             .ConfigureServices(
                                 services =>
                                 {
+                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
+
                                     services.AddTransient<IFakeService, FakeService>();
 
                                     initializer.ConfigureServices(services);

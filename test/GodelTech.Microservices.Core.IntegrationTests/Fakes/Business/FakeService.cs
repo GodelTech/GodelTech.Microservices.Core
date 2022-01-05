@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
-using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Models;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
 {
     public class FakeService : IFakeService
     {
-        private static readonly IReadOnlyList<FakeModel> Items = new List<FakeModel>
+        private static readonly IReadOnlyList<FakeDto> Items = new List<FakeDto>
         {
-            new FakeModel(),
-            new FakeModel
+            new FakeDto(),
+            new FakeDto
             {
                 Id = 1,
                 ServiceName = nameof(FakeService),
@@ -21,13 +21,13 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
                 {
                     { "FirstKey", "FirstValue" },
                     { "Second Key", "Second Value" },
-                    { "third key", "third value" }
+                    { "third key lowercase", "third value lowercase" }
                 },
                 IntValue = 97,
                 NullableIntValue = null,
                 Status = FakeStatus.Default
             },
-            new FakeModel
+            new FakeDto
             {
                 Id = 2,
                 IntValue = 97,
@@ -36,16 +36,26 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
             }
         };
         
-        public IList<FakeModel> GetList()
+        public IList<FakeDto> GetList()
         {
             return Items
                 .ToList();
         }
 
-        public FakeModel Get(int id)
+        public FakeDto Get(int id)
         {
             return Items
                 .FirstOrDefault(x => x.Id == id);
+        }
+
+        public FakeDto Add(IFakeAddDto item)
+        {
+            return new FakeDto
+            {
+                Id = 3,
+                ServiceName = item.ServiceName,
+                Message = item.Message
+            };
         }
 
         public Task CompleteAsync()

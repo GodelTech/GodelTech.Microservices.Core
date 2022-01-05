@@ -1,16 +1,22 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models.Fake;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IFakeService _service;
+        private readonly IFakeService _fakeService;
+        private readonly IMapper _mapper;
 
-        public HomeController(IFakeService service)
+        public HomeController(
+            IFakeService fakeService,
+            IMapper mapper)
         {
-            _service = service;
+            _fakeService = fakeService;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -20,14 +26,16 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
 
         public IActionResult Details(int id)
         {
-            var item = _service.Get(id);
+            var item = _fakeService.Get(id);
 
-            return View(item);
+            return View(
+                _mapper.Map<FakeModel>(item)
+            );
         }
 
         public async Task<IActionResult> TestAsync()
         {
-            await _service.CompleteAsync();
+            await _fakeService.CompleteAsync();
 
             return View();
         }

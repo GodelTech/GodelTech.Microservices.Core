@@ -43,6 +43,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                             .ConfigureServices(
                                 services =>
                                 {
+                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
+
                                     services.AddTransient<IFakeService, FakeService>();
 
                                     initializer.ConfigureServices(services);
@@ -96,14 +98,17 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 .TestLoggerContext
                 .Entries;
 
-            var controllerLog = logs.Where(
-                x =>
-                    x.CategoryName ==
-                    "GodelTech.Microservices.Core.Mvc.RequestResponseLogging.RequestResponseLoggingMiddleware");
 
-            Assert.Equal(2, controllerLog.Count());
+            var middlewareLogs = logs.Where(
+                    x =>
+                        x.CategoryName ==
+                        "GodelTech.Microservices.Core.Mvc.RequestResponseLogging.RequestResponseLoggingMiddleware"
+                )
+                .ToList();
 
-            Assert.Equal("Http Request Information:\r\nSchema: http Host: localhost Path: /fakes/1 QueryString: ", controllerLog.First().Message);
+            Assert.Equal(2, middlewareLogs.Count);
+
+            Assert.Equal($"Http Request Information:{Environment.NewLine}Schema: http Host: localhost Path: /fakes/1 QueryString: ", middlewareLogs.First().Message);
         }
     }
 }

@@ -5,16 +5,16 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IFakeService _service;
+        private readonly IFakeService _fakeService;
 
-        public IndexModel(IFakeService service)
+        public IndexModel(IFakeService fakeService)
         {
-            _service = service;
+            _fakeService = fakeService;
         }
 
         public void OnGet()
         {
-            _service.GetList();
+            _fakeService.GetList();
         }
     }
 }
