@@ -102,6 +102,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                     "GodelTech.Microservices.Core.Mvc.RequestResponseLogging.RequestResponseLoggingMiddleware");
 
             Assert.Equal(2, controllerLog.Count());
+
+            Assert.Equal("Http Request Information:\r\nSchema: http Host: localhost Path: /fakes/1 QueryString: ", controllerLog.First().Message);
         }
     }
 }
