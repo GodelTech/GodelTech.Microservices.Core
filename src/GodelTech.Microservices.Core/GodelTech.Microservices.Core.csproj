@@ -34,8 +34,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Source Link needs this -->
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
+
+		<!-- Source Link needs this -->
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.IO;
 
@@ -19,18 +15,12 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
 
-        private const string AuthorizationHeader = "Authorization";
-        private static readonly HashSet<string> RequestHeadersToSkip = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            AuthorizationHeader,
-            "Cookie"
-        };
-
         /// <summary>
         /// Creates a new instance of the RequestResponseLoggingMiddleware.
         /// </summary>
         /// <param name="next">The next middleware in the pipeline.</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="recyclableMemoryStreamManager">The recyclableMemoryStreamManager.</param>
         public RequestResponseLoggingMiddleware(
             RequestDelegate next,
             ILogger<RequestResponseLoggingMiddleware> logger, 
@@ -59,60 +49,32 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
                 await _next.Invoke(context);
                 return;
             }
-            // code dealing with the request
-            await using var requestBodyStream = _recyclableMemoryStreamManager.GetStream();
-            context.Request.EnableBuffering();
 
-            await context.Request.Body.CopyToAsync(requestBodyStream);
-
-
-            var requestUriOriginalString = context.Request.GetEncodedUrl();
-            var requestRemoteIpAddress = context.Request.HttpContext.Connection.RemoteIpAddress?.ToString();
-            var requestHttpMethod = context.Request.Method;
-            var requestAuthHeader = GetAndParseRequestAuthHeader(context);
-            var requestAuthHeaderValue = GetRequestAuthHeaderStringValue(requestAuthHeader);
-            var requestHeaders = GetHeadersDctionary(context.Request.Headers);
-
-
-
+            LogRequest(context);
 
             await _next(context);
 
-            // code dealing with the response
-        }
-        private static AuthenticationHeaderValue GetAndParseRequestAuthHeader(HttpContext context)
-        {
-            var header = context.Request.Headers[context.Request.Headers[AuthorizationHeader]];
-
-            return string.IsNullOrEmpty(header) 
-                ? null
-                : AuthenticationHeaderValue.Parse(header);
+            LogResponse(context);
         }
 
-        private static string GetRequestAuthHeaderStringValue(AuthenticationHeaderValue authHeader)
+        private void LogRequest(HttpContext context)
         {
-            return authHeader == null
-                ? string.Empty 
-                : AuthorizationHeader + "=" + authHeader.Scheme;
+            // todo: enable log request body
+            _logger.LogInformation($"Http Request Information:{Environment.NewLine}" +
+                                   $"Schema: {context.Request.Scheme} " +
+                                   $"Host: {context.Request.Host} " +
+                                   $"Path: {context.Request.Path} " +
+                                   $"QueryString: {context.Request.QueryString}");
         }
 
-        private IDictionary<string, string> GetHeadersDctionary(IHeaderDictionary headers)
+        private void LogResponse(HttpContext context)
         {
-            try
-            {
-                return headers
-                    .Where(x => !RequestHeadersToSkip.Contains(x.Key))
-                    .ToDictionary(
-                        x => x.Key,
-                        x => x.Value.ToString()
-                    );
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Header dictionary creation failure");
-            }
-
-            return EmptyDictionary;
+            // todo: enable log response body
+            _logger.LogInformation($"Http Response Information:{Environment.NewLine}" +
+                                   $"Schema: {context.Request.Scheme} " +
+                                   $"Host: {context.Request.Host} " +
+                                   $"Path: {context.Request.Path} " +
+                                   $"QueryString: {context.Request.QueryString}");
         }
     }
 }
