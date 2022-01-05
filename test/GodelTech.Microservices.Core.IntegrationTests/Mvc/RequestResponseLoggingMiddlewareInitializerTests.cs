@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
@@ -19,8 +20,10 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
         public RequestResponseLoggingMiddlewareInitializerTests(ITestOutputHelper output)
         {
-            _fixture = new AppTestFixture();
-            _fixture.Output = output;
+            _fixture = new AppTestFixture
+            {
+                Output = output
+            };
         }
 
         public void Dispose()
@@ -78,34 +81,19 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             var client = CreateClient(initializer);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<ArgumentException>(
-                () => client.GetAsync(
-                    new Uri(
-                        "/fakes/1",
-                        UriKind.Relative
-                    )
+            var result = await client.GetAsync(
+                new Uri(
+                    "/fakes",
+                    UriKind.Relative
                 )
             );
 
-            Assert.Equal("Fake ArgumentException (Parameter 'name')", exception.Message);
-            Assert.Equal("name", exception.ParamName);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
             var logs = _fixture
                 .TestLoggerContextAccessor
                 .TestLoggerContext
                 .Entries;
-
-            var controllerLog = Assert.Single(
-                logs.Where(
-                    x =>
-                        x.CategoryName ==
-                        "GodelTech.Microservices.Core.Mvc.LogUncaughtErrors.LogUncaughtErrorsMiddleware"
-                )
-            );
-            Assert.Equal(
-                "Action=LogUncaughtErrors, Message=Uncaught error:Fake ArgumentException (Parameter 'name'), Method=GET, RequestUri=http://localhost/fakes/argumentException",
-                controllerLog.Message
-            );
         }
     }
 }

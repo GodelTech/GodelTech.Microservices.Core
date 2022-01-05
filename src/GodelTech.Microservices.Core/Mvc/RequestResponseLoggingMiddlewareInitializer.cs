@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IO;
 
 namespace GodelTech.Microservices.Core.Mvc
 {
@@ -13,7 +14,7 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddSingleton<RecyclableMemoryStreamManager>();
         }
 
         /// <inheritdoc />
