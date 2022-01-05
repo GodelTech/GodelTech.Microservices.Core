@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models.Fake;
 using GodelTech.Microservices.Core.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -83,21 +85,33 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             var client = CreateClient(initializer);
 
             // Act 
-            var result = await client.GetAsync(
+            var result = await client.PostAsJsonAsync(
                 new Uri(
-                    "/fakes/1",
+                    "/fakes?version=1",
                     UriKind.Relative
-                )
+                ),
+                new FakePostModel
+                {
+                    Message = "Test Message",
+                    ServiceName = "Test ServiceName"
+                }
             );
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, result.StatusCode);
+
+            Assert.Equal("http://localhost/fakes/3", result.Headers.Location?.AbsoluteUri);
+
+            var resultValue = await result.Content.ReadFromJsonAsync<FakeModel>();
+            Assert.NotNull(resultValue);
+            Assert.Equal(3, resultValue.Id);
+            Assert.Equal("Test Message", resultValue.Message);
+            Assert.Equal("Test ServiceName", resultValue.ServiceName);
 
             var logs = _fixture
                 .TestLoggerContextAccessor
                 .TestLoggerContext
                 .Entries;
-
 
             var middlewareLogs = logs.Where(
                     x =>
@@ -108,7 +122,14 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             Assert.Equal(2, middlewareLogs.Count);
 
-            Assert.Equal($"Http Request Information:{Environment.NewLine}Schema: http Host: localhost Path: /fakes/1 QueryString: ", middlewareLogs.First().Message);
+            Assert.Equal(
+                $"Http Request Information:{Environment.NewLine}" +
+                "Method: POST," +
+                "Url: http://localhost/fakes?version=1," +
+                "RemoteIP: ," +
+                "RequestHeaders: [Content-Type, application/json; charset=utf-8],[Content-Length, 59],[Host, localhost]",
+                middlewareLogs.First().Message
+            );
         }
     }
 }

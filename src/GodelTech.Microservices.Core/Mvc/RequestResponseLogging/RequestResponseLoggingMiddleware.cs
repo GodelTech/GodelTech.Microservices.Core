@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.IO;
 
@@ -50,6 +52,9 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
                 return;
             }
 
+            // todo: check below items
+            // "ResponseTimeMs={responseTimeMs}, "
+
             LogRequest(context);
 
             await _next(context);
@@ -61,10 +66,10 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         {
             // todo: enable log request body
             _logger.LogInformation($"Http Request Information:{Environment.NewLine}" +
-                                   $"Schema: {context.Request.Scheme} " +
-                                   $"Host: {context.Request.Host} " +
-                                   $"Path: {context.Request.Path} " +
-                                   $"QueryString: {context.Request.QueryString}");
+                                   $"Method: {context.Request.Method}," +
+                                   $"Url: {context.Request.GetEncodedUrl()}," +
+                                   $"RemoteIP: {context.Request.HttpContext.Connection.RemoteIpAddress}," +
+                                   $"RequestHeaders: {string.Join(",", context.Request.Headers)}");
         }
 
         private void LogResponse(HttpContext context)
