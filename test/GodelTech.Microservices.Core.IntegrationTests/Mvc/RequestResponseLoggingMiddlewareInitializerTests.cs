@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
@@ -122,13 +123,16 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             Assert.Equal(2, middlewareLogs.Count);
 
-            Assert.Equal(
-                $"Http Request Information:{Environment.NewLine}" +
-                "Method: POST," +
-                "Url: http://localhost/fakes?version=1," +
-                "RemoteIP: ," +
-                "RequestHeaders: [Content-Type, application/json; charset=utf-8],[Content-Length, 59],[Host, localhost]",
-                middlewareLogs.First().Message
+            Assert.Matches(
+                new Regex(
+                    $"Http Request Information:{Environment.NewLine}" +
+                    "TraceIdentifier: [0-9A-Z]{13}," +
+                    "Method: POST," +
+                    @"Url: http://localhost/fakes\?version=1," +
+                    "RemoteIP: ," +
+                    @"RequestHeaders: {""Content-Type"":\[""application/json; charset=utf-8""\],""Content-Length"":\[""59""\],""Host"":\[""localhost""\]}"
+                ),
+                middlewareLogs[0].Message
             );
         }
     }

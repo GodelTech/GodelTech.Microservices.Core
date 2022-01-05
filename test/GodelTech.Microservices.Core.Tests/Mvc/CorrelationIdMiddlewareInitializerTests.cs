@@ -15,7 +15,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc
         }
 
         [Fact]
-        public void ConfigureRazorPagesOptions_Success()
+        public void ConfigureCorrelationIdOptions_Success()
         {
             // Arrange
             var mockOptions = new Mock<CorrelationIdOptions>(MockBehavior.Strict);

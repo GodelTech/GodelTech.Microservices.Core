@@ -14,6 +14,8 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<RequestResponseLoggingOptions>(ConfigureRequestResponseLoggingOptions);
+
             services.AddSingleton<RecyclableMemoryStreamManager>();
         }
 
@@ -21,6 +23,15 @@ namespace GodelTech.Microservices.Core.Mvc
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
+        }
+
+        /// <summary>
+        /// Configure RequestResponseLoggingOptions.
+        /// </summary>
+        /// <param name="options">RequestResponseLoggingOptions.</param>
+        protected virtual void ConfigureRequestResponseLoggingOptions(RequestResponseLoggingOptions options)
+        {
+
         }
     }
 }
