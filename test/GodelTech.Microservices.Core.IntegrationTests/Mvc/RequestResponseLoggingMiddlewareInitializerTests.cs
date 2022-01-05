@@ -80,20 +80,28 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             var client = CreateClient(initializer);
 
-            // Act & Assert
+            // Act 
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes",
+                    "/fakes/1",
                     UriKind.Relative
                 )
             );
 
+            // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
             var logs = _fixture
                 .TestLoggerContextAccessor
                 .TestLoggerContext
                 .Entries;
+
+            var controllerLog = logs.Where(
+                x =>
+                    x.CategoryName ==
+                    "GodelTech.Microservices.Core.Mvc.RequestResponseLogging.RequestResponseLoggingMiddleware");
+
+            Assert.Equal(2, controllerLog.Count());
         }
     }
 }
