@@ -54,9 +54,9 @@ namespace GodelTech.Microservices.Core
         }
 
         /// <summary>
-        /// Creates Microservice Initializers.
+        /// Creates microservice initializers.
         /// </summary>
-        /// <returns>List of Microservice Initializers.</returns>
+        /// <returns>List of microservice initializers.</returns>
         protected abstract IEnumerable<IMicroserviceInitializer> CreateInitializers();
     }
 }
