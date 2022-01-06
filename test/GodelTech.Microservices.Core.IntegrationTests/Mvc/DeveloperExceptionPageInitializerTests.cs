@@ -97,7 +97,9 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             Assert.Matches(
                 new Regex(
-                    await File.ReadAllTextAsync("Documents/DeveloperExceptionPage.txt")
+                    "^" +
+                    await File.ReadAllTextAsync("Documents/DeveloperExceptionPage.txt") +
+                    "$"
                 ),
                 await result.Content.ReadAsStringAsync()
             );

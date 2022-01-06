@@ -128,9 +128,9 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Matches(
                 new Regex(
-                    "{" +
+                    "^{" +
                     "\"correlationId\":\"" + expectedCorrelationIdRegex + "\"" +
-                    "}"
+                    "}$"
                 ),
                 await result.Content.ReadAsStringAsync()
             );

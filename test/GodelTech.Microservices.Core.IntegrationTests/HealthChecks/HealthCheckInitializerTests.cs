@@ -90,11 +90,11 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
 
             Assert.Matches(
                 new Regex(
-                    "{" +
+                    "^{" +
                     "\"status\":\"Healthy\"," +
                     "\"results\":[[]]," +
                     "\"totalDuration\":[\\d]{1,4}[.,][\\d]{1,4}" +
-                    "}"
+                    "}$"
                 ),
                 await result.Content.ReadAsStringAsync()
             );
