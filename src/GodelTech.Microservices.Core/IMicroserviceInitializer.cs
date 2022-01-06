@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: CLSCompliant(false)]
+[assembly: InternalsVisibleTo("GodelTech.Microservices.Core.Tests")]
 namespace GodelTech.Microservices.Core
 {
     /// <summary>
