@@ -123,6 +123,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             Assert.Equal(2, middlewareLogs.Count);
 
+            var requestLog = middlewareLogs[0].Message;
+
             Assert.Matches(
                 new Regex(
                     $"Http Request Information:{Environment.NewLine}" +
@@ -132,7 +134,31 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                     "RemoteIP: ," +
                     @"RequestHeaders: {""Content-Type"":\[""application/json; charset=utf-8""\],""Content-Length"":\[""59""\],""Host"":\[""localhost""\]}"
                 ),
-                middlewareLogs[0].Message
+                requestLog
+            );
+
+            var responseLog = middlewareLogs[1].Message;
+
+            Assert.Matches(
+                new Regex(
+                    $"Http Response Information:{Environment.NewLine}" +
+                    "TraceIdentifier: [0-9A-Z]{13}," +
+                    "StatusCode: 201," +
+                    "ReasonPhrase: ," +
+                    @"ResponseHeaders: {""Location"":\[""http://localhost/fakes/3""\],""Content-Type"":\[""application/json; charset=utf-8""\]}"
+                ),
+                responseLog
+            );
+
+            Assert.Equal(
+                requestLog
+                    .Replace($"Http Request Information:{Environment.NewLine}", string.Empty, StringComparison.InvariantCulture)
+                    .Replace("TraceIdentifier: ", string.Empty, StringComparison.InvariantCulture)
+                    .Substring(0, 13),
+                responseLog
+                    .Replace($"Http Response Information:{Environment.NewLine}", string.Empty, StringComparison.InvariantCulture)
+                    .Replace("TraceIdentifier: ", string.Empty, StringComparison.InvariantCulture)
+                    .Substring(0, 13)
             );
         }
     }

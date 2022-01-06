@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IO;
@@ -59,9 +60,6 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
                 return;
             }
 
-            // todo: check below items
-            // "ResponseTimeMs={responseTimeMs}, "
-
             LogRequest(context);
 
             await _next(context);
@@ -84,13 +82,16 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
         private void LogResponse(HttpContext context)
         {
+            // todo: check below items
+            // "ResponseTimeMs={responseTimeMs}, "
+
             // todo: enable log response body
             _logger.LogInformation(
                 $"Http Response Information:{Environment.NewLine}" +
-                $"Schema: {context.Request.Scheme} " +
-                $"Host: {context.Request.Host} " +
-                $"Path: {context.Request.Path} " +
-                $"QueryString: {context.Request.QueryString}"
+                $"TraceIdentifier: {context.TraceIdentifier}," +
+                $"StatusCode: {context.Response.StatusCode}," +
+                $"ReasonPhrase: {context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase}," +
+                $"ResponseHeaders: {JsonSerializer.Serialize(context.Response.Headers)}"
             );
         }
     }
