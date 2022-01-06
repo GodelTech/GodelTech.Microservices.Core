@@ -8,7 +8,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
     public class StreamExtensionsTests
     {
         [Fact]
-        public void ReadInChunks_Returns_TextWriter()
+        public void ReadInChunks_Success()
         {
             // Arrange
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Test Bytes"));
