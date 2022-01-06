@@ -11,13 +11,13 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
         public void ReadInChunks_Success()
         {
             // Arrange
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Test Bytes"));
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("Test String"));
 
             // Act
             var result = stream.ReadInChunks();
 
             // Assert
-            Assert.Equal("Test Bytes", result);
+            Assert.Equal("Test String", result);
         }
     }
 }

@@ -96,8 +96,6 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
         private async Task LogResponse(HttpContext context)
         {
-            // todo: check below items
-            // "ResponseTimeMs={responseTimeMs}, "
             var timer = Stopwatch.StartNew();
 
             var body = string.Empty;
