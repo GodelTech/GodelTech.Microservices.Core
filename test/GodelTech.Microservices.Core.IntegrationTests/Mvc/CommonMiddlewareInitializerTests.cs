@@ -110,6 +110,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 .ToList();
 
             Assert.Equal(2, requestResponseLogs.Count); // check if RequestResponseLoggingMiddleware was initialized
+            
             var hasCorrelationIdHeader = result.Headers.Contains(
                 "X-Correlation-ID");
 
