@@ -81,9 +81,9 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Arrange
             var initializer = new CommonMiddlewareInitializer();
 
-            // Act
             var client = CreateClient(initializer);
 
+            // Act
             var result = await client.PostAsJsonAsync(
                 new Uri(
                     "/fakes?version=1",
@@ -109,29 +109,55 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 )
                 .ToList();
 
-            Assert.Equal(2, requestResponseLogs.Count); // check if RequestResponseLoggingMiddleware was initialized
+            Assert.Equal(2, requestResponseLogs.Count);
+
+            Assert.True(result.Headers.Contains("X-Correlation-ID"));
+        }
+
+        [Fact]
+        public async Task Configure_WithArgumentException()
+        {
+            // Arrange
+            var initializer = new CommonMiddlewareInitializer();
+
+            var client = CreateClient(initializer);
             
-            var hasCorrelationIdHeader = result.Headers.Contains(
-                "X-Correlation-ID");
-
-            Assert.True(hasCorrelationIdHeader); // check if CorrelationIdMiddlewareInitializer was initialized
-
+            // Act
             await Assert.ThrowsAsync<ArgumentException>(
-                () => client.GetAsync(
+                () => client.PostAsJsonAsync(
                     new Uri(
-                        "/fakes/argumentException",
+                        "/fakes/argumentException?version=1",
                         UriKind.Relative
-                    )
+                    ),
+                    new FakePostModel
+                    {
+                        Message = "Test Message",
+                        ServiceName = "Test ServiceName"
+                    }
                 )
             );
 
+            // Assert
+            var logs = _fixture
+                .TestLoggerContextAccessor
+                .TestLoggerContext
+                .Entries;
+
+            Assert.Single(logs.Where(
+                    x =>
+                        x.CategoryName ==
+                        "GodelTech.Microservices.Core.Mvc.RequestResponseLogging.RequestResponseLoggingMiddleware"
+                )
+                .ToList()
+            );
+
             Assert.Single(
-            logs.Where(
+                logs.Where(
                     x =>
                         x.CategoryName ==
                         "GodelTech.Microservices.Core.Mvc.LogUncaughtErrors.LogUncaughtErrorsMiddleware"
                 )
-            ); // check if LogUncaughtErrorsMiddleware was initialized
+            );
         }
     }
 }

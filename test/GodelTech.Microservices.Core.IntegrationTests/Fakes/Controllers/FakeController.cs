@@ -93,12 +93,31 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         }
 
         [HttpGet("argumentException")]
-        [ProducesResponseType(typeof(ExceptionFilterResultModel), StatusCodes.Status413RequestEntityTooLarge)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetArgumentException()
         {
             _fakeService.ThrowArgumentException(null);
 
             return Ok();
+        }
+
+        [HttpPost("argumentException")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(FakeModel), StatusCodes.Status201Created)]
+        public IActionResult PostThrowArgumentException([FromBody] FakePostModel model)
+        {
+            var item = _mapper.Map<FakeModel>(
+                _fakeService.Add(model)
+            );
+
+            _fakeService.ThrowArgumentException(null);
+
+            return CreatedAtAction(
+                nameof(Get),
+                new { id = item.Id },
+                item
+            );
         }
     }
 }
