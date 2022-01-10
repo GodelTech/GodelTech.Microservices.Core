@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
 {
-    [ApiController]
     [Route("fakes")]
+    [ApiController]
     public class FakeController : ControllerBase
     {
         private readonly IFakeService _fakeService;
@@ -35,6 +35,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(FakeModel), StatusCodes.Status200OK)]
         public IActionResult Get(int id)
         {
