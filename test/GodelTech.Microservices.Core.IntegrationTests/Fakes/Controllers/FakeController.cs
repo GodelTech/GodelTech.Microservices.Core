@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
 {
-    [ApiController]
     [Route("fakes")]
+    [ApiController]
     public class FakeController : ControllerBase
     {
         private readonly IFakeService _fakeService;
