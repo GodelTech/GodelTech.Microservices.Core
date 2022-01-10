@@ -1,7 +1,7 @@
-# GodeTech.Microservices.Core
+# GodelTech.Microservices.Core
 
 ## Overview
-`GodeTech.Microservices.Core` project contains base components and interfaces of Microservices Framework. Whole idea of framework is based on components called **initializers**. 
+`GodelTech.Microservices.Core` project contains base components and interfaces of Microservices Framework. Whole idea of framework is based on components called **initializers**. 
 
 Initializer contract is defined as follows:
 
@@ -31,7 +31,7 @@ Other than this no other logic is included into `MicroserviceStartup` class.
 In order to use microservice framework few simple steps are required:
 
 1. Create ASP.NET Website application using **Visual Studio** or **dotnet cli**.
-2. Reference latest version of `GodeTech.Microservices.Core` nuget package and optionally satellite packages you would like to use.
+2. Reference latest version of `GodelTech.Microservices.Core` nuget package and optionally satellite packages you would like to use.
 3. Update your `Startup.cs` file to create initializers used to configure pipeline.
 
 ### REST API configuration
