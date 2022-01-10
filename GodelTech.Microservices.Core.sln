@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29728.190
+VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{339DDC48-26C9-4A09-A77B-C4B34C6F35B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7EB2BE1D-731C-4B19-AE14-15027D218381}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.Core", "src\GodelTech.Microservices.Core\GodelTech.Microservices.Core.csproj", "{00000000-0000-0000-0000-000000000001}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodelTech.Microservices.Core.Tests", "test\GodelTech.Microservices.Core.Tests\GodelTech.Microservices.Core.Tests.csproj", "{00000000-0000-0000-0000-000000000002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodelTech.Microservices.IntegrationTests", "test\GodelTech.Microservices.IntegrationTests\GodelTech.Microservices.IntegrationTests.csproj", "{5BA960FD-8A69-4303-B29C-7AABDCC14A00}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodelTech.Microservices.Website", "test\GodelTech.Microservices.Website\GodelTech.Microservices.Website.csproj", "{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodelTech.Microservices.Core.IntegrationTests", "test\GodelTech.Microservices.Core.IntegrationTests\GodelTech.Microservices.Core.IntegrationTests.csproj", "{42286551-E05C-45EE-A98F-AA2982A6692A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,19 +27,20 @@ Global
 		{00000000-0000-0000-0000-000000000002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00000000-0000-0000-0000-000000000002}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00000000-0000-0000-0000-000000000002}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BA960FD-8A69-4303-B29C-7AABDCC14A00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BA960FD-8A69-4303-B29C-7AABDCC14A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BA960FD-8A69-4303-B29C-7AABDCC14A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BA960FD-8A69-4303-B29C-7AABDCC14A00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C23A5CE-CFD0-4664-BC7C-12B0B5CA03FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42286551-E05C-45EE-A98F-AA2982A6692A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42286551-E05C-45EE-A98F-AA2982A6692A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42286551-E05C-45EE-A98F-AA2982A6692A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42286551-E05C-45EE-A98F-AA2982A6692A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00000000-0000-0000-0000-000000000001} = {339DDC48-26C9-4A09-A77B-C4B34C6F35B5}
+		{00000000-0000-0000-0000-000000000002} = {7EB2BE1D-731C-4B19-AE14-15027D218381}
+		{42286551-E05C-45EE-A98F-AA2982A6692A} = {7EB2BE1D-731C-4B19-AE14-15027D218381}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D695AB56-54D7-4D9F-80D7-3951FE69FE54}
+		SolutionGuid = {20D23D07-79B9-44FB-8E0E-EA2A39713C79}
 	EndGlobalSection
 EndGlobal

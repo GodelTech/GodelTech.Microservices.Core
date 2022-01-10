@@ -1,15 +1,16 @@
 # GodeTech.Microservices.Core
 
 ## Overview
-`Godel.Microservice.Core` project contains base components and interfaces of Microservices Framework. Whole idea of framework is based on components called **initializers**. 
+`GodeTech.Microservices.Core` project contains base components and interfaces of Microservices Framework. Whole idea of framework is based on components called **initializers**. 
 
 Initializer contract is defined as follows:
 
 ```c#
     public interface IMicroserviceInitializer
     {
-        void Configure(IApplicationBuilder app, IWebHostEnvironment env);
         void ConfigureServices(IServiceCollection services);
+
+        void Configure(IApplicationBuilder app, IWebHostEnvironment env);
     }
 ```
 
@@ -19,8 +20,8 @@ It's easy to see that contracts mimics signature of typical `Startup` class. Mai
 
 1. It accepts `IConfiguration` as constructor parameter and stores it in property named `Configuration`.
 2. Abstract method `CreateInitializers` must be created by child classes. This method is responsible for initializer chain creation.
-3. Virtual methods `Configure()` and `ConfigureServices()` are defined.
-4. `Configure()` and `ConfigureServices()` invoke corresponding methods of initializers to configure ASP.NET Core application.
+3. Virtual methods `ConfigureServices()` and `Configure()` are defined.
+4. `ConfigureServices()` and `Configure()` invoke corresponding methods of initializers to configure ASP.NET Core application.
 5. Few common services are registered by `ConfigureServices()`
 
 Other than this no other logic is included into `MicroserviceStartup` class.
@@ -30,7 +31,7 @@ Other than this no other logic is included into `MicroserviceStartup` class.
 In order to use microservice framework few simple steps are required:
 
 1. Create ASP.NET Website application using **Visual Studio** or **dotnet cli**.
-2. Reference latest version of `Godel.Microservice.Core` nuget package and optionally satellite packages you would like to use.
+2. Reference latest version of `GodeTech.Microservices.Core` nuget package and optionally satellite packages you would like to use.
 3. Update your `Startup.cs` file to create initializers used to configure pipeline.
 
 ### REST API configuration
@@ -43,17 +44,19 @@ Please use the following snippet to configure service which uses REST API only:
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
+
         }
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
         {
-            yield return new DeveloperExceptionPageInitializer(Configuration);
-            yield return new HttpsInitializer(Configuration);
+            yield return new DeveloperExceptionPageInitializer();
+            yield return new ExceptionHandlerInitializer();
+            yield return new HstsInitializer();
 
             yield return new GenericInitializer((app, env) => app.UseRouting());
             yield return new GenericInitializer((app, env) => app.UseAuthentication());
 
-            yield return new ApiInitializer(Configuration);
+            yield return new ApiInitializer();
         }
     }
 ```
@@ -68,22 +71,20 @@ Please use the following snippet to configure service which use Razon Pages only
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
+
         }
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
         {
-            yield return new DeveloperExceptionPageInitializer(Configuration)
-            {
-                ErrorHandlingPath = "/Error"
-            };
-
-            yield return new HttpsInitializer(Configuration);
+            yield return new DeveloperExceptionPageInitializer();
+            yield return new ExceptionHandlerInitializer();
+            yield return new HstsInitializer();
 
             yield return new GenericInitializer((app, env) => app.UseStaticFiles());
             yield return new GenericInitializer((app, env) => app.UseRouting());
             yield return new GenericInitializer((app, env) => app.UseAuthentication());
 
-            yield return new RazorPagesInitializer(Configuration);
+            yield return new RazorPagesInitializer();
         }
     }
 ```
@@ -98,22 +99,20 @@ Please use the following snippet to configure service which use ASP.NET MVC only
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
+
         }
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
         {
-            yield return new DeveloperExceptionPageInitializer(Configuration)
-            {
-                ErrorHandlingPath = "/Error"
-            };
-
-            yield return new HttpsInitializer(Configuration);
+            yield return new DeveloperExceptionPageInitializer();
+            yield return new ExceptionHandlerInitializer();
+            yield return new HstsInitializer();
 
             yield return new GenericInitializer((app, env) => app.UseStaticFiles());
             yield return new GenericInitializer((app, env) => app.UseRouting());
             yield return new GenericInitializer((app, env) => app.UseAuthentication());
 
-            yield return new MvcInitializer(Configuration);
+            yield return new MvcInitializer();
         }
     }
 ```
@@ -130,23 +129,21 @@ The following snippet is example of microservice using Razor Pages and REST APIs
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
+
         }
 
         protected override IEnumerable<IMicroserviceInitializer> CreateInitializers()
         {
-            yield return new DeveloperExceptionPageInitializer(Configuration)
-            {
-                ErrorHandlingPath = "/Error"
-            };
-                        
-            yield return new HttpsInitializer(Configuration);
+            yield return new DeveloperExceptionPageInitializer();
+            yield return new ExceptionHandlerInitializer();
+            yield return new HstsInitializer();
 
             yield return new GenericInitializer((app, env) => app.UseStaticFiles());
             yield return new GenericInitializer((app, env) => app.UseRouting());
             yield return new GenericInitializer((app, env) => app.UseAuthentication());
 
-            yield return new ApiInitializer(Configuration);
-            yield return new RazorPagesInitializer(Configuration);
+            yield return new ApiInitializer();
+            yield return new RazorPagesInitializer();
         }
     }
 ```
@@ -161,8 +158,9 @@ Framework comes with a number of initializers. Full list of initializers and the
 |`RazorPagesInitializer`| Component is reponsible for Razor Pages configuration. |
 |`MvcInitializer`| Initializer is reponsible for MVC controllers with views configuration. When this controller is used REST API initialization is also performed. Additional use of `ApiInitializer` is not required. |
 |`GenericInitializer`| This initialize accepts lamda function as parameters. These functions are used by `ConfigureServices()` and `Configure()` method. This initializer can be used when single line pipeline configuration is performed and creation of dedicated initializer is not reasonable.|
-|`DeveloperExceptionPageInitializer`| Component is reponsible for exception handling pages configuration. If application is executed in `Development` environment developer exception page is used. If environment differs from `Development` exception handler is used. |
-|`HttpsInitializer`| HTTP configuration is performed by this initializer. |
+|`DeveloperExceptionPageInitializer`| Component is reponsible for exception handling pages configuration. If application is executed in `Development` environment developer exception page is used. |
+|`ExceptionHandlerInitializer`| Component is reponsible for exception handling configuration. If environment differs from `Development` exception handler is used. |
+|`HstsInitializer`| HTTP configuration is performed by this initializer. |
 |`HealthCheckInitializer`| Health check infrastructure is configured by this initializer.|
 |`CommonMiddlewareInitializer`| This class configures number of frequently used middlewares such as `CorrelationIdMiddleware`, `LogUncaughtErrorsMiddleware` and `RequestResponseLoggingMiddleware`. |
 
@@ -184,10 +182,7 @@ ASP.NET Core provides good configuration by default. At the same time certain fu
         {
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+                .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>());
         }
     }
 ```
@@ -216,14 +211,13 @@ In order to use third-party logging libraries your `Program.cs` file must be upd
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .UseSerilog((context, loggerConfiguration) =>
-                {
-                    loggerConfiguration.ReadFrom.Configuration(context.Configuration);
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+                .UseSerilog(
+                    (context, loggerConfiguration) =>
+                    {
+                        loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+                    }
+                )
+                .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>());
         }
     }
 ```

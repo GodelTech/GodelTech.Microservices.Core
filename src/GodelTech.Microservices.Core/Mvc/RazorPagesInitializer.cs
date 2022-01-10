@@ -1,50 +1,58 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GodelTech.Microservices.Core.Mvc
 {
-    public class RazorPagesInitializer : MicroserviceInitializerBase
+    /// <summary>
+    /// Razor Pages initializer.
+    /// </summary>
+    public class RazorPagesInitializer : IMicroserviceInitializer
     {
-        public bool EnableAddRazorRuntimeCompilation { get; set; }
-
-        public RazorPagesInitializer(IConfiguration configuration) 
-            : base(configuration)
+        /// <inheritdoc />
+        public virtual void ConfigureServices(IServiceCollection services)
         {
+            var builder = services
+                .AddRazorPages(
+                    options =>
+                    {
+                        ConfigureRazorPagesOptions(options);
+                    }
+                );
+
+            ConfigureMvcBuilder(builder);
         }
 
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <inheritdoc />
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (app == null) 
-                throw new ArgumentNullException(nameof(app));
-            if (env == null) 
-                throw new ArgumentNullException(nameof(env));
+            app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-            });
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapRazorPages();
+                }
+            );
         }
 
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            if (services == null) 
-                throw new ArgumentNullException(nameof(services));
-
-            var builder = services.AddRazorPages(ConfigureRazorPagesOptions);
-
-            if (EnableAddRazorRuntimeCompilation)
-                builder.AddRazorRuntimeCompilation();
-        }
-
+        /// <summary>
+        /// Configure RazorPagesOptions.
+        /// </summary>
+        /// <param name="options">RazorPagesOptions.</param>
         protected virtual void ConfigureRazorPagesOptions(RazorPagesOptions options)
         {
-            // You can put security configuration logic here in your subclass
-            // options.Conventions.AuthorizePage("/Index");
-            // options.Conventions.AuthorizeFolder("/Admin");
+
+        }
+
+        /// <summary>
+        /// Configure MvcBuilder.
+        /// </summary>
+        /// <param name="builder">IMvcBuilder.</param>
+        protected virtual void ConfigureMvcBuilder(IMvcBuilder builder)
+        {
+
         }
     }
 }

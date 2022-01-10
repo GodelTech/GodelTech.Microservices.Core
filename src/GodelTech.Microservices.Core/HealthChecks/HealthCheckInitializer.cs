@@ -1,80 +1,70 @@
 ﻿using System;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace GodelTech.Microservices.Core.HealthChecks
 {
-    public class HealthCheckInitializer : MicroserviceInitializerBase
+    /// <summary>
+    /// HealthCheck initializer.
+    /// </summary>
+    public class HealthCheckInitializer : IMicroserviceInitializer
     {
-        public string HealthCheckPath { get; set; } = "/health";
+        private readonly string _path;
 
-        public HealthCheckInitializer(IConfiguration configuration)
-            : base(configuration)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HealthCheckInitializer"/> class.
+        /// </summary>
+        /// <param name="path">Path.</param>
+        public HealthCheckInitializer(string path = "/health")
         {
+            _path = path;
         }
 
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <inheritdoc />
+        public virtual void ConfigureServices(IServiceCollection services)
         {
-            if (app == null) 
-                throw new ArgumentNullException(nameof(app));
-            if (env == null) 
-                throw new ArgumentNullException(nameof(env));
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHealthChecks(HealthCheckPath, new HealthCheckOptions
-                {
-                    AllowCachingResponses = false,
-                    Predicate = _ => true,
-                    ResponseWriter = WriteResponse
-                });
-            });
-        }
-
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            if (services == null) 
-                throw new ArgumentNullException(nameof(services));
+            services.AddTransient<IHealthCheckResponseWriter, HealthCheckResponseWriter>();
 
             services.AddHealthChecks();
         }
 
-        protected virtual Task WriteResponse(HttpContext httpContext, HealthReport result)
+        /// <inheritdoc />
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (httpContext == null) 
-                throw new ArgumentNullException(nameof(httpContext));
-            if (result == null) 
-                throw new ArgumentNullException(nameof(result));
+            app.UseRouting();
 
-            httpContext.Response.ContentType = "application/json";
+            var options = new HealthCheckOptions();
 
-            var healthResult = new
-            {
-                status = result.Status.ToString(),
-                results = result.Entries.ToDictionary(
-                    x => x.Key,
-                    x => new
-                    {
-                        status = x.Value.Status.ToString(),
-                        description = x.Value.Description,
-                    }
-                ).ToArray()
-            };
+            ConfigureHealthCheckOptions(options, app);
 
-            var json = JsonSerializer.Serialize(healthResult, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapHealthChecks(
+                        _path,
+                        options
+                    );
+                }
+            );
+        }
 
-            return httpContext.Response.WriteAsync(json);
+        /// <summary>
+        /// Configure HealthCheckOptions.
+        /// </summary>
+        /// <param name="options">HealthCheckOptions.</param>
+        /// <param name="app">ApplicationBuilder.</param>
+        protected virtual void ConfigureHealthCheckOptions(HealthCheckOptions options, IApplicationBuilder app)
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (app == null) throw new ArgumentNullException(nameof(app));
+
+            var writer = app.ApplicationServices.GetRequiredService<IHealthCheckResponseWriter>();
+
+            options.AllowCachingResponses = false;
+            options.Predicate = _ => true;
+            options.ResponseWriter = writer.Write;
         }
     }
 }

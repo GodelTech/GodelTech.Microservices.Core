@@ -1,0 +1,21 @@
+﻿System.ArgumentException: Fake ArgumentException \(Parameter 'name'\)
+   at GodelTech.Microservices.Core.IntegrationTests.Fakes.FakeService.ThrowArgumentException\(String name\) in c:\\Dev\\GodelTech\\GodelTech.Microservices.Core\\test\\GodelTech.Microservices.Core.IntegrationTests\\Fakes\\FakeService.cs:line 61
+   at GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers.FakeController.GetArgumentException\(\) in c:\\Dev\\GodelTech\\GodelTech.Microservices.Core\\test\\GodelTech.Microservices.Core.IntegrationTests\\Fakes\\Controllers\\FakeController.cs:line 61
+   at lambda_method[\d]{2,3}\(Closure , Object , Object[] \)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute\(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments\)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync\(\)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next\(State& next, Scope& scope, Object& state, Boolean& isCompleted\)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync\(\)
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow\(ActionExecutedContextSealed context\)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next\(State& next, Scope& scope, Object& state, Boolean& isCompleted\)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync\(\)
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0\(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted\)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1\(ResourceInvoker invoker\)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0\(Endpoint endpoint, Task requestTask, ILogger logger\)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke\(HttpContext context\)
+
+HEADERS
+=======
+Host: localhost

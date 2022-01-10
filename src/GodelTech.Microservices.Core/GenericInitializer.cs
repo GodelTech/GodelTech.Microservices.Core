@@ -5,29 +5,37 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GodelTech.Microservices.Core
 {
-    public class GenericInitializer : IMicroserviceInitializer
+    /// <summary>
+    /// Generic Microservice initializer.
+    /// </summary>
+    public sealed class GenericInitializer : IMicroserviceInitializer
     {
-        private readonly Action<IApplicationBuilder, IWebHostEnvironment> _configureAction;
         private readonly Action<IServiceCollection> _configureServices;
+        private readonly Action<IApplicationBuilder, IWebHostEnvironment> _configure;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericInitializer"/> class.
+        /// </summary>
+        /// <param name="configureServices">Action for configure services.</param>
+        /// <param name="configure">Action for configure.</param>
         public GenericInitializer(
-            Action<IApplicationBuilder, IWebHostEnvironment> configureAction = null,
-            Action<IServiceCollection> configureServices = null)
+            Action<IServiceCollection> configureServices = null,
+            Action<IApplicationBuilder, IWebHostEnvironment> configure = null)
         {
-            _configureAction = configureAction;
             _configureServices = configureServices;
+            _configure = configure;
         }
-
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            _configureAction?.Invoke(app, env);
-
-        }
-
+        
+        /// <inheritdoc />
         public void ConfigureServices(IServiceCollection services)
         {
             _configureServices?.Invoke(services);
+        }
+
+        /// <inheritdoc />
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            _configure?.Invoke(app, env);
         }
     }
 }

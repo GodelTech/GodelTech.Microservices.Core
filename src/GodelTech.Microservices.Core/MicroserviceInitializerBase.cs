@@ -6,21 +6,37 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GodelTech.Microservices.Core
 {
-    public class MicroserviceInitializerBase : IMicroserviceInitializer
+    /// <summary>
+    /// Abstract microservice initializer.
+    /// </summary>
+    public abstract class MicroserviceInitializerBase : IMicroserviceInitializer
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MicroserviceInitializerBase"/> class.
+        /// </summary>
+        /// <param name="configuration">Configuration.</param>
+        protected MicroserviceInitializerBase(IConfiguration configuration)
+        {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            Configuration = configuration;
+        }
+
+        /// <summary>
+        /// Configuration.
+        /// </summary>
         protected IConfiguration Configuration { get; }
 
-        public MicroserviceInitializerBase(IConfiguration configuration)
-        {
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        }
-
-        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-        }
-
+        /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
+
+        }
+
+        /// <inheritdoc />
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+
         }
     }
 }

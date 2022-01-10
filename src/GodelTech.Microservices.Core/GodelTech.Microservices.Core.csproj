@@ -1,37 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
-    <PackageId>GodelTech.Microservices.Core</PackageId>
-    <PackageTags>.netcore netcore microservice</PackageTags>
-    <Copyright>Godel Technologies Europe</Copyright>
-    <Product>Microservice Platform</Product>
-    <Company>Godel Technologies Europe</Company>
-    <Authors>Andrei Salanoi</Authors>
-    <RepositoryUrl>https://github.com/GodelTech/GodelTech.Microservices.Core</RepositoryUrl>
-    <PackageIconUrl>https://www.gravatar.com/avatar/839234621070de51e7b9cabd5ceee8fe?s=64</PackageIconUrl>
-    <VersionPrefix>1.4.1</VersionPrefix>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<PackageId>GodelTech.Microservices.Core</PackageId>
+		<VersionPrefix>2.0.0</VersionPrefix>
+		<Authors>Andrei Salanoi</Authors>
+		<Company>Godel Technologies</Company>
+		<Description>Library contains base components and interfaces of Microservices Framework. Whole idea of framework is based on components called initializers.</Description>
+		<Copyright>Godel Technologies 2020</Copyright>
+		<PackageLicenseUrl>https://github.com/GodelTech/GodelTech.Microservices.Core/blob/master/LICENSE</PackageLicenseUrl>
+		<PackageProjectUrl>https://github.com/GodelTech/GodelTech.Microservices.Core/wiki</PackageProjectUrl>
+		<PackageIconUrl>https://www.gravatar.com/avatar/839234621070de51e7b9cabd5ceee8fe?s=64</PackageIconUrl>
+		<RepositoryUrl>https://github.com/GodelTech/GodelTech.Microservices.Core</RepositoryUrl>
+		<PackageTags>dotnet core microservice</PackageTags>
 
-    <!-- SonarQube needs this -->
-    <ProjectGuid>{00000000-0000-0000-0000-000000000001}</ProjectGuid>
+		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
 
-    <!-- XML documentation -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<!-- XML documentation -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <!-- Source Link needs this -->
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+		<!-- Source Link needs this -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.5" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
+		<!-- SonarQube needs this -->
+		<ProjectGuid>{00000000-0000-0000-0000-000000000001}</ProjectGuid>
+	</PropertyGroup>
 
-    <!-- Source Link needs this -->
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
+
+		<!-- Source Link needs this -->
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+	</ItemGroup>
 
 </Project>
