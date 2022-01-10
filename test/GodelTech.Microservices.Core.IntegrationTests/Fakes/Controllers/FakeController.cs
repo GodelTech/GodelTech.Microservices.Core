@@ -35,6 +35,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(FakeModel), StatusCodes.Status200OK)]
         public IActionResult Get(int id)
         {
