@@ -8,6 +8,7 @@ using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.Mvc;
 using GodelTech.Microservices.Core.Mvc.Filters;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -82,6 +83,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                             .Configure(
                                 (context, app) =>
                                 {
+                                    app.UseRouting();
+
                                     initializer.Configure(app, context.HostingEnvironment);
                                 }
                             );

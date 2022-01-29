@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.HealthChecks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Xunit;
@@ -49,6 +50,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
                             .Configure(
                                 (context, app) =>
                                 {
+                                    app.UseRouting();
+
                                     initializer.Configure(app, context.HostingEnvironment);
                                 }
                             );

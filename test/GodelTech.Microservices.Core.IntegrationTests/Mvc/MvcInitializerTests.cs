@@ -7,6 +7,7 @@ using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Mvc;
 using GodelTech.Microservices.Core.Mvc;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
@@ -81,6 +82,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                             .Configure(
                                 (context, app) =>
                                 {
+                                    app.UseRouting();
+
                                     initializer.Configure(app, context.HostingEnvironment);
                                 }
                             );
