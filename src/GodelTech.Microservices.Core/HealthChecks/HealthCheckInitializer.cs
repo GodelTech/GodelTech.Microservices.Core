@@ -33,8 +33,6 @@ namespace GodelTech.Microservices.Core.HealthChecks
         /// <inheritdoc />
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseRouting();
-
             var options = new HealthCheckOptions();
 
             ConfigureHealthCheckOptions(options, app);

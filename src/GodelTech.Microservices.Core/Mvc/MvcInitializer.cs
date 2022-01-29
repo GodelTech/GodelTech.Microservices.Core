@@ -29,8 +29,6 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseRouting();
-
             app.UseEndpoints(
                 endpoints =>
                 {
