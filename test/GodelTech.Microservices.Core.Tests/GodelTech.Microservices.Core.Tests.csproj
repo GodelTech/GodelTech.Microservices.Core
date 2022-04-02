@@ -11,6 +11,11 @@
 		<ProjectGuid>{00000000-0000-0000-0000-000000000020}</ProjectGuid>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<!-- todo: solve this: Type or member is obsolete -->
+		<NoWarn>$(NoWarn);SYSLIB0020</NoWarn>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="coverlet.collector" Version="3.1.2">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
