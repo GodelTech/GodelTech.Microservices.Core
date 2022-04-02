@@ -106,6 +106,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             Dictionary<string, string> requestHeaders,
             string expectedCorrelationIdRegex)
         {
+            if (requestHeaders == null) throw new ArgumentNullException(nameof(requestHeaders));
+
             // Arrange
             var initializer = new CorrelationIdMiddlewareInitializer();
 

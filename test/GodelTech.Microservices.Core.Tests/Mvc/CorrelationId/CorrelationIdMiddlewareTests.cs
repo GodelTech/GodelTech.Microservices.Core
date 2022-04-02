@@ -192,6 +192,9 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
             string expectedRequestCorrelationId,
             Dictionary<string, string> expectedCorrelationIdResponseHeaders)
         {
+            if (requestHeaders == null) throw new ArgumentNullException(nameof(requestHeaders));
+            if (responseHeaders == null) throw new ArgumentNullException(nameof(responseHeaders));
+
             // Arrange
             var httpContext = new DefaultHttpContext
             {
