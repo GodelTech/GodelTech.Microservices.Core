@@ -91,7 +91,10 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
             Assert.Equal(
-                new MediaTypeHeaderValue("text/plain"),
+                new MediaTypeHeaderValue("text/plain")
+                {
+                    CharSet = "utf-8"
+                },
                 result.Content.Headers.ContentType
             );
 
