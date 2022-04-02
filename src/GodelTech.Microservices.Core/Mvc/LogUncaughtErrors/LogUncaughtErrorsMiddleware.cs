@@ -38,6 +38,16 @@ namespace GodelTech.Microservices.Core.Mvc.LogUncaughtErrors
             return InvokeInternalAsync(context);
         }
 
+        private static readonly Action<ILogger, string, string, string, string, Exception> LogErrorCallback
+            = LoggerMessage.Define<string, string, string, string>(
+                LogLevel.Error,
+                new EventId(0, nameof(InvokeAsync)),
+                "Action={Action}," +
+                "Message=Uncaught error:{ErrorMessage}," +
+                "Method={RequestMethod}," +
+                "RequestUri={RequestUrl}"
+            );
+
         private async Task InvokeInternalAsync(HttpContext context)
         {
             // catch any errors that can propagate out of any middleware we run.
@@ -48,14 +58,17 @@ namespace GodelTech.Microservices.Core.Mvc.LogUncaughtErrors
             }
             catch (Exception e)
             {
-                _logger.LogError(
-                    e,
-                    "Action={action}, Message=Uncaught error:{errorMessage}, Method={requestMethod}, RequestUri={requestUrl}",
-                    "LogUncaughtErrors",
-                    e.Message,
-                    context.Request.Method,
-                    context.Request.GetDisplayUrl()
-                );
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    LogErrorCallback(
+                        _logger,
+                        "LogUncaughtErrors",
+                        e.Message,
+                        context.Request.Method,
+                        context.Request.GetDisplayUrl(),
+                        e
+                    );
+                }
 
                 throw;
             }
