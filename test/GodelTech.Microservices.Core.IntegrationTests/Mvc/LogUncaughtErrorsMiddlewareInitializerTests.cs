@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -105,7 +106,17 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 )
             );
             Assert.Equal(
-                "Action=LogUncaughtErrors, Message=Uncaught error:Fake ArgumentException (Parameter 'name'), Method=GET, RequestUri=http://localhost/fakes/argumentException",
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Action={0}," +
+                    "Message=Uncaught error:{1}," +
+                    "Method={2}," +
+                    "RequestUri={3}",
+                    "LogUncaughtErrors",
+                    "Fake ArgumentException (Parameter 'name')",
+                    "GET",
+                    "http://localhost/fakes/argumentException"
+                ),
                 middlewareLog.Message
             );
         }

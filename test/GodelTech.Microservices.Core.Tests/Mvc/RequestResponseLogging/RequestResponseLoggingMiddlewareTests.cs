@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq.Expressions;
 using System.Net;
@@ -157,16 +158,27 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
             var requestHeaders = JsonSerializer.Serialize(httpContext.Request.Headers);
             Expression<Action<ILogger<RequestResponseLoggingMiddleware>>> loggerExpressionRequest = x => x.Log(
                 LogLevel.Information,
-                0,
+                new EventId(0, "LogRequest"),
                 It.Is<It.IsAnyType>((v, t) =>
                     v.ToString() ==
-                    $"Http Request Information:{Environment.NewLine}" +
-                    $"TraceIdentifier: {httpContext.TraceIdentifier}," +
-                    $"Method: {httpContext.Request.Method}," +
-                    $"Url: {httpContext.Request.GetEncodedUrl()}," +
-                    $"RemoteIP: {httpContext.Request.HttpContext.Connection.RemoteIpAddress}," +
-                    $"RequestHeaders: {requestHeaders}" +
-                    (includeRequestBody ? ",Body: Test RequestBody" : string.Empty)
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Http Request Information:" + Environment.NewLine +
+                        "TraceIdentifier: {0}," +
+                        "Method: {1}," +
+                        "Url: {2}," +
+                        "RemoteIP: {3}," +
+                        "RequestHeaders: {4}," +
+                        "Body: {5}",
+                        httpContext.TraceIdentifier,
+                        httpContext.Request.Method,
+                        httpContext.Request.GetEncodedUrl(),
+                        httpContext.Request.HttpContext.Connection.RemoteIpAddress,
+                        requestHeaders,
+                        _options.IncludeRequestBody
+                            ? "Test RequestBody"
+                            : "<IncludeRequestBody is false>"
+                    )
                 ),
                 null,
                 It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)
@@ -185,17 +197,28 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
 
             Expression<Action<ILogger<RequestResponseLoggingMiddleware>>> loggerExpressionResponse = x => x.Log(
                 LogLevel.Information,
-                0,
+                new EventId(0, "LogResponse"),
                 It.Is<It.IsAnyType>((v, t) =>
                     new Regex(
                         "^" +
-                        $"Http Response Information:{Environment.NewLine}" +
-                        $"TraceIdentifier: {httpContext.TraceIdentifier}," +
-                        $"StatusCode: {httpContext.Response.StatusCode}," +
-                        $"ReasonPhrase: {httpContext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase}," +
-                        "ResponseTimeMilliseconds: [0-9]{1,}," +
-                        @"ResponseHeaders: {""Test ResponseHeader Key"":\[""Test ResponseHeader Value""\]}" +
-                        (includeResponseBody ? ",Body: Test NewResponseBody" : string.Empty) +
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Http Response Information:" + Environment.NewLine +
+                            "TraceIdentifier: {0}," +
+                            "StatusCode: {1}," +
+                            "ReasonPhrase: {2}," +
+                            "ResponseTimeMilliseconds: {3}," +
+                            "ResponseHeaders: {4}," +
+                            "Body: {5}",
+                            httpContext.TraceIdentifier,
+                            httpContext.Response.StatusCode,
+                            httpContext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase,
+                            "[0-9]{1,}",
+                            @"{""Test ResponseHeader Key"":\[""Test ResponseHeader Value""\]}",
+                            _options.IncludeResponseBody
+                                ? "Test NewResponseBody"
+                                : "<IncludeResponseBody is false>"
+                        ) +
                         "$"
                     ).IsMatch(v.ToString())
                 ),

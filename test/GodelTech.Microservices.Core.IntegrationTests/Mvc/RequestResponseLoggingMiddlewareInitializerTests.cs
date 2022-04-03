@@ -128,11 +128,11 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             Assert.Matches(
                 new Regex(
                     "^" +
-                    $"Http Request Information:{Environment.NewLine}" +
+                    "Http Request Information:" + Environment.NewLine +
                     "TraceIdentifier: [0-9A-Z]{13}," +
                     "Method: POST," +
                     @"Url: http://localhost/fakes\?version=1," +
-                    "RemoteIP: ," +
+                    @"RemoteIP: \(null\)," +
                     @"RequestHeaders: {""Content-Type"":\[""application/json; charset=utf-8""\],""Content-Length"":\[""59""\],""Host"":\[""localhost""\]}" +
                     @",Body: {""serviceName"":""Test ServiceName"",""message"":""Test Message""}" +
                     "$"
@@ -145,10 +145,10 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             Assert.Matches(
                 new Regex(
                     "^" +
-                    $"Http Response Information:{Environment.NewLine}" +
+                    "Http Response Information:" + Environment.NewLine +
                     "TraceIdentifier: [0-9A-Z]{13}," +
                     "StatusCode: 201," +
-                    "ReasonPhrase: ," +
+                    @"ReasonPhrase: \(null\)," +
                     "ResponseTimeMilliseconds: [0-9]{1,}," +
                     @"ResponseHeaders: {""Location"":\[""http://localhost/fakes/3""\],""Content-Type"":\[""application/json; charset=utf-8""\]}" +
                     @",Body: {""id"":3,""serviceName"":""Test ServiceName"",""message"":""Test Message"",""dictionary"":{},""emptyDictionary"":null,""intValue"":0,""nullableIntValue"":null,""status"":0}" +
@@ -159,11 +159,11 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
             Assert.Equal(
                 requestLog
-                    .Replace($"Http Request Information:{Environment.NewLine}", string.Empty, StringComparison.InvariantCulture)
+                    .Replace("Http Request Information:" + Environment.NewLine, string.Empty, StringComparison.InvariantCulture)
                     .Replace("TraceIdentifier: ", string.Empty, StringComparison.InvariantCulture)
                     .Substring(0, 13),
                 responseLog
-                    .Replace($"Http Response Information:{Environment.NewLine}", string.Empty, StringComparison.InvariantCulture)
+                    .Replace("Http Response Information:" + Environment.NewLine, string.Empty, StringComparison.InvariantCulture)
                     .Replace("TraceIdentifier: ", string.Empty, StringComparison.InvariantCulture)
                     .Substring(0, 13)
             );

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -84,12 +85,26 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.LogUncaughtErrors
                 .Setup(x => x.Invoke(httpContext))
                 .ThrowsAsync(expectedException);
 
+            _mockLogger
+                .Setup(x => x.IsEnabled(LogLevel.Error))
+                .Returns(true);
+
             Expression<Action<ILogger<LogUncaughtErrorsMiddleware>>> loggerExpression = x => x.Log(
                 LogLevel.Error,
-                0,
+                new EventId(0, "InvokeAsync"),
                 It.Is<It.IsAnyType>((v, t) =>
                     v.ToString() ==
-                    "Action=LogUncaughtErrors, Message=Uncaught error:Test exception message., Method=, RequestUri=://"
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Action={0}," +
+                        "Message=Uncaught error:{1}," +
+                        "Method={2}," +
+                        "RequestUri={3}",
+                        "LogUncaughtErrors",
+                        "Test exception message.",
+                        "",
+                        "://"
+                    )
                 ),
                 It.Is<InvalidOperationException>(e => e == expectedException),
                 It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)

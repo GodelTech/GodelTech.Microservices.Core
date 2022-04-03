@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -67,6 +68,19 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
             await LogResponse(context);
         }
 
+        private static readonly Action<ILogger, string, string, string, IPAddress, string, string, Exception> LogRequestCallback
+            = LoggerMessage.Define<string, string, string, IPAddress, string, string>(
+                LogLevel.Information,
+                new EventId(0, nameof(LogRequest)),
+                "Http Request Information:" + Environment.NewLine +
+                "TraceIdentifier: {TraceIdentifier}," +
+                "Method: {Method}," +
+                "Url: {Url}," +
+                "RemoteIP: {RemoteIpAddress}," +
+                "RequestHeaders: {RequestHeaders}," +
+                "Body: {Body}"
+            );
+
         private async Task LogRequest(HttpContext context)
         {
             var body = string.Empty;
@@ -83,16 +97,35 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
                 context.Request.Body.Position = 0;
             }
 
-            _logger.LogInformation(
-                $"Http Request Information:{Environment.NewLine}" +
-                $"TraceIdentifier: {context.TraceIdentifier}," +
-                $"Method: {context.Request.Method}," +
-                $"Url: {context.Request.GetEncodedUrl()}," +
-                $"RemoteIP: {context.Request.HttpContext.Connection.RemoteIpAddress}," +
-                $"RequestHeaders: {JsonSerializer.Serialize(context.Request.Headers)}" +
-                (_options.IncludeRequestBody ? $",Body: {body}" : string.Empty)
-            );
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                LogRequestCallback(
+                    _logger,
+                    context.TraceIdentifier,
+                    context.Request.Method,
+                    context.Request.GetEncodedUrl(),
+                    context.Request.HttpContext.Connection.RemoteIpAddress,
+                    JsonSerializer.Serialize(context.Request.Headers),
+                    _options.IncludeRequestBody
+                        ? body
+                        : "<IncludeRequestBody is false>",
+                    null
+                );
+            }
         }
+
+        private static readonly Action<ILogger, string, int, string, long, string, string, Exception> LogResponseCallback
+            = LoggerMessage.Define<string, int, string, long, string, string>(
+                LogLevel.Information,
+                new EventId(0, nameof(LogResponse)),
+                "Http Response Information:" + Environment.NewLine +
+                "TraceIdentifier: {TraceIdentifier}," +
+                "StatusCode: {StatusCode}," +
+                "ReasonPhrase: {ReasonPhrase}," +
+                "ResponseTimeMilliseconds: {ResponseTimeMilliseconds}," +
+                "ResponseHeaders: {ResponseHeaders}," +
+                "Body: {Body}"
+            );
 
         private async Task LogResponse(HttpContext context)
         {
@@ -123,15 +156,21 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
             timer.Stop();
 
-            _logger.LogInformation(
-                $"Http Response Information:{Environment.NewLine}" +
-                $"TraceIdentifier: {context.TraceIdentifier}," +
-                $"StatusCode: {context.Response.StatusCode}," +
-                $"ReasonPhrase: {context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase}," +
-                $"ResponseTimeMilliseconds: {timer.ElapsedMilliseconds}," +
-                $"ResponseHeaders: {JsonSerializer.Serialize(context.Response.Headers)}" +
-                (_options.IncludeResponseBody ? $",Body: {body}" : string.Empty)
-            );
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                LogResponseCallback(
+                    _logger,
+                    context.TraceIdentifier,
+                    context.Response.StatusCode,
+                    context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase,
+                    timer.ElapsedMilliseconds,
+                    JsonSerializer.Serialize(context.Response.Headers),
+                    _options.IncludeResponseBody
+                        ? body
+                        : "<IncludeResponseBody is false>",
+                    null
+                );
+            }
         }
     }
 }
