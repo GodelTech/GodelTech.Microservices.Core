@@ -97,21 +97,18 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
                 context.Request.Body.Position = 0;
             }
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                LogRequestCallback(
-                    _logger,
-                    context.TraceIdentifier,
-                    context.Request.Method,
-                    context.Request.GetEncodedUrl(),
-                    context.Request.HttpContext.Connection.RemoteIpAddress,
-                    JsonSerializer.Serialize(context.Request.Headers),
-                    _options.IncludeRequestBody
-                        ? body
-                        : "<IncludeRequestBody is false>",
-                    null
-                );
-            }
+            LogRequestCallback(
+                _logger,
+                context.TraceIdentifier,
+                context.Request.Method,
+                context.Request.GetEncodedUrl(),
+                context.Request.HttpContext.Connection.RemoteIpAddress,
+                JsonSerializer.Serialize(context.Request.Headers),
+                _options.IncludeRequestBody
+                    ? body
+                    : "<IncludeRequestBody is false>",
+                null
+            );
         }
 
         private static readonly Action<ILogger, string, int, string, long, string, string, Exception> LogResponseCallback
@@ -156,21 +153,18 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
             timer.Stop();
 
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                LogResponseCallback(
-                    _logger,
-                    context.TraceIdentifier,
-                    context.Response.StatusCode,
-                    context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase,
-                    timer.ElapsedMilliseconds,
-                    JsonSerializer.Serialize(context.Response.Headers),
-                    _options.IncludeResponseBody
-                        ? body
-                        : "<IncludeResponseBody is false>",
-                    null
-                );
-            }
+            LogResponseCallback(
+                _logger,
+                context.TraceIdentifier,
+                context.Response.StatusCode,
+                context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase,
+                timer.ElapsedMilliseconds,
+                JsonSerializer.Serialize(context.Response.Headers),
+                _options.IncludeResponseBody
+                    ? body
+                    : "<IncludeResponseBody is false>",
+                null
+            );
         }
     }
 }

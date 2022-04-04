@@ -58,17 +58,14 @@ namespace GodelTech.Microservices.Core.Mvc.LogUncaughtErrors
             }
             catch (Exception e)
             {
-                if (_logger.IsEnabled(LogLevel.Error))
-                {
-                    LogErrorCallback(
-                        _logger,
-                        "LogUncaughtErrors",
-                        e.Message,
-                        context.Request.Method,
-                        context.Request.GetDisplayUrl(),
-                        e
-                    );
-                }
+                LogErrorCallback(
+                    _logger,
+                    "LogUncaughtErrors",
+                    e.Message,
+                    context.Request.Method,
+                    context.Request.GetDisplayUrl(),
+                    e
+                );
 
                 throw;
             }
