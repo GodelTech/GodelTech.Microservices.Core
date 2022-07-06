@@ -20,8 +20,10 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
         public LogUncaughtErrorsMiddlewareInitializerTests(ITestOutputHelper output)
         {
-            _fixture = new AppTestFixture();
-            _fixture.Output = output;
+            _fixture = new AppTestFixture
+            {
+                Output = output
+            };
         }
 
         public void Dispose()

@@ -33,7 +33,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         public RequestResponseLoggingMiddleware(
             RequestDelegate next,
             IOptions<RequestResponseLoggingOptions> options,
-            ILogger<RequestResponseLoggingMiddleware> logger, 
+            ILogger<RequestResponseLoggingMiddleware> logger,
             RecyclableMemoryStreamManager recyclableMemoryStreamManager)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));

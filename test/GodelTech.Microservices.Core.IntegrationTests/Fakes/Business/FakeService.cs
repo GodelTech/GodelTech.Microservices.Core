@@ -35,7 +35,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
                 Status = FakeStatus.Other
             }
         };
-        
+
         public IList<FakeDto> GetList()
         {
             return Items

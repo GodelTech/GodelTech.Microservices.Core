@@ -8,7 +8,6 @@ namespace GodelTech.Microservices.Core.Tests.Fakes.Mvc.CorrelationId
 {
     public class FakeResponseFeature : IHttpResponseFeature
     {
-        private bool _hasStarted;
         private Func<object, Task> _callback;
         private object _state;
 
@@ -17,13 +16,13 @@ namespace GodelTech.Microservices.Core.Tests.Fakes.Mvc.CorrelationId
         public string ReasonPhrase { get; set; }
 
 #pragma warning disable CA2227 // Collection properties should be read only
-                               // implementation of interface
+        // implementation of interface
         public IHeaderDictionary Headers { get; set; } = new HeaderDictionary();
 #pragma warning restore CA2227 // Collection properties should be read only
 
         public Stream Body { get; set; }
 
-        public bool HasStarted => _hasStarted;
+        public bool HasStarted { get; private set; }
 
         public void OnStarting(Func<object, Task> callback, object state)
         {
@@ -38,7 +37,7 @@ namespace GodelTech.Microservices.Core.Tests.Fakes.Mvc.CorrelationId
 
         public Task InvokeCallBack()
         {
-            _hasStarted = true;
+            HasStarted = true;
 
             return _callback(_state);
         }

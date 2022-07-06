@@ -121,7 +121,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             var initializer = new CommonMiddlewareInitializer();
 
             var client = CreateClient(initializer);
-            
+
             // Act
             await Assert.ThrowsAsync<ArgumentException>(
                 () => client.PostAsJsonAsync(

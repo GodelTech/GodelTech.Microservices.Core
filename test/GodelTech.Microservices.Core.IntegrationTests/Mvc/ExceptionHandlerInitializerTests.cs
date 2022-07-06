@@ -94,7 +94,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 },
                 result.Content.Headers.ContentType
             );
-            
+
             Assert.Matches(
                 new Regex(
                     "^{" +
