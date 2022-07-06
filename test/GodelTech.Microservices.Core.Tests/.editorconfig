@@ -9,5 +9,8 @@ dotnet_diagnostic.CA1014.severity = none
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = none
 
+# IDE0041: Use 'is null' check
+dotnet_diagnostic.IDE0041.severity = none
+
 # IDE0160: Convert to block-scoped namespace
 csharp_style_namespace_declarations = block_scoped

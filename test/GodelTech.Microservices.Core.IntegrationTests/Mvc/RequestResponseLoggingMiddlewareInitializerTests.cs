@@ -161,11 +161,11 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                 requestLog
                     .Replace("Http Request Information:" + Environment.NewLine, string.Empty, StringComparison.InvariantCulture)
                     .Replace("TraceIdentifier: ", string.Empty, StringComparison.InvariantCulture)
-                    .Substring(0, 13),
+                    [..13],
                 responseLog
                     .Replace("Http Response Information:" + Environment.NewLine, string.Empty, StringComparison.InvariantCulture)
                     .Replace("TraceIdentifier: ", string.Empty, StringComparison.InvariantCulture)
-                    .Substring(0, 13)
+                    [..13]
             );
         }
     }

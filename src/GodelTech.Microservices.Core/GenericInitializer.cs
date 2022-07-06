@@ -25,7 +25,7 @@ namespace GodelTech.Microservices.Core
             _configureServices = configureServices;
             _configure = configure;
         }
-        
+
         /// <inheritdoc />
         public void ConfigureServices(IServiceCollection services)
         {

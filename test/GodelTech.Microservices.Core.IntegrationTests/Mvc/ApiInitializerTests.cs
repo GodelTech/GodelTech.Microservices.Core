@@ -48,7 +48,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             "\"status\":\"Other\"" +
             "}"
         };
-        
+
         private readonly AppTestFixture _fixture;
 
         public ApiInitializerTests()

@@ -11,7 +11,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Models
         public string Message { get; set; }
 
 #pragma warning disable CA2227 // Collection properties should be read only
-                               // You can suppress the warning if the property is part of a Data Transfer Object (DTO) class.
+        // You can suppress the warning if the property is part of a Data Transfer Object (DTO) class.
         public Dictionary<string, string> Dictionary { get; set; }
 #pragma warning restore CA2227 // Collection properties should be read only
 

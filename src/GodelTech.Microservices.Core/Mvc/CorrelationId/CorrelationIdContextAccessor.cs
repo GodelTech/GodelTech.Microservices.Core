@@ -12,10 +12,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
         /// <inheritdoc/>
         public CorrelationIdContext CorrelationIdContext
         {
-            get
-            {
-                return CorrelationIdContextCurrent.Value?.Context;
-            }
+            get => CorrelationIdContextCurrent.Value?.Context;
             set
             {
                 var holder = CorrelationIdContextCurrent.Value;
