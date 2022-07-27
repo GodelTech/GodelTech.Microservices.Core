@@ -18,6 +18,8 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
+
             services
                 .AddControllers(
                     options =>
