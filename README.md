@@ -155,8 +155,8 @@ Framework comes with a number of initializers. Full list of initializers and the
 | Initializer | Description |
 |---|---|
 |`ApiInitializer`| Initializer configures REST API controllers and configures set of frequently used action filters and JSON formatting settings. |
-|`RazorPagesInitializer`| Component is reponsible for Razor Pages configuration. |
 |`MvcInitializer`| Initializer is reponsible for MVC controllers with views configuration. When this controller is used REST API initialization is also performed. Additional use of `ApiInitializer` is not required. |
+|`RazorPagesInitializer`| Component is reponsible for Razor Pages configuration. |
 |`GenericInitializer`| This initialize accepts lamda function as parameters. These functions are used by `ConfigureServices()` and `Configure()` method. This initializer can be used when single line pipeline configuration is performed and creation of dedicated initializer is not reasonable.|
 |`DeveloperExceptionPageInitializer`| Component is reponsible for exception handling pages configuration. If application is executed in `Development` environment developer exception page is used. |
 |`ExceptionHandlerInitializer`| Component is reponsible for exception handling configuration. If environment differs from `Development` exception handler is used. |
@@ -222,6 +222,11 @@ In order to use third-party logging libraries your `Program.cs` file must be upd
     }
 ```
 This snippet configures `Serilog` as logging provider for ASP.NET Core application.
+
+## Cache in-memory
+
+`ApiInitializer`, `MvcInitializer` and `RazorPagesInitializer` has registration to use in-memory cache via `IMemoryCache`.
+More information on how to use it can be found [here](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-6.0).
 
 ## Links
 
