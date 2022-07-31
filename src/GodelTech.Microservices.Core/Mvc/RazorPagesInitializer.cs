@@ -13,6 +13,8 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCaching();
+
             services.AddMemoryCache();
 
             var builder = services
@@ -29,6 +31,8 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCaching();
+
             app.UseEndpoints(
                 endpoints =>
                 {

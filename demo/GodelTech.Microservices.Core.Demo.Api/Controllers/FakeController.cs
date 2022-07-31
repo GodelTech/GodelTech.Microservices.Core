@@ -22,6 +22,7 @@ public class FakeController : ControllerBase
     };
 
     [HttpGet]
+    [ResponseCache(VaryByHeader = "User-Agent", Duration = 30)]
     [ProducesResponseType(typeof(IList<FakeModel>), StatusCodes.Status200OK)]
     public IActionResult GetList()
     {

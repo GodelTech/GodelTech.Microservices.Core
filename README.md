@@ -228,6 +228,11 @@ This snippet configures `Serilog` as logging provider for ASP.NET Core applicati
 `ApiInitializer`, `MvcInitializer` and `RazorPagesInitializer` has registration to use in-memory cache via `IMemoryCache`.
 More information on how to use it can be found [here](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-6.0).
 
+## Response cache
+
+`ApiInitializer`, `MvcInitializer` and `RazorPagesInitializer` has registration to use response cache headers.
+More information on how to use it can be found [here](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/response?view=aspnetcore-6.0).
+
 ## Links
 
 Microservice framework has number of satellite projects:
