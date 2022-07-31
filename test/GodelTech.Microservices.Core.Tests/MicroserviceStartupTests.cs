@@ -101,6 +101,13 @@ namespace GodelTech.Microservices.Core.Tests
                         mockWebHostEnvironment.Object
                     )
                 );
+            mockInitializer
+                .Setup(
+                    x => x.ConfigureEndpoints(
+                        mockApplicationBuilder.Object,
+                        mockWebHostEnvironment.Object
+                    )
+                );
 
             for (var i = 0; i < count; i++)
             {

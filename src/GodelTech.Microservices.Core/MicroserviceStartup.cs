@@ -51,6 +51,11 @@ namespace GodelTech.Microservices.Core
             {
                 initializer.Configure(app, env);
             }
+
+            foreach (var initializer in CreateInitializers())
+            {
+                initializer.ConfigureEndpoints(app, env);
+            }
         }
 
         /// <summary>

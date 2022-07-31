@@ -85,6 +85,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
                                     app.UseRouting();
 
                                     initializer.Configure(app, context.HostingEnvironment);
+                                    initializer.ConfigureEndpoints(app, context.HostingEnvironment);
                                 }
                             );
                     }

@@ -26,6 +26,17 @@ namespace GodelTech.Microservices.Core
             {
                 initializer.Configure(app, env);
             }
+
+            ConfigureEndpoints(app, env);
+        }
+
+        /// <inheritdoc />
+        public virtual void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            foreach (var initializer in CreateInitializers())
+            {
+                initializer.ConfigureEndpoints(app, env);
+            }
         }
 
         /// <summary>

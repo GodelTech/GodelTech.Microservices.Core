@@ -41,7 +41,11 @@ namespace GodelTech.Microservices.Core.Mvc
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCaching();
+        }
 
+        /// <inheritdoc />
+        public virtual void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
+        {
             app.UseEndpoints(
                 endpoints =>
                 {

@@ -25,5 +25,15 @@ namespace GodelTech.Microservices.Core
         /// <param name="app">Application builder.</param>
         /// <param name="env">WebHost environment.</param>
         void Configure(IApplicationBuilder app, IWebHostEnvironment env);
+
+        /// <summary>
+        /// Use this method to configure endpoints.
+        /// </summary>
+        /// <param name="app">Application builder.</param>
+        /// <param name="env">WebHost environment.</param>
+        void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+
+        }
     }
 }

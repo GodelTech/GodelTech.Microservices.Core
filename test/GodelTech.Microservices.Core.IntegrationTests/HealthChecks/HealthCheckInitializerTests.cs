@@ -53,6 +53,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
                                     app.UseRouting();
 
                                     initializer.Configure(app, context.HostingEnvironment);
+                                    initializer.ConfigureEndpoints(app, context.HostingEnvironment);
                                 }
                             );
                     }

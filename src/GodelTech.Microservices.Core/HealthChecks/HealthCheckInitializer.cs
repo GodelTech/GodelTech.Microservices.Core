@@ -33,6 +33,12 @@ namespace GodelTech.Microservices.Core.HealthChecks
         /// <inheritdoc />
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+        }
+
+        /// <inheritdoc />
+        public virtual void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
+        {
             var options = new HealthCheckOptions();
 
             ConfigureHealthCheckOptions(options, app);
