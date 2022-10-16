@@ -26,8 +26,6 @@ namespace GodelTech.Microservices.Core
             {
                 initializer.Configure(app, env);
             }
-
-            ConfigureEndpoints(app, env);
         }
 
         /// <inheritdoc />

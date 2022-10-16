@@ -27,5 +27,11 @@ namespace GodelTech.Microservices.Core.Mvc
 
             app.UseHttpsRedirection();
         }
+
+        /// <inheritdoc />
+        public virtual void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+
+        }
     }
 }

@@ -24,5 +24,11 @@ namespace GodelTech.Microservices.Core.Mvc
                 app.UseDeveloperExceptionPage();
             }
         }
+
+        /// <inheritdoc />
+        public virtual void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+
+        }
     }
 }
