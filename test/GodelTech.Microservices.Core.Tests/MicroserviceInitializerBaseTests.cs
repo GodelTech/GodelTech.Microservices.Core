@@ -77,5 +77,22 @@ namespace GodelTech.Microservices.Core.Tests
             mockApplicationBuilder.VerifyAll();
             mockWebHostEnvironment.VerifyAll();
         }
+
+        [Fact]
+        public void ConfigureEndpoints_Success()
+        {
+            // Arrange
+            var mockApplicationBuilder = new Mock<IApplicationBuilder>(MockBehavior.Strict);
+            var mockWebHostEnvironment = new Mock<IWebHostEnvironment>(MockBehavior.Strict);
+
+            // Act
+            _initializer.ConfigureEndpoints(
+                mockApplicationBuilder.Object,
+                mockWebHostEnvironment.Object
+            );
+
+            // Assert
+            Assert.NotNull(_initializer);
+        }
     }
 }

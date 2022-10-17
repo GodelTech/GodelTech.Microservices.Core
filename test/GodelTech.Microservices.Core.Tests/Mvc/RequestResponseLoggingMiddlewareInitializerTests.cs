@@ -1,5 +1,7 @@
 ﻿using GodelTech.Microservices.Core.Mvc.RequestResponseLogging;
 using GodelTech.Microservices.Core.Tests.Fakes.Mvc;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Xunit;
 
@@ -12,6 +14,23 @@ namespace GodelTech.Microservices.Core.Tests.Mvc
         public RequestResponseLoggingMiddlewareInitializerTests()
         {
             _initializer = new FakeRequestResponseLoggingMiddlewareInitializer();
+        }
+
+        [Fact]
+        public void ConfigureEndpoints_Success()
+        {
+            // Arrange
+            var mockApplicationBuilder = new Mock<IApplicationBuilder>(MockBehavior.Strict);
+            var mockWebHostEnvironment = new Mock<IWebHostEnvironment>(MockBehavior.Strict);
+
+            // Act
+            _initializer.ConfigureEndpoints(
+                mockApplicationBuilder.Object,
+                mockWebHostEnvironment.Object
+            );
+
+            // Assert
+            Assert.NotNull(_initializer);
         }
 
         [Fact]

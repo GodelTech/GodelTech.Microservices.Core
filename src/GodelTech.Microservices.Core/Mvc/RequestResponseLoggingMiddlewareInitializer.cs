@@ -25,6 +25,12 @@ namespace GodelTech.Microservices.Core.Mvc
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
         }
 
+        /// <inheritdoc />
+        public virtual void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+
+        }
+
         /// <summary>
         /// Configure RequestResponseLoggingOptions.
         /// </summary>

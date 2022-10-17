@@ -72,13 +72,6 @@ namespace GodelTech.Microservices.Core.Tests
                         mockWebHostEnvironment.Object
                     )
                 );
-            mockInitializer
-                .Setup(
-                    x => x.ConfigureEndpoints(
-                        mockApplicationBuilder.Object,
-                        mockWebHostEnvironment.Object
-                    )
-                );
 
             for (var i = 0; i < count; i++)
             {
@@ -95,6 +88,48 @@ namespace GodelTech.Microservices.Core.Tests
             mockInitializer
                 .Verify(
                     x => x.Configure(
+                        mockApplicationBuilder.Object,
+                        mockWebHostEnvironment.Object
+                    ),
+                    Times.Exactly(count)
+                );
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void ConfigureEndpoints_Success(int count)
+        {
+            // Arrange
+            var mockApplicationBuilder = new Mock<IApplicationBuilder>(MockBehavior.Strict);
+            var mockWebHostEnvironment = new Mock<IWebHostEnvironment>(MockBehavior.Strict);
+
+            var mockInitializer = new Mock<IMicroserviceInitializer>(MockBehavior.Strict);
+            mockInitializer
+                .Setup(
+                    x => x.ConfigureEndpoints(
+                        mockApplicationBuilder.Object,
+                        mockWebHostEnvironment.Object
+                    )
+                );
+
+            for (var i = 0; i < count; i++)
+            {
+                _mockInitializers.Add(mockInitializer.Object);
+            }
+
+            // Act
+            _initializerCollection.ConfigureEndpoints(
+                mockApplicationBuilder.Object,
+                mockWebHostEnvironment.Object
+            );
+
+            // Assert
+            mockInitializer
+                .Verify(
+                    x => x.ConfigureEndpoints(
                         mockApplicationBuilder.Object,
                         mockWebHostEnvironment.Object
                     ),

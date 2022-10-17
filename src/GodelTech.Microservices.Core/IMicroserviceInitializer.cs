@@ -31,9 +31,6 @@ namespace GodelTech.Microservices.Core
         /// </summary>
         /// <param name="app">Application builder.</param>
         /// <param name="env">WebHost environment.</param>
-        void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            // to be implemented in derived type
-        }
+        void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env);
     }
 }

@@ -29,7 +29,7 @@ namespace GodelTech.Microservices.Core.Tests
                 _mockConfigure.Object
             );
 
-            // Act & Assert
+            // Act
             initializer.ConfigureServices(mockServiceCollection.Object);
 
             // Assert
@@ -49,7 +49,7 @@ namespace GodelTech.Microservices.Core.Tests
                 _mockConfigureServices.Object
             );
 
-            // Act & Assert
+            // Act
             initializer.ConfigureServices(mockServiceCollection.Object);
 
             // Assert
@@ -72,7 +72,7 @@ namespace GodelTech.Microservices.Core.Tests
                 null
             );
 
-            // Act & Assert
+            // Act
             initializer.Configure(
                 mockApplicationBuilder.Object,
                 mockWebHostEnvironment.Object
@@ -102,7 +102,7 @@ namespace GodelTech.Microservices.Core.Tests
                 _mockConfigure.Object
             );
 
-            // Act & Assert
+            // Act
             initializer.Configure(
                 mockApplicationBuilder.Object,
                 mockWebHostEnvironment.Object
@@ -117,6 +117,28 @@ namespace GodelTech.Microservices.Core.Tests
                     ),
                     Times.Once
                 );
+        }
+
+        [Fact]
+        public void ConfigureEndpoints_Success()
+        {
+            // Arrange
+            var mockApplicationBuilder = new Mock<IApplicationBuilder>(MockBehavior.Strict);
+            var mockWebHostEnvironment = new Mock<IWebHostEnvironment>(MockBehavior.Strict);
+
+            var initializer = new GenericInitializer(
+                null,
+                null
+            );
+
+            // Act
+            initializer.ConfigureEndpoints(
+                mockApplicationBuilder.Object,
+                mockWebHostEnvironment.Object
+            );
+
+            // Assert
+            Assert.NotNull(initializer);
         }
     }
 }
