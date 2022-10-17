@@ -41,7 +41,7 @@ namespace GodelTech.Microservices.Core
         /// <inheritdoc />
         public void ConfigureEndpoints(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
+            // this method is empty for GenericInitializer
         }
     }
 }
