@@ -79,7 +79,7 @@ namespace GodelTech.Microservices.Core.Tests.HealthChecks
 
             Assert.False(options.AllowCachingResponses);
             Assert.True(options.Predicate.Invoke(default));
-            Assert.Equal(mockHealthCheckResponseWriter.Object.Write, options.ResponseWriter);
+            Assert.Equal(mockHealthCheckResponseWriter.Object.WriteAsync, options.ResponseWriter);
             Assert.Equal(expectedResultStatusCodes, options.ResultStatusCodes);
         }
     }
