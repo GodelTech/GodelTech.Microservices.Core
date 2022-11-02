@@ -14,6 +14,6 @@ namespace GodelTech.Microservices.Core.HealthChecks
         /// </summary>
         /// <param name="context">HttpContext.</param>
         /// <param name="healthReport">HealthReport.</param>
-        Task Write(HttpContext context, HealthReport healthReport);
+        Task WriteAsync(HttpContext context, HealthReport healthReport);
     }
 }

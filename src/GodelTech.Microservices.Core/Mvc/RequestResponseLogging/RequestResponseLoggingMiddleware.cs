@@ -63,15 +63,15 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
                 return;
             }
 
-            await LogRequest(context);
+            await LogRequestAsync(context);
 
-            await LogResponse(context);
+            await LogResponseAsync(context);
         }
 
         private static readonly Action<ILogger, string, string, string, IPAddress, string, string, Exception> LogRequestCallback
             = LoggerMessage.Define<string, string, string, IPAddress, string, string>(
                 LogLevel.Information,
-                new EventId(0, nameof(LogRequest)),
+                new EventId(0, nameof(LogRequestAsync)),
                 "Http Request Information:" + Environment.NewLine +
                 "TraceIdentifier: {TraceIdentifier}," +
                 "Method: {Method}," +
@@ -81,7 +81,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
                 "Body: {Body}"
             );
 
-        private async Task LogRequest(HttpContext context)
+        private async Task LogRequestAsync(HttpContext context)
         {
             var body = string.Empty;
 
@@ -114,7 +114,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         private static readonly Action<ILogger, string, int, string, long, string, string, Exception> LogResponseCallback
             = LoggerMessage.Define<string, int, string, long, string, string>(
                 LogLevel.Information,
-                new EventId(0, nameof(LogResponse)),
+                new EventId(0, nameof(LogResponseAsync)),
                 "Http Response Information:" + Environment.NewLine +
                 "TraceIdentifier: {TraceIdentifier}," +
                 "StatusCode: {StatusCode}," +
@@ -124,7 +124,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
                 "Body: {Body}"
             );
 
-        private async Task LogResponse(HttpContext context)
+        private async Task LogResponseAsync(HttpContext context)
         {
             var timer = Stopwatch.StartNew();
 

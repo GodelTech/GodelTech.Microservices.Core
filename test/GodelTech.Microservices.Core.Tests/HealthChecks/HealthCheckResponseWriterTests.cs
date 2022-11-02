@@ -20,7 +20,7 @@ namespace GodelTech.Microservices.Core.Tests.HealthChecks
         }
 
         [Fact]
-        public void Write_WhenHttpContextIsNull_ThrowsArgumentNullException()
+        public void WriteAsync_WhenHttpContextIsNull_ThrowsArgumentNullException()
         {
             // Arrange
             var healthReport = new HealthReport(
@@ -31,21 +31,21 @@ namespace GodelTech.Microservices.Core.Tests.HealthChecks
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => _writer.Write(null, healthReport).Wait()
+                () => _writer.WriteAsync(null, healthReport).Wait()
             );
 
             Assert.Equal("context", exception.ParamName);
         }
 
         [Fact]
-        public void Write_WhenHealthReportIsNull_ThrowsArgumentNullException()
+        public void WriteAsync_WhenHealthReportIsNull_ThrowsArgumentNullException()
         {
             // Arrange
             var mockHttpContext = new Mock<HttpContext>(MockBehavior.Strict);
 
             // Act & Assert
             var exception = Assert.Throws<ArgumentNullException>(
-                () => _writer.Write(mockHttpContext.Object, null).Wait()
+                () => _writer.WriteAsync(mockHttpContext.Object, null).Wait()
             );
 
             Assert.Equal("healthReport", exception.ParamName);
@@ -110,7 +110,7 @@ namespace GodelTech.Microservices.Core.Tests.HealthChecks
 
         [Theory]
         [MemberData(nameof(WriteJsonMemberData))]
-        public void Write_Success(
+        public void WriteAsync_Success(
             Dictionary<string, HealthReportEntry> entries,
             HealthStatus status,
             TimeSpan totalDuration,
@@ -132,7 +132,7 @@ namespace GodelTech.Microservices.Core.Tests.HealthChecks
             );
 
             // Act
-            _writer.Write(httpContext, healthReport).Wait();
+            _writer.WriteAsync(httpContext, healthReport).Wait();
 
             // Assert
             Assert.Equal("application/json", httpContext.Response.ContentType);

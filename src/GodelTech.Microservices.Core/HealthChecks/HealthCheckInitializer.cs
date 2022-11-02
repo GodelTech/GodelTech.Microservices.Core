@@ -68,7 +68,7 @@ namespace GodelTech.Microservices.Core.HealthChecks
 
             options.AllowCachingResponses = false;
             options.Predicate = _ => true;
-            options.ResponseWriter = writer.Write;
+            options.ResponseWriter = writer.WriteAsync;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace GodelTech.Microservices.Core.HealthChecks
     public class HealthCheckResponseWriter : IHealthCheckResponseWriter
     {
         /// <inheritdoc />
-        public Task Write(HttpContext context, HealthReport healthReport)
+        public Task WriteAsync(HttpContext context, HealthReport healthReport)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (healthReport == null) throw new ArgumentNullException(nameof(healthReport));
