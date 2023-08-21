@@ -31,6 +31,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         /// <param name="options">The configuration options.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="recyclableMemoryStreamManager">The recyclableMemoryStreamManager.</param>
+        /// <param name="stopwatchFactory">The Stopwatch factory.</param>
         public RequestResponseLoggingMiddleware(
             RequestDelegate next,
             IOptions<RequestResponseLoggingOptions> options,
