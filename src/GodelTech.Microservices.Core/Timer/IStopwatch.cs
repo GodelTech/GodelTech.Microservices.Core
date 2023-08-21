@@ -1,17 +1,10 @@
-﻿using System;
-
-namespace GodelTech.Microservices.Core.Timer
+﻿namespace GodelTech.Microservices.Core.Timer
 {
     /// <summary>
     /// Timer.
     /// </summary>
     public interface IStopwatch
     {
-        /// <summary>
-        /// Start new.
-        /// </summary>
-        IStopwatch StartNew();
-
         /// <summary>
         /// Start.
         /// </summary>

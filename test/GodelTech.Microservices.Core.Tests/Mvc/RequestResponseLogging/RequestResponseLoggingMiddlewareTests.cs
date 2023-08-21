@@ -44,12 +44,17 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
             _mockStopwatch = new Mock<IStopwatch>(MockBehavior.Strict);
 
+            var mockStopwatchFactory = new Mock<IStopwatchFactory>(MockBehavior.Strict);
+            mockStopwatchFactory
+                .Setup(x => x.Create())
+                .Returns(_mockStopwatch.Object);
+
             _middleware = new RequestResponseLoggingMiddleware(
                 _mockRequestDelegate.Object,
                 mockOptions.Object,
                 _mockLogger.Object,
                 _recyclableMemoryStreamManager,
-                _mockStopwatch.Object
+                mockStopwatchFactory.Object
             );
         }
 
@@ -159,8 +164,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
                 .Returns(true);
 
             _mockStopwatch
-                .Setup(x => x.StartNew())
-                .Returns(_mockStopwatch.Object);
+                .Setup(x => x.Start());
 
             _mockStopwatch
                 .Setup(x => x.Stop());
@@ -252,7 +256,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
 
             _mockStopwatch
                 .Verify(
-                    x => x.StartNew(),
+                    x => x.Start(),
                     Times.Once
                 );
 

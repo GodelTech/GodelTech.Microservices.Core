@@ -22,7 +22,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         private readonly RequestResponseLoggingOptions _options;
         private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
-        private readonly IStopwatch _stopwatch;
+        private readonly IStopwatchFactory _stopwatchFactory;
 
         /// <summary>
         /// Creates a new instance of the RequestResponseLoggingMiddleware.
@@ -36,7 +36,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
             IOptions<RequestResponseLoggingOptions> options,
             ILogger<RequestResponseLoggingMiddleware> logger,
             RecyclableMemoryStreamManager recyclableMemoryStreamManager,
-            IStopwatch stopwatch = default(SystemStopwatch))
+            IStopwatchFactory stopwatchFactory = default(SystemStopwatchFactory))
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
@@ -44,7 +44,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
             _options = options.Value;
             _logger = logger;
             _recyclableMemoryStreamManager = recyclableMemoryStreamManager;
-            _stopwatch = stopwatch ?? new SystemStopwatch();
+            _stopwatchFactory = stopwatchFactory ?? new SystemStopwatchFactory();
         }
 
         /// <summary>
@@ -133,7 +133,8 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
             // Stryker disable once string
             var body = string.Empty;
 
-            var timer = _stopwatch.StartNew();
+            var timer = _stopwatchFactory.Create();
+            timer.Start();
 
             if (_options.IncludeResponseBody)
             {

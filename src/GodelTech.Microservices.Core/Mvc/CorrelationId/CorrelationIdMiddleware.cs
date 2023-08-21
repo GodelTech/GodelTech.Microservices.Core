@@ -88,7 +88,8 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
                 return _newId().ToString();
             }
 
-            return correlationIdValue.First();
+            // Stryker disable once linq
+            return correlationIdValue.FirstOrDefault();
         }
     }
 }
