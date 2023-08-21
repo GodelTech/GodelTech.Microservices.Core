@@ -1,4 +1,4 @@
-﻿namespace GodelTech.Microservices.Core.Timer
+﻿namespace GodelTech.Microservices.Core.Utilities
 {
     internal class SystemStopwatchFactory : IStopwatchFactory
     {

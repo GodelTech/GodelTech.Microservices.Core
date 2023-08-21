@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace GodelTech.Microservices.Core.Timer
+namespace GodelTech.Microservices.Core.Utilities
 {
     internal class SystemStopwatch : IStopwatch
     {
