@@ -88,7 +88,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
                 return _newId().ToString();
             }
 
-            return correlationIdValue.FirstOrDefault();
+            return correlationIdValue.First();
         }
     }
 }

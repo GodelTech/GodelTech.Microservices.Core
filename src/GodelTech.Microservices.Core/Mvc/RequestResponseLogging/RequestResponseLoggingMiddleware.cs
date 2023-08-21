@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using GodelTech.Microservices.Core.Timer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -22,6 +22,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         private readonly RequestResponseLoggingOptions _options;
         private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
+        private readonly IStopwatch _stopwatch;
 
         /// <summary>
         /// Creates a new instance of the RequestResponseLoggingMiddleware.
@@ -34,7 +35,8 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
             RequestDelegate next,
             IOptions<RequestResponseLoggingOptions> options,
             ILogger<RequestResponseLoggingMiddleware> logger,
-            RecyclableMemoryStreamManager recyclableMemoryStreamManager)
+            RecyclableMemoryStreamManager recyclableMemoryStreamManager,
+            IStopwatch stopwatch = default(SystemStopwatch))
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
@@ -42,6 +44,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
             _options = options.Value;
             _logger = logger;
             _recyclableMemoryStreamManager = recyclableMemoryStreamManager;
+            _stopwatch = stopwatch ?? new SystemStopwatch();
         }
 
         /// <summary>
@@ -83,6 +86,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
         private async Task LogRequestAsync(HttpContext context)
         {
+            // Stryker disable once string
             var body = string.Empty;
 
             if (_options.IncludeRequestBody)
@@ -126,9 +130,10 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
         private async Task LogResponseAsync(HttpContext context)
         {
-            var timer = Stopwatch.StartNew();
-
+            // Stryker disable once string
             var body = string.Empty;
+
+            var timer = _stopwatch.StartNew();
 
             if (_options.IncludeResponseBody)
             {
