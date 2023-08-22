@@ -105,7 +105,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes",
+                    "/api/fakes",
                     UriKind.Relative
                 )
             );
@@ -134,7 +134,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    $"/fakes/{id}",
+                    $"/api/fakes/{id}",
                     UriKind.Relative
                 )
             );
@@ -144,6 +144,51 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             Assert.Equal(
                 FakeJsonStrings[expectedFakeJsonStringsIndex],
                 await result.Content.ReadAsStringAsync()
+            );
+        }
+
+        [Fact]
+        public async Task Configure_WhenResponseCache_Success()
+        {
+            // Arrange
+            var initializer = new ApiInitializer();
+
+            var client = CreateClient(initializer);
+
+            // Act
+            var result1 = await client.GetAsync(
+                new Uri(
+                    "/api/fakes/responseCache?testKey=testValue",
+                    UriKind.Relative
+                )
+            );
+
+            var result2 = await client.GetAsync(
+                new Uri(
+                    "/api/fakes/responseCache?testKey=testValue",
+                    UriKind.Relative
+                )
+            );
+
+            var result3 = await client.GetAsync(
+                new Uri(
+                    "/api/fakes/responseCache?testKey=newTestValue",
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result1.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result2.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result3.StatusCode);
+
+            Assert.Equal(
+                await result1.Content.ReadAsStringAsync(),
+                await result2.Content.ReadAsStringAsync()
+            );
+            Assert.NotEqual(
+                await result2.Content.ReadAsStringAsync(),
+                await result3.Content.ReadAsStringAsync()
             );
         }
 
@@ -158,7 +203,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes/fileTooLargeException",
+                    "/api/fakes/fileTooLargeException",
                     UriKind.Relative
                 )
             );
@@ -194,7 +239,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes/requestValidationException",
+                    "/api/fakes/requestValidationException",
                     UriKind.Relative
                 )
             );
@@ -230,7 +275,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes/resourceNotFoundException",
+                    "/api/fakes/resourceNotFoundException",
                     UriKind.Relative
                 )
             );
