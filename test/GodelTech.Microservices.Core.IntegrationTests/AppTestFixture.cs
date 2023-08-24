@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using GodelTech.XUnit.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -10,6 +11,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests
 {
     public class AppTestFixture : WebApplicationFactory<TestStartup>
     {
+        private Action<IWebHostBuilder, IMicroserviceInitializer> _configuration;
+        private IMicroserviceInitializer _initializer;
         private string _environment;
 
         public ITestOutputHelper Output { get; set; }
@@ -19,6 +22,14 @@ namespace GodelTech.Microservices.Core.IntegrationTests
         public void SetEnvironment(string environment)
         {
             _environment = environment;
+        }
+
+        public void SetConfiguration(
+            Action<IWebHostBuilder, IMicroserviceInitializer> configuration,
+            IMicroserviceInitializer initializer)
+        {
+            _configuration = configuration;
+            _initializer = initializer;
         }
 
         protected override IHostBuilder CreateHostBuilder()
@@ -39,6 +50,11 @@ namespace GodelTech.Microservices.Core.IntegrationTests
                 );
 
             return builder;
+        }
+
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            _configuration?.Invoke(builder, _initializer);
         }
 
         protected override IHost CreateHost(IHostBuilder builder)
