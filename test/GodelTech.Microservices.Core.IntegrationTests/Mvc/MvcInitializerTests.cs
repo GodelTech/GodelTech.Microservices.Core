@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Http.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
@@ -9,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Xunit;
@@ -131,6 +135,78 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(
                 await File.ReadAllTextAsync($"Documents/HomeDetails.{id}.txt"),
+                await result.Content.ReadAsStringAsync()
+            );
+        }
+
+        [Fact]
+        public async Task Configure_WhenResponseCache_Success()
+        {
+            // Arrange
+            var client = _fixture.CreateClient();
+
+            // Act
+            var result1 = await client.GetAsync(
+                new Uri(
+                    "/Home/ResponseCache?testKey=testValue",
+                    UriKind.Relative
+                )
+            );
+
+            var result2 = await client.GetAsync(
+                new Uri(
+                    "/Home/ResponseCache?testKey=testValue",
+                    UriKind.Relative
+                )
+            );
+
+            var result3 = await client.GetAsync(
+                new Uri(
+                    "/Home/ResponseCache?testKey=newTestValue",
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result1.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result2.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result3.StatusCode);
+
+            Assert.Equal(
+                await result1.Content.ReadAsStringAsync(),
+                await result2.Content.ReadAsStringAsync()
+            );
+            Assert.NotEqual(
+                await result2.Content.ReadAsStringAsync(),
+                await result3.Content.ReadAsStringAsync()
+            );
+        }
+
+        [Fact]
+        public async Task Configure_WhenMemoryCache_Success()
+        {
+            // Arrange
+            var client = _fixture.CreateClient();
+
+            var memoryCache = _fixture.Services.GetRequiredService<IMemoryCache>();
+            var hasCacheValue = memoryCache.TryGetValue("_Current_DateTime", out DateTime? cacheValue);
+            Assert.False(hasCacheValue);
+            Assert.Null(cacheValue);
+
+            // Act
+            var result = await client.GetAsync(
+                new Uri(
+                    "/Home/MemoryCache",
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            cacheValue = memoryCache.Get<DateTime>("_Current_DateTime");
+
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Matches(
+                new Regex("<div>" + cacheValue + "</div>"),
                 await result.Content.ReadAsStringAsync()
             );
         }

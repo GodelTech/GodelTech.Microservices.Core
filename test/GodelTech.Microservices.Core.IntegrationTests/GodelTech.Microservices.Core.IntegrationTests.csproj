@@ -54,4 +54,9 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Fakes\Views\Home\MemoryCache.cshtml" />
+    <None Remove="Fakes\Views\Home\ResponseCache.cshtml" />
+  </ItemGroup>
+
 </Project>
