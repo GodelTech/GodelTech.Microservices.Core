@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
@@ -12,6 +10,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -234,6 +234,28 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             Assert.Equal(expectedStatusCode, result.StatusCode);
             Assert.Equal(
                 expectedContent,
+                await result.Content.ReadAsStringAsync()
+            );
+        }
+
+        [Fact]
+        public async Task Configure_MapControllerRoute_Success()
+        {
+            // Arrange
+            var client = _fixture.CreateClient();
+
+            // Act
+            var result = await client.GetAsync(
+                new Uri(
+                    "/Home/Route",
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(
+                "/Home/Details/123",
                 await result.Content.ReadAsStringAsync()
             );
         }

@@ -38,7 +38,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
             );
         }
 
-        [ResponseCache(Duration = 30, VaryByQueryKeys = new[] { "*" })]
+        [ResponseCache(Duration = 10, VaryByQueryKeys = new[] { "*" })]
         public IActionResult ResponseCache()
         {
             return View(DateTime.Now);
@@ -67,6 +67,21 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
             await _fakeService.CompleteAsync();
 
             return View();
+        } 
+
+        public IActionResult Route()
+        {
+            return Ok(
+                Url.RouteUrl(
+                    "default",
+                    new
+                    {
+                        controller = "Home",
+                        action = "Details",
+                        id = 123
+                    }
+                )
+            );
         }
     }
 }
