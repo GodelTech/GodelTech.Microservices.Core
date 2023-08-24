@@ -65,7 +65,7 @@ namespace GodelTech.Microservices.Core.Mvc.Filters
                 );
             }
 
-            if (exceptions.All(x => x.GetType() != ExceptionType))
+            if (exceptions.TrueForAll(x => x.GetType() != ExceptionType))
             {
                 return;
             }
