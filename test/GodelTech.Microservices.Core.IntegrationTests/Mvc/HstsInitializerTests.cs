@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
@@ -19,6 +18,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public HstsInitializerTests()
         {
             _fixture = new AppTestFixture();
+            _fixture.SetConfiguration(GetConfiguration(), new HstsInitializer());
         }
 
         public void Dispose()
@@ -26,68 +26,62 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(HstsInitializer initializer)
+        private static Action<IWebHostBuilder, IMicroserviceInitializer> GetConfiguration()
         {
-            return _fixture
-                .WithWebHostBuilder(
-                    builder =>
-                    {
-                        builder
-                            .ConfigureServices(
-                                services =>
+            return (builder, initializer) =>
+            {
+                builder
+                    .ConfigureServices(
+                        services =>
+                        {
+                            services.AddAutoMapper(typeof(TestStartup).Assembly);
+
+                            services.AddTransient<IFakeService, FakeService>();
+
+                            services.AddHsts(
+                                options =>
                                 {
-                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
-
-                                    services.AddTransient<IFakeService, FakeService>();
-
-                                    services.AddHsts(
-                                        options =>
-                                        {
-                                            options.ExcludedHosts.Clear();
-                                        }
-                                    );
-
-                                    services.AddHttpsRedirection(
-                                        options =>
-                                        {
-                                            options.HttpsPort = 5001;
-                                        }
-                                    );
-
-                                    initializer.ConfigureServices(services);
-
-                                    services.AddControllers();
+                                    options.ExcludedHosts.Clear();
                                 }
                             );
 
-                        builder
-                            .Configure(
-                                (context, app) =>
+                            services.AddHttpsRedirection(
+                                options =>
                                 {
-                                    initializer.Configure(app, context.HostingEnvironment);
-
-                                    app.UseRouting();
-
-                                    app.UseEndpoints(
-                                        endpoints =>
-                                        {
-                                            endpoints.MapControllers();
-                                        }
-                                    );
+                                    options.HttpsPort = 5001;
                                 }
                             );
-                    }
-                )
-                .CreateClient();
+
+                            initializer.ConfigureServices(services);
+
+                            services.AddControllers();
+                        }
+                    );
+
+                builder
+                    .Configure(
+                        (context, app) =>
+                        {
+                            initializer.Configure(app, context.HostingEnvironment);
+
+                            app.UseRouting();
+
+                            app.UseEndpoints(
+                                endpoints =>
+                                {
+                                    endpoints.MapControllers();
+                                }
+                            );
+                        }
+                    );
+            };
         }
 
         [Fact]
         public async Task Configure_WhenIsNotDevelopmentEnvironment_Success()
         {
             // Arrange
-            var initializer = new HstsInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(
@@ -117,11 +111,9 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_WhenIsDevelopmentEnvironment_Success()
         {
             // Arrange
-            var initializer = new HstsInitializer();
-
             _fixture.SetEnvironment("Development");
 
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
@@ -24,6 +23,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             {
                 Output = output
             };
+            _fixture.SetConfiguration(GetConfiguration(), new LogUncaughtErrorsMiddlewareInitializer());
         }
 
         public void Dispose()
@@ -31,56 +31,50 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(LogUncaughtErrorsMiddlewareInitializer initializer)
+        private Action<IWebHostBuilder, IMicroserviceInitializer> GetConfiguration()
         {
-            return _fixture
-                .WithWebHostBuilder(
-                    builder =>
-                    {
-                        builder.ConfigureTestLogging(_fixture.Output, _fixture.TestLoggerContextAccessor);
+            return (builder, initializer) =>
+            {
+                builder.ConfigureTestLogging(_fixture.Output, _fixture.TestLoggerContextAccessor);
 
-                        builder
-                            .ConfigureServices(
-                                services =>
+                builder
+                    .ConfigureServices(
+                        services =>
+                        {
+                            services.AddAutoMapper(typeof(TestStartup).Assembly);
+
+                            services.AddTransient<IFakeService, FakeService>();
+
+                            initializer.ConfigureServices(services);
+
+                            services.AddControllers();
+                        }
+                    );
+
+                builder
+                    .Configure(
+                        (context, app) =>
+                        {
+                            initializer.Configure(app, context.HostingEnvironment);
+
+                            app.UseRouting();
+
+                            app.UseEndpoints(
+                                endpoints =>
                                 {
-                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
-
-                                    services.AddTransient<IFakeService, FakeService>();
-
-                                    initializer.ConfigureServices(services);
-
-                                    services.AddControllers();
+                                    endpoints.MapControllers();
                                 }
                             );
-
-                        builder
-                            .Configure(
-                                (context, app) =>
-                                {
-                                    initializer.Configure(app, context.HostingEnvironment);
-
-                                    app.UseRouting();
-
-                                    app.UseEndpoints(
-                                        endpoints =>
-                                        {
-                                            endpoints.MapControllers();
-                                        }
-                                    );
-                                }
-                            );
-                    }
-                )
-                .CreateClient();
+                        }
+                    );
+            };
         }
 
         [Fact]
         public async Task Configure_Success()
         {
             // Arrange
-            var initializer = new LogUncaughtErrorsMiddlewareInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentException>(

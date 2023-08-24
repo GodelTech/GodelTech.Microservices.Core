@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -27,6 +26,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             {
                 Output = output
             };
+            _fixture.SetConfiguration(GetConfiguration(), new RequestResponseLoggingMiddlewareInitializer());
         }
 
         public void Dispose()
@@ -34,56 +34,50 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(RequestResponseLoggingMiddlewareInitializer initializer)
+        private Action<IWebHostBuilder, IMicroserviceInitializer> GetConfiguration()
         {
-            return _fixture
-                .WithWebHostBuilder(
-                    builder =>
-                    {
-                        builder.ConfigureTestLogging(_fixture.Output, _fixture.TestLoggerContextAccessor);
+            return (builder, initializer) =>
+            {
+                builder.ConfigureTestLogging(_fixture.Output, _fixture.TestLoggerContextAccessor);
 
-                        builder
-                            .ConfigureServices(
-                                services =>
+                builder
+                    .ConfigureServices(
+                        services =>
+                        {
+                            services.AddAutoMapper(typeof(TestStartup).Assembly);
+
+                            services.AddTransient<IFakeService, FakeService>();
+
+                            initializer.ConfigureServices(services);
+
+                            services.AddControllers();
+                        }
+                    );
+
+                builder
+                    .Configure(
+                        (context, app) =>
+                        {
+                            initializer.Configure(app, context.HostingEnvironment);
+
+                            app.UseRouting();
+
+                            app.UseEndpoints(
+                                endpoints =>
                                 {
-                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
-
-                                    services.AddTransient<IFakeService, FakeService>();
-
-                                    initializer.ConfigureServices(services);
-
-                                    services.AddControllers();
+                                    endpoints.MapControllers();
                                 }
                             );
-
-                        builder
-                            .Configure(
-                                (context, app) =>
-                                {
-                                    initializer.Configure(app, context.HostingEnvironment);
-
-                                    app.UseRouting();
-
-                                    app.UseEndpoints(
-                                        endpoints =>
-                                        {
-                                            endpoints.MapControllers();
-                                        }
-                                    );
-                                }
-                            );
-                    }
-                )
-                .CreateClient();
+                        }
+                    );
+            };
         }
 
         [Fact]
         public async Task Configure_Success()
         {
             // Arrange
-            var initializer = new RequestResponseLoggingMiddlewareInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act 
             var result = await client.PostAsJsonAsync(

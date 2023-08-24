@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.Mvc;
@@ -21,6 +20,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public CorrelationIdMiddlewareInitializerTests()
         {
             _fixture = new AppTestFixture();
+            _fixture.SetConfiguration(GetConfiguration(), new CorrelationIdMiddlewareInitializer());
         }
 
         public void Dispose()
@@ -28,41 +28,37 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(CorrelationIdMiddlewareInitializer initializer)
+        private static Action<IWebHostBuilder, IMicroserviceInitializer> GetConfiguration()
         {
-            return _fixture
-                .WithWebHostBuilder(
-                    builder =>
-                    {
-                        builder
-                            .ConfigureServices(
-                                services =>
-                                {
-                                    initializer.ConfigureServices(services);
+            return (builder, initializer) =>
+            {
+                builder
+                    .ConfigureServices(
+                        services =>
+                        {
+                            initializer.ConfigureServices(services);
 
-                                    services.AddControllers();
+                            services.AddControllers();
+                        }
+                    );
+
+                builder
+                    .Configure(
+                        (context, app) =>
+                        {
+                            initializer.Configure(app, context.HostingEnvironment);
+
+                            app.UseRouting();
+
+                            app.UseEndpoints(
+                                endpoints =>
+                                {
+                                    endpoints.MapControllers();
                                 }
                             );
-
-                        builder
-                            .Configure(
-                                (context, app) =>
-                                {
-                                    initializer.Configure(app, context.HostingEnvironment);
-
-                                    app.UseRouting();
-
-                                    app.UseEndpoints(
-                                        endpoints =>
-                                        {
-                                            endpoints.MapControllers();
-                                        }
-                                    );
-                                }
-                            );
-                    }
-                )
-                .CreateClient();
+                        }
+                    );
+            };
         }
 
         public static IEnumerable<object[]> ConfigureMemberData =>
@@ -109,9 +105,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             if (requestHeaders == null) throw new ArgumentNullException(nameof(requestHeaders));
 
             // Arrange
-            var initializer = new CorrelationIdMiddlewareInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             foreach (var requestHeader in requestHeaders)
             {

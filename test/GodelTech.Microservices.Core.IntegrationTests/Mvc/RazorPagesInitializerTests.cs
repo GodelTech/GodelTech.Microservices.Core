@@ -1,12 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Mvc;
-using GodelTech.Microservices.Core.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
@@ -24,6 +22,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public RazorPagesInitializerTests()
         {
             _fixture = new AppTestFixture();
+            _fixture.SetConfiguration(GetConfiguration(), new FakeRazorPagesInitializer());
         }
 
         public void Dispose()
@@ -31,58 +30,52 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(RazorPagesInitializer initializer)
+        private static Action<IWebHostBuilder, IMicroserviceInitializer> GetConfiguration()
         {
-            return _fixture
-                .WithWebHostBuilder(
-                    builder =>
-                    {
-                        builder
-                            .ConfigureServices(
-                                services =>
+            return (builder, initializer) =>
+            {
+                builder
+                    .ConfigureServices(
+                        services =>
+                        {
+                            services.AddTransient<IFakeService, FakeService>();
+
+                            services.Configure<MvcRazorRuntimeCompilationOptions>(
+                                options =>
                                 {
-                                    services.AddTransient<IFakeService, FakeService>();
-
-                                    services.Configure<MvcRazorRuntimeCompilationOptions>(
-                                        options =>
-                                        {
-                                            options.FileProviders
-                                                .Add(
-                                                    new EmbeddedFileProvider(
-                                                        typeof(TestStartup).Assembly
-                                                    )
-                                                );
-                                        }
-                                    );
-
-                                    services.Configure<RazorPagesOptions>(options => options.RootDirectory = "/Fakes/Pages");
-
-                                    initializer.ConfigureServices(services);
+                                    options.FileProviders
+                                        .Add(
+                                            new EmbeddedFileProvider(
+                                                typeof(TestStartup).Assembly
+                                            )
+                                        );
                                 }
                             );
 
-                        builder
-                            .Configure(
-                                (context, app) =>
-                                {
-                                    app.UseRouting();
+                            services.Configure<RazorPagesOptions>(options => options.RootDirectory = "/Fakes/Pages");
 
-                                    initializer.Configure(app, context.HostingEnvironment);
-                                    initializer.ConfigureEndpoints(app, context.HostingEnvironment);
-                                }
-                            );
-                    }
-                )
-                .CreateClient();
+                            initializer.ConfigureServices(services);
+                        }
+                    );
+
+                builder
+                    .Configure(
+                        (context, app) =>
+                        {
+                            app.UseRouting();
+
+                            initializer.Configure(app, context.HostingEnvironment);
+                            initializer.ConfigureEndpoints(app, context.HostingEnvironment);
+                        }
+                    );
+            };
         }
 
         [Fact]
         public async Task Configure_Success()
         {
             // Arrange
-            var initializer = new FakeRazorPagesInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(

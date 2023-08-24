@@ -1,12 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Mvc;
-using GodelTech.Microservices.Core.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -24,6 +22,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public MvcInitializerTests()
         {
             _fixture = new AppTestFixture();
+            _fixture.SetConfiguration(GetConfiguration(), new FakeMvcInitializer());
         }
 
         public void Dispose()
@@ -31,75 +30,69 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(MvcInitializer initializer)
+        private static Action<IWebHostBuilder, IMicroserviceInitializer> GetConfiguration()
         {
-            return _fixture
-                .WithWebHostBuilder(
-                    builder =>
-                    {
-                        builder
-                            .ConfigureServices(
-                                services =>
+            return (builder, initializer) =>
+            {
+                builder
+                    .ConfigureServices(
+                        services =>
+                        {
+                            services.AddAutoMapper(typeof(TestStartup).Assembly);
+
+                            services.AddTransient<IFakeService, FakeService>();
+
+                            services.Configure<RazorViewEngineOptions>(
+                                options =>
                                 {
-                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
+                                    options
+                                        .ViewLocationFormats
+                                        .Clear();
 
-                                    services.AddTransient<IFakeService, FakeService>();
+                                    options
+                                        .ViewLocationFormats
+                                        .Add("/Fakes/Views/{1}/{0}" + RazorViewEngine.ViewExtension);
 
-                                    services.Configure<RazorViewEngineOptions>(
-                                        options =>
-                                        {
-                                            options
-                                                .ViewLocationFormats
-                                                .Clear();
-
-                                            options
-                                                .ViewLocationFormats
-                                                .Add("/Fakes/Views/{1}/{0}" + RazorViewEngine.ViewExtension);
-
-                                            options
-                                                .ViewLocationFormats
-                                                .Add("/Fakes/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
-                                        }
-                                    );
-
-                                    services.Configure<MvcRazorRuntimeCompilationOptions>(
-                                        options =>
-                                        {
-                                            options.FileProviders
-                                                .Add(
-                                                    new EmbeddedFileProvider(
-                                                        typeof(TestStartup).Assembly
-                                                    )
-                                                );
-                                        }
-                                    );
-
-                                    initializer.ConfigureServices(services);
+                                    options
+                                        .ViewLocationFormats
+                                        .Add("/Fakes/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
                                 }
                             );
 
-                        builder
-                            .Configure(
-                                (context, app) =>
+                            services.Configure<MvcRazorRuntimeCompilationOptions>(
+                                options =>
                                 {
-                                    app.UseRouting();
-
-                                    initializer.Configure(app, context.HostingEnvironment);
-                                    initializer.ConfigureEndpoints(app, context.HostingEnvironment);
+                                    options.FileProviders
+                                        .Add(
+                                            new EmbeddedFileProvider(
+                                                typeof(TestStartup).Assembly
+                                            )
+                                        );
                                 }
                             );
-                    }
-                )
-                .CreateClient();
+
+                            initializer.ConfigureServices(services);
+                        }
+                    );
+
+                builder
+                    .Configure(
+                        (context, app) =>
+                        {
+                            app.UseRouting();
+
+                            initializer.Configure(app, context.HostingEnvironment);
+                            initializer.ConfigureEndpoints(app, context.HostingEnvironment);
+                        }
+                    );
+            };
         }
 
         [Fact]
         public async Task Configure_Success()
         {
             // Arrange
-            var initializer = new FakeMvcInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(
@@ -124,9 +117,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_WhenItem_Success(int id)
         {
             // Arrange
-            var initializer = new FakeMvcInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(
@@ -153,9 +144,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             string expectedContent)
         {
             // Arrange
-            var initializer = new FakeMvcInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(
