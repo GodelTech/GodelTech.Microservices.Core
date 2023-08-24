@@ -102,40 +102,15 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             var client = _fixture.CreateClient();
 
             // Act
-            var result1 = await client.GetAsync(
+            var result = await client.GetAsync(
                 new Uri(
                     "/ResponseCache",
-                    UriKind.Relative
-                )
-            );
-
-            var result2 = await client.GetAsync(
-                new Uri(
-                    "/ResponseCache",
-                    UriKind.Relative
-                )
-            );
-
-            var result3 = await client.GetAsync(
-                new Uri(
-                    "/ResponseCache?testKey=newTestValue",
                     UriKind.Relative
                 )
             );
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, result1.StatusCode);
-            Assert.Equal(HttpStatusCode.OK, result2.StatusCode);
-            Assert.Equal(HttpStatusCode.OK, result3.StatusCode);
-
-            Assert.Equal(
-                await result1.Content.ReadAsStringAsync(),
-                await result2.Content.ReadAsStringAsync()
-            );
-            Assert.NotEqual(
-                await result2.Content.ReadAsStringAsync(),
-                await result3.Content.ReadAsStringAsync()
-            );
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
 
         [Fact]

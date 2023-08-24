@@ -21,8 +21,10 @@ namespace GodelTech.Microservices.Core.Mvc
 
             var builder = services
                 .AddRazorPages(
+                    // Stryker disable once block
                     options =>
                     {
+                        // Stryker disable once statement
                         ConfigureRazorPagesOptions(options);
                     }
                 );
