@@ -67,7 +67,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
             await _fakeService.CompleteAsync();
 
             return View();
-        } 
+        }
 
         public IActionResult Route()
         {
