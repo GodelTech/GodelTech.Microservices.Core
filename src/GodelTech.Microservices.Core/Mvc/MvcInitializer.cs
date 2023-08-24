@@ -18,6 +18,7 @@ namespace GodelTech.Microservices.Core.Mvc
             // Stryker disable once statement
             services.AddResponseCaching();
 
+            // Stryker disable once statement
             services.AddMemoryCache();
 
             var builder = services
