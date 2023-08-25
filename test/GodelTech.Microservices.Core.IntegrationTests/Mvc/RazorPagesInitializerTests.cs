@@ -120,7 +120,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             var client = _fixture.CreateClient();
 
             var memoryCache = _fixture.Services.GetRequiredService<IMemoryCache>();
-            var hasCacheValue = memoryCache.TryGetValue("_Current_DateTime", out DateTime? cacheValue);
+            var hasCacheValue = memoryCache.TryGetValue("_Current_Guid", out Guid? cacheValue);
             Assert.False(hasCacheValue);
             Assert.Null(cacheValue);
 
@@ -133,7 +133,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
-            cacheValue = memoryCache.Get<DateTime>("_Current_DateTime");
+            cacheValue = memoryCache.Get<Guid>("_Current_Guid");
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Matches(

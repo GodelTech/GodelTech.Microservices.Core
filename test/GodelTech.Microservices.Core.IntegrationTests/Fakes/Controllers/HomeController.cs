@@ -41,21 +41,21 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
         [ResponseCache(Duration = 10, VaryByQueryKeys = new[] { "*" })]
         public IActionResult ResponseCache()
         {
-            return View(DateTime.Now);
+            return View(Guid.NewGuid());
         }
 
         public async Task<IActionResult> MemoryCache()
         {
-            var currentDateTime = DateTime.Now;
+            var value = Guid.NewGuid();
 
             var cacheValue = await _memoryCache.GetOrCreateAsync(
-                "_Current_DateTime",
+                "_Current_Guid",
                 async entry =>
                 {
                     entry.SlidingExpiration = TimeSpan.FromHours(1);
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
 
-                    return await Task.FromResult(currentDateTime);
+                    return await Task.FromResult(value);
                 }
             );
 

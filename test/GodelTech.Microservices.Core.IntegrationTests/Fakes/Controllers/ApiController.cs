@@ -26,26 +26,26 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Controllers
 
         [HttpGet("responseCache")]
         [ResponseCache(Duration = 30, VaryByQueryKeys = new[] { "*" })]
-        [ProducesResponseType(typeof(DateTime), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
         public IActionResult GetResponseCache()
         {
-            return Ok(DateTime.Now);
+            return Ok(Guid.NewGuid());
         }
 
         [HttpGet("memoryCache")]
-        [ProducesResponseType(typeof(DateTime), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetMemoryCache()
         {
-            var currentDateTime = DateTime.Now;
+            var value = Guid.NewGuid();
 
             var cacheValue = await _memoryCache.GetOrCreateAsync(
-                "_Current_DateTime",
+                "_Current_Guid",
                 async entry =>
                 {
                     entry.SlidingExpiration = TimeSpan.FromHours(1);
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
 
-                    return await Task.FromResult(currentDateTime);
+                    return await Task.FromResult(value);
                 }
             );
 
