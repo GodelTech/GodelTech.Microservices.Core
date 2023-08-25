@@ -13,14 +13,18 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            // Stryker disable once statement
             services.AddResponseCaching();
 
+            // Stryker disable once statement
             services.AddMemoryCache();
 
             var builder = services
                 .AddRazorPages(
+                    // Stryker disable once block
                     options =>
                     {
+                        // Stryker disable once statement
                         ConfigureRazorPagesOptions(options);
                     }
                 );

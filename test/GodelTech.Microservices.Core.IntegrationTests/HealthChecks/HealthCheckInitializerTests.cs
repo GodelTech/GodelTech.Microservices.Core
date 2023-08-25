@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -25,6 +24,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
         public HealthCheckInitializerTests()
         {
             _fixture = new AppTestFixture();
+            _fixture.SetConfiguration(GetConfiguration(), new HealthCheckInitializer());
         }
 
         public void Dispose()
@@ -32,33 +32,29 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(HealthCheckInitializer initializer)
+        private static Action<IWebHostBuilder, IMicroserviceInitializer> GetConfiguration()
         {
-            return _fixture
-                .WithWebHostBuilder(
-                    builder =>
-                    {
-                        builder
-                            .ConfigureServices(
-                                services =>
-                                {
-                                    initializer.ConfigureServices(services);
-                                }
-                            );
+            return (builder, initializer) =>
+            {
+                builder
+                    .ConfigureServices(
+                        services =>
+                        {
+                            initializer.ConfigureServices(services);
+                        }
+                    );
 
-                        builder
-                            .Configure(
-                                (context, app) =>
-                                {
-                                    app.UseRouting();
+                builder
+                    .Configure(
+                        (context, app) =>
+                        {
+                            app.UseRouting();
 
-                                    initializer.Configure(app, context.HostingEnvironment);
-                                    initializer.ConfigureEndpoints(app, context.HostingEnvironment);
-                                }
-                            );
-                    }
-                )
-                .CreateClient();
+                            initializer.Configure(app, context.HostingEnvironment);
+                            initializer.ConfigureEndpoints(app, context.HostingEnvironment);
+                        }
+                    );
+            };
         }
 
         public static IEnumerable<object[]> SuccessMemberData =>
@@ -83,7 +79,9 @@ namespace GodelTech.Microservices.Core.IntegrationTests.HealthChecks
             Uri uri)
         {
             // Arrange
-            var client = CreateClient(initializer);
+            _fixture.SetConfiguration(GetConfiguration(), initializer);
+
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(uri);

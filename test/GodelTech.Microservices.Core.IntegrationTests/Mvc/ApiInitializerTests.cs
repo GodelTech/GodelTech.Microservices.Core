@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
@@ -10,6 +9,8 @@ using GodelTech.Microservices.Core.Mvc;
 using GodelTech.Microservices.Core.Mvc.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -54,6 +55,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public ApiInitializerTests()
         {
             _fixture = new AppTestFixture();
+            _fixture.SetConfiguration(GetConfiguration(), new ApiInitializer());
         }
 
         public void Dispose()
@@ -61,51 +63,45 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             _fixture.Dispose();
         }
 
-        private HttpClient CreateClient(ApiInitializer initializer)
+        private static Action<IWebHostBuilder, IMicroserviceInitializer> GetConfiguration()
         {
-            return _fixture
-                .WithWebHostBuilder(
-                    builder =>
-                    {
-                        builder
-                            .ConfigureServices(
-                                services =>
-                                {
-                                    services.AddAutoMapper(typeof(TestStartup).Assembly);
+            return (builder, initializer) =>
+            {
+                builder
+                    .ConfigureTestServices(
+                        services =>
+                        {
+                            services.AddAutoMapper(typeof(TestStartup).Assembly);
 
-                                    services.AddTransient<IFakeService, FakeService>();
+                            services.AddTransient<IFakeService, FakeService>();
 
-                                    initializer.ConfigureServices(services);
-                                }
-                            );
+                            initializer.ConfigureServices(services);
+                        }
+                    );
 
-                        builder
-                            .Configure(
-                                (context, app) =>
-                                {
-                                    app.UseRouting();
+                builder
+                    .Configure(
+                        (context, app) =>
+                        {
+                            app.UseRouting();
 
-                                    initializer.Configure(app, context.HostingEnvironment);
-                                    initializer.ConfigureEndpoints(app, context.HostingEnvironment);
-                                }
-                            );
-                    }
-                )
-                .CreateClient();
+                            initializer.Configure(app, context.HostingEnvironment);
+                            initializer.ConfigureEndpoints(app, context.HostingEnvironment);
+                        }
+                    );
+            };
         }
 
         [Fact]
         public async Task Configure_WhenList_Success()
         {
             // Arrange
-            var initializer = new ApiInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes",
+                    "/api/fakes",
                     UriKind.Relative
                 )
             );
@@ -127,14 +123,12 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             int expectedFakeJsonStringsIndex)
         {
             // Arrange
-            var initializer = new ApiInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    $"/fakes/{id}",
+                    $"/api/fakes/{id}",
                     UriKind.Relative
                 )
             );
@@ -148,17 +142,85 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         }
 
         [Fact]
-        public async Task Configure_HasFileTooLargeExceptionFilter()
+        public async Task Configure_WhenResponseCache_Success()
         {
             // Arrange
-            var initializer = new ApiInitializer();
+            var client = _fixture.CreateClient();
 
-            var client = CreateClient(initializer);
+            // Act
+            var result1 = await client.GetAsync(
+                new Uri(
+                    "/api/fakes/responseCache?testKey=testValue",
+                    UriKind.Relative
+                )
+            );
+
+            var result2 = await client.GetAsync(
+                new Uri(
+                    "/api/fakes/responseCache?testKey=testValue",
+                    UriKind.Relative
+                )
+            );
+
+            var result3 = await client.GetAsync(
+                new Uri(
+                    "/api/fakes/responseCache?testKey=newTestValue",
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result1.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result2.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, result3.StatusCode);
+
+            Assert.Equal(
+                await result1.Content.ReadAsStringAsync(),
+                await result2.Content.ReadAsStringAsync()
+            );
+            Assert.NotEqual(
+                await result2.Content.ReadAsStringAsync(),
+                await result3.Content.ReadAsStringAsync()
+            );
+        }
+
+        [Fact]
+        public async Task Configure_WhenMemoryCache_Success()
+        {
+            // Arrange
+            var client = _fixture.CreateClient();
+
+            var memoryCache = _fixture.Services.GetRequiredService<IMemoryCache>();
+            var hasCacheValue = memoryCache.TryGetValue("_Current_Guid", out Guid? cacheValue);
+            Assert.False(hasCacheValue);
+            Assert.Null(cacheValue);
 
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes/fileTooLargeException",
+                    "/api/fakes/memoryCache",
+                    UriKind.Relative
+                )
+            );
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(
+                await result.Content.ReadFromJsonAsync<Guid>(),
+                memoryCache.Get<Guid>("_Current_Guid")
+            );
+        }
+
+        [Fact]
+        public async Task Configure_HasFileTooLargeExceptionFilter()
+        {
+            // Arrange
+            var client = _fixture.CreateClient();
+
+            // Act
+            var result = await client.GetAsync(
+                new Uri(
+                    "/api/fakes/fileTooLargeException",
                     UriKind.Relative
                 )
             );
@@ -187,14 +249,12 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_HasRequestValidationExceptionFilter()
         {
             // Arrange
-            var initializer = new ApiInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes/requestValidationException",
+                    "/api/fakes/requestValidationException",
                     UriKind.Relative
                 )
             );
@@ -223,14 +283,12 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         public async Task Configure_HasResourceNotFoundExceptionFilter()
         {
             // Arrange
-            var initializer = new ApiInitializer();
-
-            var client = CreateClient(initializer);
+            var client = _fixture.CreateClient();
 
             // Act
             var result = await client.GetAsync(
                 new Uri(
-                    "/fakes/resourceNotFoundException",
+                    "/api/fakes/resourceNotFoundException",
                     UriKind.Relative
                 )
             );

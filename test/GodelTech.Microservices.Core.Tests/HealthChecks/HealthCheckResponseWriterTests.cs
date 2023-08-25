@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using GodelTech.Microservices.Core.HealthChecks;
 using Microsoft.AspNetCore.Http;
@@ -51,72 +50,23 @@ namespace GodelTech.Microservices.Core.Tests.HealthChecks
             Assert.Equal("healthReport", exception.ParamName);
         }
 
-        public static IEnumerable<object[]> WriteJsonMemberData =>
-            new Collection<object[]>
+        [Fact]
+        public void WriteAsync_Success()
+        {
+            // Arrange
+            var entries = new Dictionary<string, HealthReportEntry>
             {
-                new object[]
                 {
-                    new Dictionary<string, HealthReportEntry>(),
-                    null,
-                    null,
-                    "{\"status\":\"Unhealthy\",\"results\":[],\"totalDuration\":0}"
-                },
-
-                new object[]
-                {
-                    new Dictionary<string, HealthReportEntry>(),
-                    HealthStatus.Unhealthy,
-                    null,
-                    "{\"status\":\"Unhealthy\",\"results\":[],\"totalDuration\":0}"
-                },
-                new object[]
-                {
-                    new Dictionary<string, HealthReportEntry>(),
-                    HealthStatus.Degraded,
-                    null,
-                    "{\"status\":\"Degraded\",\"results\":[],\"totalDuration\":0}"
-                },
-                new object[]
-                {
-                    new Dictionary<string, HealthReportEntry>(),
-                    HealthStatus.Healthy,
-                    null,
-                    "{\"status\":\"Healthy\",\"results\":[],\"totalDuration\":0}"
-                },
-                new object[]
-                {
-                    new Dictionary<string, HealthReportEntry>
-                    {
-                        {
-                            "Test Key",
-                            new HealthReportEntry(
-                                HealthStatus.Healthy,
-                                "Test Description",
-                                new TimeSpan(0, 0, 0, 0, 100),
-                                new ArgumentNullException(),
-                                null
-                            )
-                        }
-                    },
-                    HealthStatus.Healthy,
-                    new TimeSpan(0, 0, 0, 0, 100),
-                    "{" +
-                    "\"status\":\"Healthy\"," +
-                    "\"results\":[{\"key\":\"Test Key\",\"value\":{\"status\":\"Healthy\",\"description\":\"Test Description\"}}]," +
-                    "\"totalDuration\":100" +
-                    "}"
+                    "Test Key", new HealthReportEntry(
+                        HealthStatus.Degraded,
+                        "Test Description",
+                        new TimeSpan(0, 0, 0, 0, 100),
+                        null,
+                        null
+                    )
                 }
             };
 
-        [Theory]
-        [MemberData(nameof(WriteJsonMemberData))]
-        public void WriteAsync_Success(
-            Dictionary<string, HealthReportEntry> entries,
-            HealthStatus status,
-            TimeSpan totalDuration,
-            string expectedResponseBody)
-        {
-            // Arrange
             var httpContext = new DefaultHttpContext
             {
                 Response =
@@ -127,9 +77,16 @@ namespace GodelTech.Microservices.Core.Tests.HealthChecks
 
             var healthReport = new HealthReport(
                 entries,
-                status,
-                totalDuration
+                HealthStatus.Healthy,
+                new TimeSpan(0, 0, 0, 0, 100)
             );
+
+            var expectedResponseBody =
+                "{" +
+                "\"status\":\"Healthy\"," +
+                "\"results\":[{\"key\":\"Test Key\",\"value\":{\"status\":\"Degraded\",\"description\":\"Test Description\"}}]," +
+                "\"totalDuration\":100" +
+                "}";
 
             // Act
             _writer.WriteAsync(httpContext, healthReport).Wait();

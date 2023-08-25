@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -51,8 +50,6 @@ namespace GodelTech.Microservices.Core.Mvc.Filters
         /// <inheritdoc />
         public override void OnException(ExceptionContext context)
         {
-            base.OnException(context);
-
             if (context == null) throw new ArgumentNullException(nameof(context));
 
             var exceptions = new List<object>
@@ -67,7 +64,7 @@ namespace GodelTech.Microservices.Core.Mvc.Filters
                 );
             }
 
-            if (exceptions.All(x => x.GetType() != ExceptionType))
+            if (exceptions.TrueForAll(x => x.GetType() != ExceptionType))
             {
                 return;
             }

@@ -129,6 +129,15 @@ namespace GodelTech.Microservices.Core.Tests
                     ),
                     Times.Exactly(count)
                 );
+
+            mockInitializer
+                .Verify(
+                    x => x.ConfigureEndpoints(
+                        mockApplicationBuilder.Object,
+                        mockWebHostEnvironment.Object
+                    ),
+                    Times.Exactly(count)
+                );
         }
 
         [Fact]

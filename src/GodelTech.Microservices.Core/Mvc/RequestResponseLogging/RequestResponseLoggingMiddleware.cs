@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using GodelTech.Microservices.Core.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -22,6 +22,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         private readonly RequestResponseLoggingOptions _options;
         private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
+        private readonly IStopwatchFactory _stopwatchFactory;
 
         /// <summary>
         /// Creates a new instance of the RequestResponseLoggingMiddleware.
@@ -30,11 +31,13 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         /// <param name="options">The configuration options.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="recyclableMemoryStreamManager">The recyclableMemoryStreamManager.</param>
+        /// <param name="stopwatchFactory">The Stopwatch factory.</param>
         public RequestResponseLoggingMiddleware(
             RequestDelegate next,
             IOptions<RequestResponseLoggingOptions> options,
             ILogger<RequestResponseLoggingMiddleware> logger,
-            RecyclableMemoryStreamManager recyclableMemoryStreamManager)
+            RecyclableMemoryStreamManager recyclableMemoryStreamManager,
+            IStopwatchFactory stopwatchFactory = default(SystemStopwatchFactory))
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
@@ -42,6 +45,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
             _options = options.Value;
             _logger = logger;
             _recyclableMemoryStreamManager = recyclableMemoryStreamManager;
+            _stopwatchFactory = stopwatchFactory ?? new SystemStopwatchFactory();
         }
 
         /// <summary>
@@ -83,6 +87,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
         private async Task LogRequestAsync(HttpContext context)
         {
+            // Stryker disable once string
             var body = string.Empty;
 
             if (_options.IncludeRequestBody)
@@ -126,9 +131,11 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
         private async Task LogResponseAsync(HttpContext context)
         {
-            var timer = Stopwatch.StartNew();
-
+            // Stryker disable once string
             var body = string.Empty;
+
+            var timer = _stopwatchFactory.Create();
+            timer.Start();
 
             if (_options.IncludeResponseBody)
             {

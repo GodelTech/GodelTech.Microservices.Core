@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+source ../Git.Hooks/global/pre-push
+
+## dotnet
+source ../Git.Hooks/dotnet/pre-push

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.Mvc.CorrelationId;
 using GodelTech.Microservices.Core.Tests.Fakes.Mvc.CorrelationId;
+using GodelTech.Microservices.Core.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
@@ -18,7 +19,6 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
     {
         private readonly Mock<RequestDelegate> _mockRequestDelegate;
         private readonly Mock<ICorrelationIdContextFactory> _mockCorrelationIdContextFactory;
-        private readonly Func<Guid> _newId = () => new Guid("00000000-0000-0000-0000-000000000001");
 
         private readonly CorrelationIdMiddleware _middleware;
 
@@ -35,11 +35,16 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
 
             _mockCorrelationIdContextFactory = new Mock<ICorrelationIdContextFactory>(MockBehavior.Strict);
 
+            var mockGuid = new Mock<IGuid>(MockBehavior.Strict);
+            mockGuid
+                .Setup(x => x.NewGuid())
+                .Returns(new Guid("00000000-0000-0000-0000-000000000001"));
+
             _middleware = new CorrelationIdMiddleware(
                 _mockRequestDelegate.Object,
                 mockOptions.Object,
                 _mockCorrelationIdContextFactory.Object,
-                _newId
+                mockGuid.Object
             );
         }
 

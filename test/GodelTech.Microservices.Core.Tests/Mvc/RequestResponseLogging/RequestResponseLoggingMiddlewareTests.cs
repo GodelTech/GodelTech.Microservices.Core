@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.Mvc.RequestResponseLogging;
+using GodelTech.Microservices.Core.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -25,6 +25,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
         private readonly RequestResponseLoggingOptions _options;
         private readonly Mock<ILogger<RequestResponseLoggingMiddleware>> _mockLogger;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
+        private readonly Mock<IStopwatch> _mockStopwatch;
 
         private readonly RequestResponseLoggingMiddleware _middleware;
 
@@ -41,12 +42,19 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
 
             _mockLogger = new Mock<ILogger<RequestResponseLoggingMiddleware>>(MockBehavior.Strict);
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
+            _mockStopwatch = new Mock<IStopwatch>(MockBehavior.Strict);
+
+            var mockStopwatchFactory = new Mock<IStopwatchFactory>(MockBehavior.Strict);
+            mockStopwatchFactory
+                .Setup(x => x.Create())
+                .Returns(_mockStopwatch.Object);
 
             _middleware = new RequestResponseLoggingMiddleware(
                 _mockRequestDelegate.Object,
                 mockOptions.Object,
                 _mockLogger.Object,
-                _recyclableMemoryStreamManager
+                _recyclableMemoryStreamManager,
+                mockStopwatchFactory.Object
             );
         }
 
@@ -155,6 +163,16 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
                 .Setup(x => x.IsEnabled(LogLevel.Information))
                 .Returns(true);
 
+            _mockStopwatch
+                .Setup(x => x.Start());
+
+            _mockStopwatch
+                .Setup(x => x.Stop());
+
+            _mockStopwatch
+                .Setup(x => x.ElapsedMilliseconds)
+                .Returns(12345);
+
             var requestHeaders = JsonSerializer.Serialize(httpContext.Request.Headers);
             Expression<Action<ILogger<RequestResponseLoggingMiddleware>>> loggerExpressionRequest = x => x.Log(
                 LogLevel.Information,
@@ -199,28 +217,25 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
                 LogLevel.Information,
                 new EventId(0, "LogResponse"),
                 It.Is<It.IsAnyType>((v, t) =>
-                    new Regex(
-                        "^" +
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Http Response Information:" + Environment.NewLine +
-                            "TraceIdentifier: {0}," +
-                            "StatusCode: {1}," +
-                            "ReasonPhrase: {2}," +
-                            "ResponseTimeMilliseconds: {3}," +
-                            "ResponseHeaders: {4}," +
-                            "Body: {5}",
-                            httpContext.TraceIdentifier,
-                            httpContext.Response.StatusCode,
-                            httpContext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase,
-                            "[0-9]{1,}",
-                            @"{""Test ResponseHeader Key"":\[""Test ResponseHeader Value""\]}",
-                            _options.IncludeResponseBody
-                                ? "Test NewResponseBody"
-                                : "<IncludeResponseBody is false>"
-                        ) +
-                        "$"
-                    ).IsMatch(v.ToString())
+                    v.ToString() ==
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Http Response Information:" + Environment.NewLine +
+                        "TraceIdentifier: {0}," +
+                        "StatusCode: {1}," +
+                        "ReasonPhrase: {2}," +
+                        "ResponseTimeMilliseconds: {3}," +
+                        "ResponseHeaders: {4}," +
+                        "Body: {5}",
+                        httpContext.TraceIdentifier,
+                        httpContext.Response.StatusCode,
+                        httpContext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase,
+                        12345,
+                        @"{""Test ResponseHeader Key"":[""Test ResponseHeader Value""]}",
+                        _options.IncludeResponseBody
+                            ? "Test NewResponseBody"
+                            : "<IncludeResponseBody is false>"
+                    )
                 ),
                 null,
                 It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)
@@ -239,12 +254,25 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
                     Times.Once
                 );
 
-            _mockLogger.Verify(loggerExpressionResponse, Times.Once);
+            _mockStopwatch
+                .Verify(
+                    x => x.Start(),
+                    Times.Once
+                );
 
-            if (includeRequestBody)
-            {
-                Assert.Equal(0, httpContext.Request.Body.Position);
-            }
+            _mockStopwatch
+                .Verify(
+                    x => x.Stop(),
+                    Times.Once
+                );
+
+            _mockStopwatch
+                .Verify(
+                    x => x.ElapsedMilliseconds,
+                    Times.Once
+                );
+
+            _mockLogger.Verify(loggerExpressionResponse, Times.Once);
         }
     }
 }
