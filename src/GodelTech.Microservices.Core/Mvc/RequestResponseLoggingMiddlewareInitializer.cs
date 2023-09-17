@@ -14,8 +14,12 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            // Stryker disable once statement
-            services.Configure<RequestResponseLoggingOptions>(ConfigureRequestResponseLoggingOptions);
+            services.Configure<RequestResponseLoggingOptions>(
+                options =>
+                {
+                    ConfigureRequestResponseLoggingOptions(options);
+                }
+            );
 
             services.AddSingleton<RecyclableMemoryStreamManager>();
         }

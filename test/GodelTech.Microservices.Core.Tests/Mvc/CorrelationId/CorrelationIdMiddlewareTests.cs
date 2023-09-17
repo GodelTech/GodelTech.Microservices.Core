@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.Mvc.CorrelationId;
 using GodelTech.Microservices.Core.Tests.Fakes.Mvc.CorrelationId;
@@ -10,6 +10,7 @@ using GodelTech.Microservices.Core.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using Xunit;
 
@@ -79,112 +80,139 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
             {
                 new object[]
                 {
-                    new Dictionary<string, string>(),
-                    new Dictionary<string, string>(),
+                    new Collection<KeyValuePair<string, StringValues>>(),
+                    new Collection<KeyValuePair<string, StringValues>>(),
                     "00000000-0000-0000-0000-000000000001",
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000001" }
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000001")
                     }
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>(),
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>(),
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "firstKey", "FirstTestValue" }
+                        new KeyValuePair<string, StringValues>("firstKey", "FirstTestValue")
                     },
                     "00000000-0000-0000-0000-000000000001",
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "firstKey", "FirstTestValue" },
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000001" }
+                        new KeyValuePair<string, StringValues>("firstKey", "FirstTestValue"),
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000001")
                     }
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>(),
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>(),
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000002" }
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000002")
                     },
                     "00000000-0000-0000-0000-000000000001",
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000002" }
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000002")
                     }
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "firstKey", "FirstTestValue" }
+                        new KeyValuePair<string, StringValues>("firstKey", "FirstTestValue")
                     },
-                    new Dictionary<string, string>(),
+                    new Collection<KeyValuePair<string, StringValues>>(),
                     "00000000-0000-0000-0000-000000000001",
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000001" }
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000001")
                     }
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "firstKey", "FirstTestValue" },
-                        { "secondKey", "SecondTestValue" }
+                        new KeyValuePair<string, StringValues>("firstKey", "FirstTestValue"),
+                        new KeyValuePair<string, StringValues>("secondKey", "SecondTestValue")
                     },
-                    new Dictionary<string, string>(),
+                    new Collection<KeyValuePair<string, StringValues>>(),
                     "00000000-0000-0000-0000-000000000001",
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000001" }
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000001")
                     }
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "10000000-0000-0000-0000-000000000000" }
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "10000000-0000-0000-0000-000000000000")
                     },
-                    new Dictionary<string, string>(),
+                    new Collection<KeyValuePair<string, StringValues>>(),
                     "10000000-0000-0000-0000-000000000000",
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "10000000-0000-0000-0000-000000000000" }
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "10000000-0000-0000-0000-000000000000")
                     }
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "10000000-0000-0000-0000-000000000000" }
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "10000000-0000-0000-0000-000000000000")
                     },
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "firstKey", "FirstTestValue" }
-                    },
-                    "10000000-0000-0000-0000-000000000000",
-                    new Dictionary<string, string>
-                    {
-                        { "firstKey", "FirstTestValue" },
-                        { "X-Correlation-ID", "10000000-0000-0000-0000-000000000000" }
-                    }
-                },
-                new object[]
-                {
-                    new Dictionary<string, string>
-                    {
-                        { "X-Correlation-ID", "10000000-0000-0000-0000-000000000000" }
-                    },
-                    new Dictionary<string, string>
-                    {
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000002" }
+                        new KeyValuePair<string, StringValues>("firstKey", "FirstTestValue")
                     },
                     "10000000-0000-0000-0000-000000000000",
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, StringValues>>
                     {
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000002" }
+                        new KeyValuePair<string, StringValues>("firstKey", "FirstTestValue"),
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "10000000-0000-0000-0000-000000000000")
+                    }
+                },
+                new object[]
+                {
+                    new Collection<KeyValuePair<string, StringValues>>
+                    {
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "10000000-0000-0000-0000-000000000000")
+                    },
+                    new Collection<KeyValuePair<string, StringValues>>
+                    {
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000002")
+                    },
+                    "10000000-0000-0000-0000-000000000000",
+                    new Collection<KeyValuePair<string, StringValues>>
+                    {
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000002")
+                    }
+                },
+                new object[]
+                {
+                    new Collection<KeyValuePair<string, StringValues>>
+                    {
+                        new KeyValuePair<string, StringValues>("requestFirstKey", "RequestFirstTestValue"),
+                        new KeyValuePair<string, StringValues>(
+                            "X-Correlation-ID",
+                            new StringValues(
+                                new []
+                                {
+                                    "00000000-0000-0000-0000-000000000002",
+                                    "00000000-0000-0000-0000-000000000003"
+                                }
+                            )
+                        )
+                    },
+                    new Collection<KeyValuePair<string, StringValues>>
+                    {
+                        new KeyValuePair<string, StringValues>("responseFirstKey", "ResponseFirstTestValue")
+                    },
+                    "00000000-0000-0000-0000-000000000002",
+                    new Collection<KeyValuePair<string, StringValues>>
+                    {
+                        new KeyValuePair<string, StringValues>("responseFirstKey", "ResponseFirstTestValue"),
+                        new KeyValuePair<string, StringValues>("X-Correlation-ID", "00000000-0000-0000-0000-000000000002")
                     }
                 }
             };
@@ -192,14 +220,11 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
         [Theory]
         [MemberData(nameof(InvokeAsyncMemberData))]
         public async Task InvokeAsync_Success(
-            Dictionary<string, string> requestHeaders,
-            Dictionary<string, string> responseHeaders,
+            [NotNull] ICollection<KeyValuePair<string, StringValues>> requestHeaders,
+            [NotNull] ICollection<KeyValuePair<string, StringValues>> responseHeaders,
             string expectedRequestCorrelationId,
-            Dictionary<string, string> expectedCorrelationIdResponseHeaders)
+            ICollection<KeyValuePair<string, StringValues>> expectedCorrelationIdResponseHeaders)
         {
-            if (requestHeaders == null) throw new ArgumentNullException(nameof(requestHeaders));
-            if (responseHeaders == null) throw new ArgumentNullException(nameof(responseHeaders));
-
             // Arrange
             var httpContext = new DefaultHttpContext
             {
@@ -266,11 +291,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
                 );
 
             // unit test context.Response.OnStarting
-            var actualResponseHeaders = httpContext.Response.Headers
-                .ToDictionary(
-                    x => x.Key,
-                    x => x.Value.ToString()
-                );
+            var actualResponseHeaders = httpContext.Response.Headers;
 
             Assert.Equal(
                 expectedCorrelationIdResponseHeaders,

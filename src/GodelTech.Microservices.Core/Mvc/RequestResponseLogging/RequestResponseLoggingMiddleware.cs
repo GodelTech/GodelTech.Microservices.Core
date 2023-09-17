@@ -87,8 +87,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
         private async Task LogRequestAsync(HttpContext context)
         {
-            // Stryker disable once string
-            var body = string.Empty;
+            string body = null;
 
             if (_options.IncludeRequestBody)
             {
@@ -131,8 +130,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
 
         private async Task LogResponseAsync(HttpContext context)
         {
-            // Stryker disable once string
-            var body = string.Empty;
+            string body = null;
 
             var timer = _stopwatchFactory.Create();
             timer.Start();

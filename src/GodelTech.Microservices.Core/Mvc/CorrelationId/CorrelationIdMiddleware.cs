@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using GodelTech.Microservices.Core.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 
 namespace GodelTech.Microservices.Core.Mvc.CorrelationId
 {
@@ -84,13 +83,11 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
                 out var correlationIdValue
             );
 
-            if (StringValues.IsNullOrEmpty(correlationIdValue))
-            {
-                return _guid.NewGuid().ToString();
-            }
+            var correlationId = correlationIdValue.FirstOrDefault();
 
-            // Stryker disable once linq
-            return correlationIdValue.FirstOrDefault();
+            return string.IsNullOrWhiteSpace(correlationId)
+                ? _guid.NewGuid().ToString()
+                : correlationId;
         }
     }
 }

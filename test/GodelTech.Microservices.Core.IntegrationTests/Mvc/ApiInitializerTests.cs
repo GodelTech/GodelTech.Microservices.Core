@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
-using GodelTech.Microservices.Core.Mvc;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Mvc;
 using GodelTech.Microservices.Core.Mvc.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,10 +52,19 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
 
         private readonly AppTestFixture _fixture;
 
+        private bool _wasConfigureResponseCachingOptionsCalled;
+        private bool _wasConfigureMemoryCacheOptionsCalled;
+
         public ApiInitializerTests()
         {
             _fixture = new AppTestFixture();
-            _fixture.SetConfiguration(GetConfiguration(), new ApiInitializer());
+            _fixture.SetConfiguration(
+                GetConfiguration(),
+                new FakeApiInitializer(
+                    () => _wasConfigureResponseCachingOptionsCalled = true,
+                    () => _wasConfigureMemoryCacheOptionsCalled = true
+                )
+            );
         }
 
         public void Dispose()
@@ -170,6 +179,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureResponseCachingOptionsCalled);
+
             Assert.Equal(HttpStatusCode.OK, result1.StatusCode);
             Assert.Equal(HttpStatusCode.OK, result2.StatusCode);
             Assert.Equal(HttpStatusCode.OK, result3.StatusCode);
@@ -204,6 +215,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureMemoryCacheOptionsCalled);
+
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(
                 await result.Content.ReadFromJsonAsync<Guid>(),
