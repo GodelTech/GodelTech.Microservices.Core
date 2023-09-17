@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using GodelTech.Microservices.Core.Mvc.CorrelationId;
 using GodelTech.Microservices.Core.Tests.Fakes.Mvc.CorrelationId;

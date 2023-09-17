@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using GodelTech.Microservices.Core.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 
 namespace GodelTech.Microservices.Core.Mvc.CorrelationId
 {
