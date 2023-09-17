@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using GodelTech.Microservices.Core.Mvc;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,10 +17,17 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
     {
         private readonly AppTestFixture _fixture;
 
+        private bool _wasConfigureCorrelationIdOptionsCalled;
+
         public CorrelationIdMiddlewareInitializerTests()
         {
             _fixture = new AppTestFixture();
-            _fixture.SetConfiguration(GetConfiguration(), new CorrelationIdMiddlewareInitializer());
+            _fixture.SetConfiguration(
+                GetConfiguration(),
+                new FakeCorrelationIdMiddlewareInitializer(
+                    () => _wasConfigureCorrelationIdOptionsCalled = true
+                )
+            );
         }
 
         public void Dispose()
@@ -66,31 +73,40 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             {
                 new object[]
                 {
-                    new Dictionary<string, string>(),
+                    new Collection<KeyValuePair<string, string>>(),
                     @"[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}"
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, string>>
                     {
-                        { "firstKey", "FirstTestValue" }
+                        new KeyValuePair<string, string>("firstKey", "FirstTestValue")
                     },
                     @"[a-fA-F0-9]{8}[-]?([a-fA-F0-9]{4}[-]?){3}[a-fA-F0-9]{12}"
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>
+                    new Collection<KeyValuePair<string, string>>
                     {
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000002" }
+                        new KeyValuePair<string, string>("X-Correlation-ID", "00000000-0000-0000-0000-000000000002")
                     },
                     "00000000-0000-0000-0000-000000000002"
                 },
                 new object[]
                 {
-                    new Dictionary<string, string>
+                    new List<KeyValuePair<string, string>>
                     {
-                        { "firstKey", "FirstTestValue" },
-                        { "X-Correlation-ID", "00000000-0000-0000-0000-000000000002" }
+                        new KeyValuePair<string, string>("firstKey", "FirstTestValue"),
+                        new KeyValuePair<string, string>("X-Correlation-ID", "00000000-0000-0000-0000-000000000002")
+                    },
+                    "00000000-0000-0000-0000-000000000002"
+                },
+                new object[]
+                {
+                    new Collection<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("X-Correlation-ID", "00000000-0000-0000-0000-000000000002"),
+                        new KeyValuePair<string, string>("X-Correlation-ID", "00000000-0000-0000-0000-000000000003")
                     },
                     "00000000-0000-0000-0000-000000000002"
                 }
@@ -99,7 +115,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
         [Theory]
         [MemberData(nameof(ConfigureMemberData))]
         public async Task Configure_Success(
-            Dictionary<string, string> requestHeaders,
+            ICollection<KeyValuePair<string, string>> requestHeaders,
             string expectedCorrelationIdRegex)
         {
             if (requestHeaders == null) throw new ArgumentNullException(nameof(requestHeaders));
@@ -121,6 +137,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureCorrelationIdOptionsCalled);
+
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Matches(
                 new Regex(

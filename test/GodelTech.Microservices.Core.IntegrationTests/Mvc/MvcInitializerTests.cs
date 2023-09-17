@@ -21,10 +21,19 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
     {
         private readonly AppTestFixture _fixture;
 
+        private bool _wasConfigureResponseCachingOptionsCalled;
+        private bool _wasConfigureMemoryCacheOptionsCalled;
+
         public MvcInitializerTests()
         {
             _fixture = new AppTestFixture();
-            _fixture.SetConfiguration(GetConfiguration(), new FakeMvcInitializer());
+            _fixture.SetConfiguration(
+                GetConfiguration(),
+                new FakeMvcInitializer(
+                    () => _wasConfigureResponseCachingOptionsCalled = true,
+                    () => _wasConfigureMemoryCacheOptionsCalled = true
+                )
+            );
         }
 
         public void Dispose()
@@ -166,6 +175,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureResponseCachingOptionsCalled);
+
             Assert.Equal(HttpStatusCode.OK, result1.StatusCode);
             Assert.Equal(HttpStatusCode.OK, result2.StatusCode);
             Assert.Equal(HttpStatusCode.OK, result3.StatusCode);
@@ -200,6 +211,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureMemoryCacheOptionsCalled);
+
             cacheValue = memoryCache.Get<Guid>("_Current_Guid");
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);

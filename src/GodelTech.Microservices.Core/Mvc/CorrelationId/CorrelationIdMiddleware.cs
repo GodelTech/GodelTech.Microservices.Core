@@ -84,13 +84,11 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
                 out var correlationIdValue
             );
 
-            if (StringValues.IsNullOrEmpty(correlationIdValue))
-            {
-                return _guid.NewGuid().ToString();
-            }
+            var correlationId = correlationIdValue.FirstOrDefault();
 
-            // Stryker disable once linq
-            return correlationIdValue.FirstOrDefault();
+            return string.IsNullOrWhiteSpace(correlationId)
+                ? _guid.NewGuid().ToString()
+                : correlationId;
         }
     }
 }

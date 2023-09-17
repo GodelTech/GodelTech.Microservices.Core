@@ -21,10 +21,21 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
     {
         private readonly AppTestFixture _fixture;
 
+        private bool _wasConfigureResponseCachingOptionsCalled;
+        private bool _wasConfigureMemoryCacheOptionsCalled;
+        private bool _wasConfigureRazorPagesOptionsCalled;
+
         public RazorPagesInitializerTests()
         {
             _fixture = new AppTestFixture();
-            _fixture.SetConfiguration(GetConfiguration(), new FakeRazorPagesInitializer());
+            _fixture.SetConfiguration(
+                GetConfiguration(),
+                new FakeRazorPagesInitializer(
+                    () => _wasConfigureResponseCachingOptionsCalled = true,
+                    () => _wasConfigureMemoryCacheOptionsCalled = true,
+                    () => _wasConfigureRazorPagesOptionsCalled = true
+                )
+            );
         }
 
         public void Dispose()
@@ -88,6 +99,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureRazorPagesOptionsCalled);
+
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(
                 await File.ReadAllTextAsync("Documents/PagesIndex.txt"),
@@ -110,6 +123,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureResponseCachingOptionsCalled);
+
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
 
@@ -133,6 +148,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureMemoryCacheOptionsCalled);
+
             cacheValue = memoryCache.Get<Guid>("_Current_Guid");
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);

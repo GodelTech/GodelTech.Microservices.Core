@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Business.Contracts;
 using GodelTech.Microservices.Core.IntegrationTests.Fakes.Models.Fake;
-using GodelTech.Microservices.Core.Mvc;
+using GodelTech.Microservices.Core.IntegrationTests.Fakes.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,13 +20,20 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
     {
         private readonly AppTestFixture _fixture;
 
+        private bool _wasConfigureRequestResponseLoggingOptionsCalled;
+
         public RequestResponseLoggingMiddlewareInitializerTests(ITestOutputHelper output)
         {
             _fixture = new AppTestFixture
             {
                 Output = output
             };
-            _fixture.SetConfiguration(GetConfiguration(), new RequestResponseLoggingMiddlewareInitializer());
+            _fixture.SetConfiguration(
+                GetConfiguration(),
+                new FakeRequestResponseLoggingMiddlewareInitializer(
+                    () => _wasConfigureRequestResponseLoggingOptionsCalled = true
+                )
+            );
         }
 
         public void Dispose()
@@ -93,6 +100,8 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             );
 
             // Assert
+            Assert.True(_wasConfigureRequestResponseLoggingOptionsCalled);
+
             Assert.Equal(HttpStatusCode.Created, result.StatusCode);
 
             Assert.Equal("http://localhost/fakes/3", result.Headers.Location?.AbsoluteUri);

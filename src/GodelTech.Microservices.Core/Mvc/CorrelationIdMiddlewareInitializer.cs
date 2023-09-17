@@ -13,7 +13,6 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            // Stryker disable once statement
             services.Configure<CorrelationIdOptions>(ConfigureCorrelationIdOptions);
 
             services.AddSingleton<ICorrelationIdContextAccessor, CorrelationIdContextAccessor>();

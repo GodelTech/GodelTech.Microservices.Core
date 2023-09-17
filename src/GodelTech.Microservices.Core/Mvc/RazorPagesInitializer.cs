@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.ResponseCaching;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GodelTech.Microservices.Core.Mvc
@@ -13,18 +15,24 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <inheritdoc />
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            // Stryker disable once statement
-            services.AddResponseCaching();
+            services.AddResponseCaching(
+                options =>
+                {
+                    ConfigureResponseCachingOptions(options);
+                }
+            );
 
-            // Stryker disable once statement
-            services.AddMemoryCache();
+            services.AddMemoryCache(
+                options =>
+                {
+                    ConfigureMemoryCacheOptions(options);
+                }
+            );
 
             var builder = services
                 .AddRazorPages(
-                    // Stryker disable once block
                     options =>
                     {
-                        // Stryker disable once statement
                         ConfigureRazorPagesOptions(options);
                     }
                 );
@@ -47,6 +55,24 @@ namespace GodelTech.Microservices.Core.Mvc
                     endpoints.MapRazorPages();
                 }
             );
+        }
+
+        /// <summary>
+        /// Configure ResponseCachingOptions.
+        /// </summary>
+        /// <param name="options">ResponseCachingOptions.</param>
+        protected virtual void ConfigureResponseCachingOptions(ResponseCachingOptions options)
+        {
+
+        }
+
+        /// <summary>
+        /// Configure MemoryCacheOptions.
+        /// </summary>
+        /// <param name="options">MemoryCacheOptions.</param>
+        protected virtual void ConfigureMemoryCacheOptions(MemoryCacheOptions options)
+        {
+
         }
 
         /// <summary>
