@@ -39,8 +39,6 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.Filters
             int expectedStatusCode,
             Type expectedExceptionType)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-
             // Arrange & Act & Assert
             Assert.Equal(expectedStatusCode, item.StatusCode);
             Assert.Equal(expectedExceptionType, item.ExceptionType);
@@ -124,8 +122,6 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.Filters
             int expectedStatusCode,
             ObjectResult expectedResult)
         {
-            if (attribute == null) throw new ArgumentNullException(nameof(attribute));
-
             // Arrange
             var actionContext = new ActionContext
             {

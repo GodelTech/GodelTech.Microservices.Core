@@ -50,8 +50,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Fakes.Business
 
         public FakeDto Add(IFakeAddDto item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-
             return new FakeDto
             {
                 Id = 3,

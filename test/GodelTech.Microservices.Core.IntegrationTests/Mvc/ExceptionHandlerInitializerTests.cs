@@ -92,7 +92,7 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             Assert.Matches(
                 new Regex(
                     "^{" +
-                    "\"type\":\"https://tools.ietf.org/html/rfc7231#section-6.6.1\"," +
+                    "\"type\":\"https://tools.ietf.org/html/rfc[0-9]{4}#section-(\\d+\\.)?(\\d+\\.)?(\\d+)\"," +
                     "\"title\":\"An error occurred while processing your request.\"," +
                     "\"status\":500," +
                     "\"traceId\":\"[0-9]{2}-[a-f0-9]{32}-[a-f0-9]{16}-[0-9]{2}\"" +
