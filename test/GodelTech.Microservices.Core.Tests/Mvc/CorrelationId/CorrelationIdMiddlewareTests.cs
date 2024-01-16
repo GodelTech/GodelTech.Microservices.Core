@@ -241,7 +241,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
 
             foreach (var requestHeader in requestHeaders)
             {
-                httpContext.Request.Headers.Add(
+                httpContext.Request.Headers.Append(
                     requestHeader.Key,
                     requestHeader.Value
                 );
@@ -249,7 +249,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.CorrelationId
 
             foreach (var responseHeader in responseHeaders)
             {
-                httpContext.Response.Headers.Add(
+                httpContext.Response.Headers.Append(
                     responseHeader.Key,
                     responseHeader.Value
                 );

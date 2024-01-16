@@ -13,7 +13,7 @@ namespace GodelTech.Microservices.Core.Tests
     public class MicroserviceStartupTests
     {
         private readonly Mock<IConfiguration> _mockConfiguration;
-        private readonly IList<IMicroserviceInitializer> _mockInitializers;
+        private readonly List<IMicroserviceInitializer> _mockInitializers;
 
         private readonly FakeMicroserviceStartup _microserviceStartup;
 

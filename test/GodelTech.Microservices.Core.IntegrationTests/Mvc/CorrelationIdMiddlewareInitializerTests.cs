@@ -118,8 +118,6 @@ namespace GodelTech.Microservices.Core.IntegrationTests.Mvc
             ICollection<KeyValuePair<string, string>> requestHeaders,
             string expectedCorrelationIdRegex)
         {
-            if (requestHeaders == null) throw new ArgumentNullException(nameof(requestHeaders));
-
             // Arrange
             var client = _fixture.CreateClient();
 

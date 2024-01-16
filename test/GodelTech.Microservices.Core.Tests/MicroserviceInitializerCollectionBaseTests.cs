@@ -10,7 +10,7 @@ namespace GodelTech.Microservices.Core.Tests
 {
     public class MicroserviceInitializerCollectionBaseTests
     {
-        private readonly IList<IMicroserviceInitializer> _mockInitializers;
+        private readonly List<IMicroserviceInitializer> _mockInitializers;
 
         private readonly FakeMicroserviceInitializerCollectionBase _initializerCollection;
 

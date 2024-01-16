@@ -140,24 +140,18 @@ namespace GodelTech.Microservices.Core.Tests.Mvc.RequestResponseLogging
                             RemoteIpAddress = IPAddress.Parse("172.0.0.1")
                         }
                     },
-                    Headers =
-                    {
-                        { "Test RequestHeader Key", "Test RequestHeader Value" }
-                    },
                     Body = new MemoryStream(Encoding.UTF8.GetBytes("Test RequestBody"))
                 },
                 Response =
                 {
                     StatusCode = 201,
-                    Headers =
-                    {
-                        { "Test ResponseHeader Key", "Test ResponseHeader Value" }
-                    },
                     Body = new MemoryStream()
                 }
             };
-            httpContext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "Test ReasonPhrase";
+            httpContext.Request.Headers.Append("Test RequestHeader Key", "Test RequestHeader Value");
+            httpContext.Response.Headers.Append("Test ResponseHeader Key", "Test ResponseHeader Value");
             httpContext.Response.Body.Write(Encoding.UTF8.GetBytes("Test ResponseBody"));
+            httpContext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "Test ReasonPhrase";
 
             _mockLogger
                 .Setup(x => x.IsEnabled(LogLevel.Information))
