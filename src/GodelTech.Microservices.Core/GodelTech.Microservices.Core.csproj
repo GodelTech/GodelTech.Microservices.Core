@@ -4,13 +4,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageId>GodelTech.Microservices.Core</PackageId>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <Authors>Andrei Salanoi</Authors>
+    <Authors>Andrei Salanoi;Vladimir Rodchenko;Andrei Yaskevich</Authors>
     <Company>Godel Technologies</Company>
     <Description>Library contains base components and interfaces of Microservices Framework. Whole idea of framework is based on components called initializers.</Description>
     <Copyright>Godel Technologies 2020</Copyright>
-    <PackageLicenseUrl>https://github.com/GodelTech/GodelTech.Microservices.Core/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/GodelTech/GodelTech.Microservices.Core/wiki</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://www.gravatar.com/avatar/839234621070de51e7b9cabd5ceee8fe?s=64</PackageIconUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/GodelTech/GodelTech.Microservices.Core</RepositoryUrl>
     <PackageTags>dotnet core microservice</PackageTags>
 
@@ -28,6 +30,17 @@
     <!-- SonarQube needs this -->
     <ProjectGuid>{00000000-0000-0000-0000-000000000010}</ProjectGuid>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
