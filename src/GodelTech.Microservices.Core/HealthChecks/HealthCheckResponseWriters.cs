@@ -17,8 +17,8 @@ namespace GodelTech.Microservices.Core.HealthChecks
         /// <inheritdoc />
         public Task WriteAsync(HttpContext context, HealthReport healthReport)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            if (healthReport == null) throw new ArgumentNullException(nameof(healthReport));
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(healthReport);
 
             context.Response.ContentType = "application/json";
 

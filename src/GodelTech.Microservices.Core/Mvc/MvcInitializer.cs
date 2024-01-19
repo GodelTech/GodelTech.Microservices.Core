@@ -83,7 +83,7 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <param name="options">MvcOptions.</param>
         protected virtual void ConfigureMvcOptions(MvcOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
             options.SuppressAsyncSuffixInActionNames = false;
         }

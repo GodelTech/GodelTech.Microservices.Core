@@ -50,7 +50,7 @@ namespace GodelTech.Microservices.Core.Mvc.Filters
         /// <inheritdoc />
         public override void OnException(ExceptionContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             var exceptions = new List<object>
             {

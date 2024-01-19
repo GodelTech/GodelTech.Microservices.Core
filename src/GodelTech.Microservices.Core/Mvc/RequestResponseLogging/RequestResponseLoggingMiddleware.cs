@@ -39,7 +39,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
             RecyclableMemoryStreamManager recyclableMemoryStreamManager,
             IStopwatchFactory stopwatchFactory = default(SystemStopwatchFactory))
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
             _next = next;
             _options = options.Value;
@@ -54,7 +54,7 @@ namespace GodelTech.Microservices.Core.Mvc.RequestResponseLogging
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         public Task InvokeAsync(HttpContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             return InvokeInternalAsync(context);
         }

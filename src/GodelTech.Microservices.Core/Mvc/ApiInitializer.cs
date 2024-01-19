@@ -90,7 +90,7 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <param name="options">MvcOptions.</param>
         protected virtual void ConfigureMvcOptions(MvcOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
             options.Filters.Add(
                 new HttpStatusCodeExceptionFilterAttribute(
@@ -118,11 +118,11 @@ namespace GodelTech.Microservices.Core.Mvc
         /// <param name="options">JsonOptions.</param>
         protected virtual void ConfigureJsonOptions(JsonOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.IgnoreNullValues = true;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         }
     }

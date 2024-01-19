@@ -28,9 +28,11 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
             RequestDelegate next,
             IOptions<CorrelationIdOptions> options,
             ICorrelationIdContextFactory correlationIdContextFactory,
+#pragma warning disable CA1720
             IGuid guid = default(SystemGuid))
+#pragma warning restore CA1720
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
             _next = next;
             _options = options.Value;
@@ -44,7 +46,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         public Task InvokeAsync(HttpContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             return InvokeInternalAsync(context);
         }
@@ -61,7 +63,7 @@ namespace GodelTech.Microservices.Core.Mvc.CorrelationId
                 {
                     if (!context.Response.Headers.ContainsKey(_options.ResponseHeader))
                     {
-                        context.Response.Headers.Add(
+                        context.Response.Headers.Append(
                             _options.ResponseHeader,
                             correlationId
                         );

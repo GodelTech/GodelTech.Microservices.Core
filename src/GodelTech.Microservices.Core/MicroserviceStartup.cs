@@ -18,7 +18,7 @@ namespace GodelTech.Microservices.Core
         /// <param name="configuration">Configuration.</param>
         protected MicroserviceStartup(IConfiguration configuration)
         {
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            ArgumentNullException.ThrowIfNull(configuration);
 
             Configuration = configuration;
         }
