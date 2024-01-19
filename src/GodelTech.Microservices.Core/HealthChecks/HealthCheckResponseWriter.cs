@@ -14,6 +14,15 @@ namespace GodelTech.Microservices.Core.HealthChecks
     /// </summary>
     public class HealthCheckResponseWriter : IHealthCheckResponseWriter
     {
+        private static readonly JsonSerializerOptions WriteJsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters =
+            {
+                new JsonStringEnumConverter()
+            }
+        };
+
         /// <inheritdoc />
         public Task WriteAsync(HttpContext context, HealthReport healthReport)
         {
@@ -41,14 +50,7 @@ namespace GodelTech.Microservices.Core.HealthChecks
 
             var json = JsonSerializer.Serialize(
                 healthResult,
-                new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    Converters =
-                    {
-                        new JsonStringEnumConverter()
-                    }
-                }
+                WriteJsonSerializerOptions
             );
 
             return context.Response.WriteAsync(json);
