@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
 
@@ -9,11 +9,6 @@
 
     <!-- SonarQube needs this -->
     <ProjectGuid>{00000000-0000-0000-0000-000000000020}</ProjectGuid>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- todo: solve this: Type or member is obsolete -->
-    <NoWarn>$(NoWarn);SYSLIB0020</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -61,8 +61,8 @@ namespace GodelTech.Microservices.Core.HealthChecks
         /// <param name="app">ApplicationBuilder.</param>
         protected virtual void ConfigureHealthCheckOptions(HealthCheckOptions options, IApplicationBuilder app)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            if (app == null) throw new ArgumentNullException(nameof(app));
+            ArgumentNullException.ThrowIfNull(options);
+            ArgumentNullException.ThrowIfNull(app);
 
             var writer = app.ApplicationServices.GetRequiredService<IHealthCheckResponseWriter>();
 

@@ -13,7 +13,9 @@
         /// <summary>
         /// Stop.
         /// </summary>
+#pragma warning disable CA1716
         void Stop();
+#pragma warning restore CA1716
 
         /// <summary>
         /// Get the elapsed time in milliseconds.

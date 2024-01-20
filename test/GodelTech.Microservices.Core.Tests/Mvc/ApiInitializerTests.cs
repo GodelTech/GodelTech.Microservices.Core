@@ -92,7 +92,7 @@ namespace GodelTech.Microservices.Core.Tests.Mvc
 
             Assert.Equal(JsonNamingPolicy.CamelCase, options.JsonSerializerOptions.PropertyNamingPolicy);
             Assert.Equal(JsonNamingPolicy.CamelCase, options.JsonSerializerOptions.DictionaryKeyPolicy);
-            Assert.True(options.JsonSerializerOptions.IgnoreNullValues);
+            Assert.Equal(JsonIgnoreCondition.WhenWritingNull, options.JsonSerializerOptions.DefaultIgnoreCondition);
 
             var actualConverters = options.JsonSerializerOptions.Converters;
             Assert.Equal(expectedConverters.Count, actualConverters.Count);

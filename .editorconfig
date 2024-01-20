@@ -152,6 +152,8 @@ dotnet_diagnostic.IDE0300.severity = none
 dotnet_diagnostic.IDE0290.severity = none
 # IDE0028: Use collection initializers or expressions
 dotnet_diagnostic.IDE0028.severity = none
+# IDE0200: Remove unnecessary lambda expression
+dotnet_diagnostic.IDE0200.severity = none
 
 [*.cs]
 csharp_style_namespace_declarations = file_scoped

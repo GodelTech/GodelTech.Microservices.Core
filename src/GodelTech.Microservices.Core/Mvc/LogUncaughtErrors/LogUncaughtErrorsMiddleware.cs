@@ -33,7 +33,7 @@ namespace GodelTech.Microservices.Core.Mvc.LogUncaughtErrors
         /// <param name="context">The <see cref="HttpContext"/> for the current request.</param>
         public Task InvokeAsync(HttpContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             return InvokeInternalAsync(context);
         }
