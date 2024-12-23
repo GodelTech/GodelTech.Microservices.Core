@@ -241,3 +241,6 @@ Microservice framework has number of satellite projects:
 * [GodelTech.Microservices.Security](https://github.com/GodelTech/GodelTech.Microservices.Security). Package contains security initializer for typical ASP.NET Core applications.
 * [GodelTech.Microservices.Http](https://github.com/GodelTech/GodelTech.Microservices.Http). Implemntation of HTTP service client which has convinient methods to collaborate with REST APIs.
 * [GodelTech.Microservices.SharedServices](https://github.com/GodelTech/GodelTech.Microservices.SharedServices). Project contains set of unitity components which wrap standard static methods. Available wrappers simplify unit test creation by exposing intefaces which mimic static method signatures.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
